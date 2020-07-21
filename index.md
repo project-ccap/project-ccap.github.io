@@ -14,4 +14,5 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 止む無くこのような形にしました。
 ご了承ください。
 
+- [PNT+Snodgrass の結果](20pnt_snodgrass_resnet18.pdf)
 
