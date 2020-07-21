@@ -1,37 +1,60 @@
-## Welcome to GitHub Pages
+# project-ccap.github.io
 
-You can use the [editor on GitHub](https://github.com/project-ccap/project-ccap.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+https://project-ccap.github.io/
+<br />
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## ページの更新方法
 
-### Markdown
+- git, GitHubの設定を行っていることが前提です．  
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+```bash
+$ git clone https://project-ccap.github.io.git
+$ cd project-ccap.githuh.io.git
+$ git checkout -b 適当なブランチ名
 
-```markdown
-Syntax highlighted code block
+編集作業を行う
 
-# Header 1
-## Header 2
-### Header 3
+$ git commit -m '編集した内容' -a
+$ git push -u origin ブランチ名
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+GitHub上で pull request を作成する
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+- mergeは管理者が行います．merge後はローカルで以下を実行してください．
 
-### Jekyll Themes
+```bash
+$ git checkout master
+$ git pull
+$ git branch -d ブランチ名
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/project-ccap/project-ccap.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## GitHubの設定・使い方
 
-### Support or Contact
+- [Getting started with GitHub](https://help.github.com/en/github/getting-started-with-github)  
+- [SSHによるGitHubへのアクセス](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)  
+- [pull requestの作成](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## localでページの見た目を確認するための手順
+
+- 環境により異なると思いますのでその都度調べてください．以下はmacOS Catalinaの場合です．  
+- 最初にやっておくこと．  
+
+command line toolsのインストール
+
+```bash
+$ cd project-ccap.github.io.git
+$ gem install bundler
+$ bundle init
+$ vim Gemfile (他のテキストエディアでも可)
+Gemfileを開いて，一番下に以下の行を追記する
+gem "github-pages", group: :jekyll_plugins
+
+$ bundle install
+```
+
+- 以下を実行するとローカルでサーバが立ち上がるので，ブラウザでhttp://localhost:4000/ にアクセスする．  
+
+```bash
+$ cd project-ccap.github.io.git
+$ bundle exec jekyll serve
+```
