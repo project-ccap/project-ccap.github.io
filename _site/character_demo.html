@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Shin Asakawa">
+  <title>リカレント文章記憶デモ</title>
+
+<style>
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #333;
+  padding: 20px;
+}
+#argmax {
+  background-color: #DFD;
+}
+#ppl {
+  color: #090;
+  font-size: 20px;
+}
+#epoch {
+  color: #900;
+  font-size: 20px;
+}
+.apred {
+  padding: 2px;
+  margin: 5px;
+  overflow: hidden;
+  height: 20px;
+  font-size: 14px;
+}
+#prepro_status {
+  background-color: #FFD;
+  padding: 5px;
+}
+#status {
+  padding: 2px;
+  margin-top: 5px;
+}
+#controls {
+  margin: 5px;
+}
+.theslider {
+  width:90%;
+  display: inline-block;
+}
+.slider_value {
+  width: 9%;
+  display: inline-block;
+}
+#wrap {
+  width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 200px;
+}
+.abutton {
+  width: 120px;
+  height: 30px;
+  margin: 10px 10px 10px 0px;
+}
+.hh {
+  background-color: #EEE;
+  padding: 5px;
+  margin-top: 5px;
+  border-bottom: 1px solid #999;
+  margin-bottom: 2px;
+}
+#pplgraph {
+  float: right;
+}
+#intro {
+  text-align: justify;
+}
+</style>
+<link href="external/jquery-ui.min.css" rel="stylesheet">
+
+<script src="external/jquery-1.8.3.min.js"></script>
+<script src="external/jquery-ui.min.js"></script>
+
+<script src="src/recurrent.js"></script>
+<script src="src/vis.js"></script>
+
+<script type="text/javascript">
+
+// prediction params
+var sample_softmax_temperature = 1.0; // how peaky model predictions should be
+var max_chars_gen = 100; // max length of generated sentences
+
+// various global var inits
+var epoch_size = -1;
+var input_size = -1;
+var output_size = -1;
+var letterToIndex = {};
+var indexToLetter = {};
+var vocab = [];
+var data_sents = [];
+var solver = new R.Solver(); // should be class because it needs memory for step caches
+var pplGraph = new Rvis.Graph();
+
+var model = {};
+
+var initVocab = function(sents, count_threshold) {
+  // go over all characters and keep track of all unique ones seen
+  var txt = sents.join(''); // concat all
+
+  // count up all characters
+  var d = {};
+  for(var i=0,n=txt.length;i<n;i++) {
+    var txti = txt[i];
+    if(txti in d) { d[txti] += 1; } 
+    else { d[txti] = 1; }
+  }
+
+  // filter by count threshold and create pointers
+  letterToIndex = {};
+  indexToLetter = {};
+  vocab = [];
+  // NOTE: start at one because we will have START and END tokens!
+  // that is, START token will be index 0 in model letter vectors
+  // and END token will be index 0 in the next character softmax
+  var q = 1; 
+  for(ch in d) {
+    if(d.hasOwnProperty(ch)) {
+      if(d[ch] >= count_threshold) {
+        // add character to vocab
+        letterToIndex[ch] = q;
+        indexToLetter[q] = ch;
+        vocab.push(ch);
+        q++;
+      }
+    }
+  }
+
+  // globals written: indexToLetter, letterToIndex, vocab (list), and:
+  input_size = vocab.length + 1;
+  output_size = vocab.length + 1;
+  epoch_size = sents.length;
+  $("#prepro_status").text('found ' + vocab.length + ' distinct characters: ' + vocab.join(''));
+}
+
+var utilAddToModel = function(modelto, modelfrom) {
+  for(var k in modelfrom) {
+    if(modelfrom.hasOwnProperty(k)) {
+      // copy over the pointer but change the key to use the append
+      modelto[k] = modelfrom[k];
+    }
+  }
+}
+
+var initModel = function() {
+  // letter embedding vectors
+  var model = {};
+  model['Wil'] = new R.RandMat(input_size, letter_size , 0, 0.08);
+  
+  if(generator === 'rnn') {
+    var rnn = R.initRNN(letter_size, hidden_sizes, output_size);
+    utilAddToModel(model, rnn);
+  } else {
+    var lstm = R.initLSTM(letter_size, hidden_sizes, output_size);
+    utilAddToModel(model, lstm);
+  }
+
+  return model;
+}
+
+var reinit_learning_rate_slider = function() {
+  // init learning rate slider for controlling the decay
+  // note that learning_rate is a global variable
+  $("#lr_slider").slider({
+    min: Math.log10(0.01) - 3.0,
+    max: Math.log10(0.01) + 0.05,
+    step: 0.05,
+    value: Math.log10(learning_rate),
+    slide: function( event, ui ) {
+      learning_rate = Math.pow(10, ui.value);
+      $("#lr_text").text(learning_rate.toFixed(5));
+    }
+  });
+  $("#lr_text").text(learning_rate.toFixed(5));
+}
+
+var reinit = function() {
+  // note: reinit writes global vars
+  
+  // eval options to set some globals
+  eval($("#newnet").val());
+
+  reinit_learning_rate_slider();
+
+  solver = new R.Solver(); // reinit solver
+  pplGraph = new Rvis.Graph();
+
+  ppl_list = [];
+  tick_iter = 0;
+
+  // process the input, filter out blanks
+  var data_sents_raw = $('#ti').val().split('\n');
+  data_sents = [];
+  for(var i=0;i<data_sents_raw.length;i++) {
+    var sent = data_sents_raw[i].trim();
+    if(sent.length > 0) {
+      data_sents.push(sent);
+    }
+  }
+
+  initVocab(data_sents, 1); // takes count threshold for characters
+  model = initModel();
+}
+
+var saveModel = function() {
+  var out = {};
+  out['hidden_sizes'] = hidden_sizes;
+  out['generator'] = generator;
+  out['letter_size'] = letter_size;
+  var model_out = {};
+  for(var k in model) {
+    if(model.hasOwnProperty(k)) {
+      model_out[k] = model[k].toJSON();
+    }
+  }
+  out['model'] = model_out;
+  var solver_out = {};
+  solver_out['decay_rate'] = solver.decay_rate;
+  solver_out['smooth_eps'] = solver.smooth_eps;
+  step_cache_out = {};
+  for(var k in solver.step_cache) {
+    if(solver.step_cache.hasOwnProperty(k)) {
+      step_cache_out[k] = solver.step_cache[k].toJSON();
+    }
+  }
+  solver_out['step_cache'] = step_cache_out;
+  out['solver'] = solver_out;
+  out['letterToIndex'] = letterToIndex;
+  out['indexToLetter'] = indexToLetter;
+  out['vocab'] = vocab;
+  $("#tio").val(JSON.stringify(out));
+}
+
+var loadModel = function(j) {
+  hidden_sizes = j.hidden_sizes;
+  generator = j.generator;
+  letter_size = j.letter_size;
+  model = {};
+  for(var k in j.model) {
+    if(j.model.hasOwnProperty(k)) {
+      var matjson = j.model[k];
+      model[k] = new R.Mat(1,1);
+      model[k].fromJSON(matjson);
+    }
+  }
+  solver = new R.Solver(); // have to reinit the solver since model changed
+  solver.decay_rate = j.solver.decay_rate;
+  solver.smooth_eps = j.solver.smooth_eps;
+  solver.step_cache = {};
+  for(var k in j.solver.step_cache){
+      if(j.solver.step_cache.hasOwnProperty(k)){
+          var matjson = j.solver.step_cache[k];
+          solver.step_cache[k] = new R.Mat(1,1);
+          solver.step_cache[k].fromJSON(matjson);
+      }
+  }
+  letterToIndex = j['letterToIndex'];
+  indexToLetter = j['indexToLetter'];
+  vocab = j['vocab'];
+
+  // reinit these
+  ppl_list = [];
+  tick_iter = 0;
+}
+
+var forwardIndex = function(G, model, ix, prev) {
+  var x = G.rowPluck(model['Wil'], ix);
+  // forward prop the sequence learner
+  if(generator === 'rnn') {
+    var out_struct = R.forwardRNN(G, model, hidden_sizes, x, prev);
+  } else {
+    var out_struct = R.forwardLSTM(G, model, hidden_sizes, x, prev);
+  }
+  return out_struct;
+}
+
+var predictSentence = function(model, samplei, temperature) {
+  if(typeof samplei === 'undefined') { samplei = false; }
+  if(typeof temperature === 'undefined') { temperature = 1.0; }
+
+  var G = new R.Graph(false);
+  var s = '';
+  var prev = {};
+  while(true) {
+
+    // RNN tick
+    var ix = s.length === 0 ? 0 : letterToIndex[s[s.length-1]];
+    var lh = forwardIndex(G, model, ix, prev);
+    prev = lh;
+
+    // sample predicted letter
+    logprobs = lh.o;
+    if(temperature !== 1.0 && samplei) {
+      // scale log probabilities by temperature and renormalize
+      // if temperature is high, logprobs will go towards zero
+      // and the softmax outputs will be more diffuse. if temperature is
+      // very low, the softmax outputs will be more peaky
+      for(var q=0,nq=logprobs.w.length;q<nq;q++) {
+        logprobs.w[q] /= temperature;
+      }
+    }
+
+    probs = R.softmax(logprobs);
+    if(samplei) {
+      var ix = R.samplei(probs.w);
+    } else {
+      var ix = R.maxi(probs.w);  
+    }
+    
+    if(ix === 0) break; // END token predicted, break out
+    if(s.length > max_chars_gen) { break; } // something is wrong
+
+    var letter = indexToLetter[ix];
+    s += letter;
+  }
+  return s;
+}
+
+var costfun = function(model, sent) {
+  // takes a model and a sentence and
+  // calculates the loss. Also returns the Graph
+  // object which can be used to do backprop
+  var n = sent.length;
+  var G = new R.Graph();
+  var log2ppl = 0.0;
+  var cost = 0.0;
+  var prev = {};
+  for(var i=-1;i<n;i++) {
+    // start and end tokens are zeros
+    var ix_source = i === -1 ? 0 : letterToIndex[sent[i]]; // first step: start with START token
+    var ix_target = i === n-1 ? 0 : letterToIndex[sent[i+1]]; // last step: end with END token
+
+    lh = forwardIndex(G, model, ix_source, prev);
+    prev = lh;
+
+    // set gradients into logprobabilities
+    logprobs = lh.o; // interpret output as logprobs
+    probs = R.softmax(logprobs); // compute the softmax probabilities
+
+    log2ppl += -Math.log2(probs.w[ix_target]); // accumulate base 2 log prob and do smoothing
+    cost += -Math.log(probs.w[ix_target]);
+
+    // write gradients into log probabilities
+    logprobs.dw = probs.w;
+    logprobs.dw[ix_target] -= 1
+  }
+  var ppl = Math.pow(2, log2ppl / (n - 1));
+  return {'G':G, 'ppl':ppl, 'cost':cost};
+}
+
+function median(values) {
+  values.sort( function(a,b) {return a - b;} );
+  var half = Math.floor(values.length/2);
+  if(values.length % 2) return values[half];
+  else return (values[half-1] + values[half]) / 2.0;
+}
+
+var ppl_list = [];
+var tick_iter = 0;
+var tick = function() {
+
+  // sample sentence fromd data
+  var sentix = R.randi(0,data_sents.length);
+  var sent = data_sents[sentix];
+
+  var t0 = +new Date();  // log start timestamp
+
+  // evaluate cost function on a sentence
+  var cost_struct = costfun(model, sent);
+  
+  // use built up graph to compute backprop (set .dw fields in mats)
+  cost_struct.G.backward();
+  // perform param update
+  var solver_stats = solver.step(model, learning_rate, regc, clipval);
+  //$("#gradclip").text('grad clipped ratio: ' + solver_stats.ratio_clipped)
+
+  var t1 = +new Date();
+  var tick_time = t1 - t0;
+
+  ppl_list.push(cost_struct.ppl); // keep track of perplexity
+
+  // evaluate now and then
+  tick_iter += 1;
+  if(tick_iter % 50 === 0) {
+    // draw samples
+    $('#samples').html('');
+    for(var q=0;q<5;q++) {
+      var pred = predictSentence(model, true, sample_softmax_temperature);
+      var pred_div = '<div class="apred">'+pred+'</div>'
+      $('#samples').append(pred_div);
+    }
+  }
+  if(tick_iter % 10 === 0) {
+    // draw argmax prediction
+    $('#argmax').html('');
+    var pred = predictSentence(model, false);
+    var pred_div = '<div class="apred">'+pred+'</div>'
+    $('#argmax').append(pred_div);
+
+    // keep track of perplexity
+    $('#epoch').text('epoch: ' + (tick_iter/epoch_size).toFixed(2));
+    $('#ppl').text('perplexity: ' + cost_struct.ppl.toFixed(2));
+    $('#ticktime').text('forw/bwd time per example: ' + tick_time.toFixed(1) + 'ms');
+
+    if(tick_iter % 100 === 0) {
+      var median_ppl = median(ppl_list);
+      ppl_list = [];
+      pplGraph.add(tick_iter, median_ppl);
+      pplGraph.drawSelf(document.getElementById("pplgraph"));
+    }
+  }
+}
+
+var gradCheck = function() {
+  var model = initModel();
+  var sent = '^test sentence$';
+  var cost_struct = costfun(model, sent);
+  cost_struct.G.backward();
+  var eps = 0.000001;
+
+  for(var k in model) {
+    if(model.hasOwnProperty(k)) {
+      var m = model[k]; // mat ref
+      for(var i=0,n=m.w.length;i<n;i++) {
+        
+        oldval = m.w[i];
+        m.w[i] = oldval + eps;
+        var c0 = costfun(model, sent);
+        m.w[i] = oldval - eps;
+        var c1 = costfun(model, sent);
+        m.w[i] = oldval;
+
+        var gnum = (c0.cost - c1.cost)/(2 * eps);
+        var ganal = m.dw[i];
+        var relerr = (gnum - ganal)/(Math.abs(gnum) + Math.abs(ganal));
+        if(relerr > 1e-1) {
+          console.log(k + ': numeric: ' + gnum + ', analytic: ' + ganal + ', err: ' + relerr);
+        }
+      }
+    }
+  }
+}
+
+var iid = null;
+$(function() {
+
+  // attach button handlers
+  $('#learn').click(function(){ 
+    reinit();
+    if(iid !== null) { clearInterval(iid); }
+    iid = setInterval(tick, 0); 
+  });
+  $('#stop').click(function(){ 
+    if(iid !== null) { clearInterval(iid); }
+    iid = null;
+  });
+  $("#resume").click(function(){
+    if(iid === null) {
+      iid = setInterval(tick, 0); 
+    }
+  });
+
+  $("#savemodel").click(saveModel);
+  $("#loadmodel").click(function(){
+    var j = JSON.parse($("#tio").val());
+    loadModel(j);
+  });
+
+  $("#loadpretrained").click(function(){
+    $.getJSON("lstm_100_model.json", function(data) {
+      pplGraph = new Rvis.Graph();
+      learning_rate = 0.0001;
+      reinit_learning_rate_slider();
+      loadModel(data);
+    });
+  });
+
+  $("#learn").click(); // simulate click on startup
+
+  //$('#gradcheck').click(gradCheck);
+
+  $("#temperature_slider").slider({
+    min: -1,
+    max: 1.05,
+    step: 0.05,
+    value: 0,
+    slide: function( event, ui ) {
+      sample_softmax_temperature = Math.pow(10, ui.value);
+      $("#temperature_text").text( sample_softmax_temperature.toFixed(2) );
+    }
+  });
+});
+
+</script>
+</head>
+
+<body>
+
+<div id="wrap">
+  <h1>リカレントニューラルネットワークによる文処理デモ</h1>
+  <div id="intro">
+    このデモでは <a href="https://github.com/karpathy/recurrentjs">recurrentjsライブラリ</a> を使用して Javascript で深層リカレントニューラルネットワーク (RNN) や  LSTM  ネットワーク を 学習することができます。
+    このデモでは 一般的な 自動誤差逆伝播がサポートされているので，任意の式グラフを設定することができます。
+<!--     This demo shows usage of the <a href="https://github.com/karpathy/recurrentjs">recurrentjs library</a> that allows you to train deep Recurrent Neural Networks (RNN) and Long Short-Term Memory Networks (LSTM) in Javascript. But the core of the library is more general and allows you to set up arbitrary expression graphs that support fully automatic backpropagation. --><br><br>
+
+    <!-- In this demo we take a dataset of sentences as input and learn to memorize the sentences character by character. That is, the RNN/LSTM takes a character, its context from previous time steps (as mediated by the hidden layers) and predicts the next character in the sequence. Here is an example:  -->
+    このデモでは 入力として 文章データを扱い 文字ごと に 文章を記憶することを学習します。
+    すなわち RNN や LSTM は 入力文字と それまでの時間ステップ からの 文脈 (隠れ層が扱う) を取り 系列内 の次の文字を予測します。ここでは一例を紹介します。<br><br>
+
+    <div style="text-align:center;"><img src="assets/eg.png"></div>
+
+    <!-- In the example image above that depicts a deep RNN, every character has an associated "letter vector" that we will train with backpropagation. These letter vectors are combined through a (learnable) Matrix-vector multiply transformation into the first hidden layer representation (yellow), then into second hidden layer representation (purple), and finally into the output space (blue). The output space has dimensionality equal to the number of characters in the dataset and every dimension provides the probability of the next character in the sequence. The network is therefore trained to always predict the next character (using Softmax + cross-entropy loss on all letters). The quantity we track during training is called the <b>perplexity</b>, which measures how surprised the network is to see the next character in a sequence. For example, if perplexity is 4.0 then it's as if the network was guessing uniformly at random from 4 possible characters for next letter (i.e. lowest it can be is 1). At test time, the prediction is currently done iteratively character by character in a greedy fashion, but I might eventually implemented more sophisticated methods (e.g. beam search). -->
+    上の例では 深層 RNN が描かれています。すべての文字にはバックプロパゲーションで学習可能な 「文字ベクトル」 が関連付けられています。
+    この文字ベクトルは (学習可能な) 行列 と ベクトル との 乗算によって 第1 隠れ層表現 (黄色) に結合されます。
+    次に 第 2 隠れ層表現 (紫色) に結合されます。
+    最後に出力空間 (青) に結合されます。
+    出力空間は データ内の 文字数 に 等しい次元数を持ちます。
+    各次元は系列内の 次の 文字の確率を与えます。
+    すなわち このネットワーク は 常に次の文字を予測するように訓練されます。
+    実際には ソフトマックス関数と，損失関数として交差エントロピー損失を使用しています。
+    学習中に追跡する指標は <b>パープレクシティ perplexity</b> と呼ばれます。
+    ネットワークがシーケンスの次の文字を見て，どれだけ予測と異なっていて，驚くのかを表します。
+    例えば、パープレクシティ (錯乱度) が 4.0 であれば ネットワーク が 次の文字候補として 4 つの文字 を予測していることを示しています。
+    パープレクシティの最小値，すなわち最良の場合は 1 となります。
+    検証テスト時には 貪欲な探索方法 で 文字ごとに反復的に予測を行っています。
+    将来的にはより洗練された方法 (例えばビームサーチ) を実装するかもしれません。<br><br>
+
+    <!-- The demo is pre-filled with sentences from <a href="http://www.paulgraham.com/articles.html">Paul Graham's essays</a>, in an attempt to encode Paul Graham's knowledge into the weights of the Recurrent Networks. The long-term goal of the project then is to generate startup wisdom at will. Feel free to train on whatever data you wish, and to experiment with the parameters. If you want more impressive models you have to increase the sizes of hidden layers, and maybe slightly the letter vectors. However, this will take longer to train. -->
+    下のデモで使用しているデータは <a href="https://www.aozora.gr.jp/cards/000148/files/773_14560.html">青空文庫</a> から夏目漱石の 「こころ」 の冒頭部分をコピーしています。
+    好きなデータを使って自由にトレーニングしてください。またパラメータを調整して実験を繰り返してください。
+    効率的なモデルにするには 隠れ層 の サイズを大きくするなどしてください。 文字埋め込み層の ベクトル の次元を少し大きくすると改善します。ですがネットワークのサイズを大きくする学習には時間がかかります。<br><br>
+
+<!--     For suggestions/bugs ping me at <a href="https://twitter.com/karpathy">@karpathy</a>.<br><br> -->
+
+  </div>
+  <div>
+    <div class="hh">入力文:</div>
+    <textarea style="width:100%; height:200px;" id="ti">
+私はその人を常に先生と呼んでいた。だからここでもただ先生と書くだけで本名は打ち明けない。これは世間を憚る遠慮というよりも、その方が私にとって自然だからである。私はその人の記憶を呼び起すごとに、すぐ「先生」といいたくなる。筆を執とっても心持は同じ事である。よそよそしい頭文字などはとても使う気にならない。
+　私が先生と知り合いになったのは鎌倉である。その時私はまだ若々しい書生であった。暑中休暇を利用して海水浴に行った友達からぜひ来いという端書を受け取ったので、私は多少の金を工面して、出掛ける事にした。私は金の工面に二、三日を費やした。ところが私が鎌倉に着いて三日と経たたないうちに、私を呼び寄せた友達は、急に国元から帰れという電報を受け取った。電報には母が病気だからと断ってあったけれども友達はそれを信じなかった。友達はかねてから国元にいる親たちに勧まない結婚を強られていた。彼は現代の習慣からいうと結婚するにはあまり年が若過ぎた。それに肝心の当人が気に入らなかった。それで夏休みに当然帰るべきところを、わざと避けて東京の近くで遊んでいたのである。彼は電報を私に見せてどうしようと相談をした。私にはどうしていいか分らなかった。けれども実際彼の母が病気であるとすれば彼は固もとより帰るべきはずであった。それで彼はとうとう帰る事になった。せっかく来た私は一人取り残された。
+　学校の授業が始まるにはまだ大分だいぶ日数があるので鎌倉におってもよし、帰ってもよいという境遇にいた私は、当分元の宿に留とまる覚悟をした。友達は中国のある資産家の息子で金に不自由のない男であったけれども、学校が学校なのと年が年なので、生活の程度は私とそう変りもしなかった。したがって一人ひとりぼっちになった私は別に恰好な宿を探す面倒ももたなかったのである。
+　宿は鎌倉でも辺鄙な方角にあった。玉突きだのアイスクリームだのというハイカラなものには長い畷を一つ越さなければ手が届かなかった。車で行っても二十銭は取られた。けれども個人の別荘はそこここにいくつでも建てられていた。それに海へはごく近いので海水浴をやるには至極便利な地位を占めていた。
+　私は毎日海へはいりに出掛けた。古い燻り返った藁葺の間を通り抜けて磯へ下りると、この辺にこれほどの都会人種が住んでいるかと思うほど、避暑に来た男や女で砂の上が動いていた。ある時は海の中が銭湯せんとうのように黒い頭でごちゃごちゃしている事もあった。その中に知った人を一人ももたない私も、こういう賑にぎやかな景色の中に裹つつまれて、砂の上に寝そべってみたり、膝頭を波に打たしてそこいらを跳はね廻まわるのは愉快であった。
+　私は実に先生をこの雑沓の間に見付け出したのである。その時海岸には掛茶屋が二軒あった。私はふとした機会はずみからその一軒の方に行き慣なれていた。長谷辺に大きな別荘を構えている人と違って、各自めいめいに専有の着換場を拵しらえていないここいらの避暑客には、ぜひともこうした共同着換所といった風ふうなものが必要なのであった。彼らはここで茶を飲み、ここで休息する外ほかに、ここで海水着を洗濯させたり、ここで鹹しおはゆい身体からだを清めたり、ここへ帽子や傘かさを預けたりするのである。海水着を持たない私にも持物を盗まれる恐れはあったので、私は海へはいるたびにその茶屋へ一切いっさいを脱ぬぎ棄すてる事にしていた。
+
+私わたくしがその掛茶屋で先生を見た時は、先生がちょうど着物を脱いでこれから海へ入ろうとするところであった。私はその時反対に濡ぬれた身体からだを風に吹かして水から上がって来た。二人の間あいだには目を遮さえぎる幾多の黒い頭が動いていた。特別の事情のない限り、私はついに先生を見逃したかも知れなかった。それほど浜辺が混雑し、それほど私の頭が放漫ほうまんであったにもかかわらず、私がすぐ先生を見付け出したのは、先生が一人の西洋人を伴つれていたからである。
+　その西洋人の優れて白い皮膚の色が、掛茶屋へ入るや否いなや、すぐ私の注意を惹ひいた。純粋の日本の浴衣ゆかたを着ていた彼は、それを床几しょうぎの上にすぽりと放ほうり出したまま、腕組みをして海の方を向いて立っていた。彼は我々の穿はく猿股さるまた一つの外ほか何物も肌に着けていなかった。私にはそれが第一不思議だった。私はその二日前に由井ゆいが浜はままで行って、砂の上にしゃがみながら、長い間西洋人の海へ入る様子を眺ながめていた。私の尻しりをおろした所は少し小高い丘の上で、そのすぐ傍わきがホテルの裏口になっていたので、私の凝じっとしている間あいだに、大分だいぶ多くの男が塩を浴びに出て来たが、いずれも胴と腕と股ももは出していなかった。女は殊更ことさら肉を隠しがちであった。大抵は頭に護謨製ゴムせいの頭巾ずきんを被かぶって、海老茶えびちゃや紺こんや藍あいの色を波間に浮かしていた。そういう有様を目撃したばかりの私の眼めには、猿股一つで済まして皆みんなの前に立っているこの西洋人がいかにも珍しく見えた。
+　彼はやがて自分の傍わきを顧みて、そこにこごんでいる日本人に、一言ひとこと二言ふたこと何なにかいった。その日本人は砂の上に落ちた手拭てぬぐいを拾い上げているところであったが、それを取り上げるや否や、すぐ頭を包んで、海の方へ歩き出した。その人がすなわち先生であった。
+　私は単に好奇心のために、並んで浜辺を下りて行く二人の後姿うしろすがたを見守っていた。すると彼らは真直まっすぐに波の中に足を踏み込んだ。そうして遠浅とおあさの磯近いそちかくにわいわい騒いでいる多人数たにんずの間あいだを通り抜けて、比較的広々した所へ来ると、二人とも泳ぎ出した。彼らの頭が小さく見えるまで沖の方へ向いて行った。それから引き返してまた一直線に浜辺まで戻って来た。掛茶屋へ帰ると、井戸の水も浴びずに、すぐ身体からだを拭ふいて着物を着て、さっさとどこへか行ってしまった。
+　彼らの出て行った後あと、私はやはり元の床几しょうぎに腰をおろして烟草タバコを吹かしていた。その時私はぽかんとしながら先生の事を考えた。どうもどこかで見た事のある顔のように思われてならなかった。しかしどうしてもいつどこで会った人か想おもい出せずにしまった。
+　その時の私は屈托くったくがないというよりむしろ無聊ぶりょうに苦しんでいた。それで翌日あくるひもまた先生に会った時刻を見計らって、わざわざ掛茶屋かけぢゃやまで出かけてみた。すると西洋人は来ないで先生一人麦藁帽むぎわらぼうを被かぶってやって来た。先生は眼鏡めがねをとって台の上に置いて、すぐ手拭てぬぐいで頭を包んで、すたすた浜を下りて行った。先生が昨日きのうのように騒がしい浴客よくかくの中を通り抜けて、一人で泳ぎ出した時、私は急にその後あとが追い掛けたくなった。私は浅い水を頭の上まで跳はねかして相当の深さの所まで来て、そこから先生を目標めじるしに抜手ぬきでを切った。すると先生は昨日と違って、一種の弧線こせんを描えがいて、妙な方向から岸の方へ帰り始めた。それで私の目的はついに達せられなかった。私が陸おかへ上がって雫しずくの垂れる手を振りながら掛茶屋に入ると、先生はもうちゃんと着物を着て入れ違いに外へ出て行った。
+
+私わたくしは次の日も同じ時刻に浜へ行って先生の顔を見た。その次の日にもまた同じ事を繰り返した。けれども物をいい掛ける機会も、挨拶あいさつをする場合も、二人の間には起らなかった。その上先生の態度はむしろ非社交的であった。一定の時刻に超然として来て、また超然と帰って行った。周囲がいくら賑にぎやかでも、それにはほとんど注意を払う様子が見えなかった。最初いっしょに来た西洋人はその後ごまるで姿を見せなかった。先生はいつでも一人であった。
+　或ある時先生が例の通りさっさと海から上がって来て、いつもの場所に脱ぬぎ棄すてた浴衣ゆかたを着ようとすると、どうした訳か、その浴衣に砂がいっぱい着いていた。先生はそれを落すために、後ろ向きになって、浴衣を二、三度振ふるった。すると着物の下に置いてあった眼鏡が板の隙間すきまから下へ落ちた。先生は白絣しろがすりの上へ兵児帯へこおびを締めてから、眼鏡の失なくなったのに気が付いたと見えて、急にそこいらを探し始めた。私はすぐ腰掛こしかけの下へ首と手を突ッ込んで眼鏡を拾い出した。先生は有難うといって、それを私の手から受け取った。
+　次の日私は先生の後あとにつづいて海へ飛び込んだ。そうして先生といっしょの方角に泳いで行った。二丁ちょうほど沖へ出ると、先生は後ろを振り返って私に話し掛けた。広い蒼あおい海の表面に浮いているものは、その近所に私ら二人より外ほかになかった。そうして強い太陽の光が、眼の届く限り水と山とを照らしていた。私は自由と歓喜に充みちた筋肉を動かして海の中で躍おどり狂った。先生はまたぱたりと手足の運動を已やめて仰向けになったまま浪なみの上に寝た。私もその真似まねをした。青空の色がぎらぎらと眼を射るように痛烈な色を私の顔に投げ付けた。「愉快ですね」と私は大きな声を出した。
+　しばらくして海の中で起き上がるように姿勢を改めた先生は、「もう帰りませんか」といって私を促した。比較的強い体質をもった私は、もっと海の中で遊んでいたかった。しかし先生から誘われた時、私はすぐ「ええ帰りましょう」と快く答えた。そうして二人でまた元の路みちを浜辺へ引き返した。
+　私はこれから先生と懇意になった。しかし先生がどこにいるかはまだ知らなかった。
+　それから中なか二日おいてちょうど三日目の午後だったと思う。先生と掛茶屋かけぢゃやで出会った時、先生は突然私に向かって、「君はまだ大分だいぶ長くここにいるつもりですか」と聞いた。考えのない私はこういう問いに答えるだけの用意を頭の中に蓄えていなかった。それで「どうだか分りません」と答えた。しかしにやにや笑っている先生の顔を見た時、私は急に極きまりが悪くなった。「先生は？」と聞き返さずにはいられなかった。これが私の口を出た先生という言葉の始まりである。
+　私はその晩先生の宿を尋ねた。宿といっても普通の旅館と違って、広い寺の境内けいだいにある別荘のような建物であった。そこに住んでいる人の先生の家族でない事も解わかった。私が先生先生と呼び掛けるので、先生は苦笑いをした。私はそれが年長者に対する私の口癖くちくせだといって弁解した。私はこの間の西洋人の事を聞いてみた。先生は彼の風変りのところや、もう鎌倉かまくらにいない事や、色々の話をした末、日本人にさえあまり交際つきあいをもたないのに、そういう外国人と近付ちかづきになったのは不思議だといったりした。私は最後に先生に向かって、どこかで先生を見たように思うけれども、どうしても思い出せないといった。若い私はその時暗あんに相手も私と同じような感じを持っていはしまいかと疑った。そうして腹の中で先生の返事を予期してかかった。ところが先生はしばらく沈吟ちんぎんしたあとで、「どうも君の顔には見覚みおぼえがありませんね。人違いじゃないですか」といったので私は変に一種の失望を感じた。
+
+私わたくしは月の末に東京へ帰った。先生の避暑地を引き上げたのはそれよりずっと前であった。私は先生と別れる時に、「これから折々お宅たくへ伺っても宜よござんすか」と聞いた。先生は単簡たんかんにただ「ええいらっしゃい」といっただけであった。その時分の私は先生とよほど懇意になったつもりでいたので、先生からもう少し濃こまやかな言葉を予期して掛かかったのである。それでこの物足りない返事が少し私の自信を傷いためた。
+　私はこういう事でよく先生から失望させられた。先生はそれに気が付いているようでもあり、また全く気が付かないようでもあった。私はまた軽微な失望を繰り返しながら、それがために先生から離れて行く気にはなれなかった。むしろそれとは反対で、不安に揺うごかされるたびに、もっと前へ進みたくなった。もっと前へ進めば、私の予期するあるものが、いつか眼の前に満足に現われて来るだろうと思った。私は若かった。けれどもすべての人間に対して、若い血がこう素直に働こうとは思わなかった。私はなぜ先生に対してだけこんな心持が起るのか解わからなかった。それが先生の亡くなった今日こんにちになって、始めて解って来た。先生は始めから私を嫌っていたのではなかったのである。先生が私に示した時々の素気そっけない挨拶あいさつや冷淡に見える動作は、私を遠ざけようとする不快の表現ではなかったのである。傷いたましい先生は、自分に近づこうとする人間に、近づくほどの価値のないものだから止よせという警告を与えたのである。他ひとの懐かしみに応じない先生は、他ひとを軽蔑けいべつする前に、まず自分を軽蔑していたものとみえる。
+　私は無論先生を訪ねるつもりで東京へ帰って来た。帰ってから授業の始まるまでにはまだ二週間の日数ひかずがあるので、そのうちに一度行っておこうと思った。しかし帰って二日三日と経たつうちに、鎌倉かまくらにいた時の気分が段々薄くなって来た。そうしてその上に彩いろどられる大都会の空気が、記憶の復活に伴う強い刺戟しげきと共に、濃く私の心を染め付けた。私は往来で学生の顔を見るたびに新しい学年に対する希望と緊張とを感じた。私はしばらく先生の事を忘れた。
+　授業が始まって、一カ月ばかりすると私の心に、また一種の弛たるみができてきた。私は何だか不足な顔をして往来を歩き始めた。物欲しそうに自分の室へやの中を見廻みまわした。私の頭には再び先生の顔が浮いて出た。私はまた先生に会いたくなった。
+　始めて先生の宅うちを訪ねた時、先生は留守であった。二度目に行ったのは次の日曜だと覚えている。晴れた空が身に沁しみ込むように感ぜられる好いい日和ひよりであった。その日も先生は留守であった。鎌倉にいた時、私は先生自身の口から、いつでも大抵たいてい宅にいるという事を聞いた。むしろ外出嫌いだという事も聞いた。二度来て二度とも会えなかった私は、その言葉を思い出して、理由わけもない不満をどこかに感じた。私はすぐ玄関先を去らなかった。下女げじょの顔を見て少し躊躇ちゅうちょしてそこに立っていた。この前名刺を取り次いだ記憶のある下女は、私を待たしておいてまた内うちへはいった。すると奥さんらしい人が代って出て来た。美しい奥さんであった。
+　私はその人から鄭寧ていねいに先生の出先を教えられた。先生は例月その日になると雑司ヶ谷ぞうしがやの墓地にある或ある仏へ花を手向たむけに行く習慣なのだそうである。「たった今出たばかりで、十分になるか、ならないかでございます」と奥さんは気の毒そうにいってくれた。私は会釈えしゃくして外へ出た。賑にぎやかな町の方へ一丁ちょうほど歩くと、私も散歩がてら雑司ヶ谷へ行ってみる気になった。先生に会えるか会えないかという好奇心も動いた。それですぐ踵きびすを回めぐらした。
+
+私わたくしは墓地の手前にある苗畠なえばたけの左側からはいって、両方に楓かえでを植え付けた広い道を奥の方へ進んで行った。するとその端はずれに見える茶店ちゃみせの中から先生らしい人がふいと出て来た。私はその人の眼鏡めがねの縁ふちが日に光るまで近く寄って行った。そうして出し抜けに「先生」と大きな声を掛けた。先生は突然立ち留まって私の顔を見た。
+「どうして……、どうして……」
+　先生は同じ言葉を二遍へん繰り返した。その言葉は森閑しんかんとした昼の中うちに異様な調子をもって繰り返された。私は急に何とも応こたえられなくなった。
+「私の後あとを跟つけて来たのですか。どうして……」
+　先生の態度はむしろ落ち付いていた。声はむしろ沈んでいた。けれどもその表情の中うちには判然はっきりいえないような一種の曇りがあった。
+　私は私がどうしてここへ来たかを先生に話した。
+「誰だれの墓へ参りに行ったか、妻さいがその人の名をいいましたか」
+「いいえ、そんな事は何もおっしゃいません」
+「そうですか。――そう、それはいうはずがありませんね、始めて会ったあなたに。いう必要がないんだから」
+　先生はようやく得心とくしんしたらしい様子であった。しかし私にはその意味がまるで解わからなかった。
+　先生と私は通りへ出ようとして墓の間を抜けた。依撒伯拉何々イサベラなになにの墓だの、神僕しんぼくロギンの墓だのという傍かたわらに、一切衆生悉有仏生いっさいしゅじょうしつうぶっしょうと書いた塔婆とうばなどが建ててあった。全権公使何々というのもあった。私は安得烈と彫ほり付けた小さい墓の前で、「これは何と読むんでしょう」と先生に聞いた。「アンドレとでも読ませるつもりでしょうね」といって先生は苦笑した。
+　先生はこれらの墓標が現わす人種々ひとさまざまの様式に対して、私ほどに滑稽こっけいもアイロニーも認めてないらしかった。私が丸い墓石はかいしだの細長い御影みかげの碑ひだのを指して、しきりにかれこれいいたがるのを、始めのうちは黙って聞いていたが、しまいに「あなたは死という事実をまだ真面目まじめに考えた事がありませんね」といった。私は黙った。先生もそれぎり何ともいわなくなった。
+　墓地の区切り目に、大きな銀杏いちょうが一本空を隠すように立っていた。その下へ来た時、先生は高い梢こずえを見上げて、「もう少しすると、綺麗きれいですよ。この木がすっかり黄葉こうようして、ここいらの地面は金色きんいろの落葉で埋うずまるようになります」といった。先生は月に一度ずつは必ずこの木の下を通るのであった。
+　向うの方で凸凹でこぼこの地面をならして新墓地を作っている男が、鍬くわの手を休めて私たちを見ていた。私たちはそこから左へ切れてすぐ街道へ出た。
+　これからどこへ行くという目的あてのない私は、ただ先生の歩く方へ歩いて行った。先生はいつもより口数を利きかなかった。それでも私はさほどの窮屈を感じなかったので、ぶらぶらいっしょに歩いて行った。
+「すぐお宅たくへお帰りですか」
+「ええ別に寄る所もありませんから」
+　二人はまた黙って南の方へ坂を下りた。
+「先生のお宅の墓地はあすこにあるんですか」と私がまた口を利き出した。
+「いいえ」
+「どなたのお墓があるんですか。――ご親類のお墓ですか」
+「いいえ」
+　先生はこれ以外に何も答えなかった。私もその話はそれぎりにして切り上げた。すると一町ちょうほど歩いた後あとで、先生が不意にそこへ戻って来た。
+「あすこには私の友達の墓があるんです」
+「お友達のお墓へ毎月まいげつお参りをなさるんですか」
+「そうです」
+　先生はその日これ以外を語らなかった。
+
+私はそれから時々先生を訪問するようになった。行くたびに先生は在宅であった。先生に会う度数どすうが重なるにつれて、私はますます繁しげく先生の玄関へ足を運んだ。
+　けれども先生の私に対する態度は初めて挨拶あいさつをした時も、懇意になったその後のちも、あまり変りはなかった。先生は何時いつも静かであった。ある時は静か過ぎて淋さびしいくらいであった。私は最初から先生には近づきがたい不思議があるように思っていた。それでいて、どうしても近づかなければいられないという感じが、どこかに強く働いた。こういう感じを先生に対してもっていたものは、多くの人のうちであるいは私だけかも知れない。しかしその私だけにはこの直感が後のちになって事実の上に証拠立てられたのだから、私は若々しいといわれても、馬鹿ばかげていると笑われても、それを見越した自分の直覚をとにかく頼もしくまた嬉うれしく思っている。人間を愛し得うる人、愛せずにはいられない人、それでいて自分の懐ふところに入いろうとするものを、手をひろげて抱き締める事のできない人、――これが先生であった。
+　今いった通り先生は始終静かであった。落ち付いていた。けれども時として変な曇りがその顔を横切る事があった。窓に黒い鳥影が射さすように。射すかと思うと、すぐ消えるには消えたが。私が始めてその曇りを先生の眉間みけんに認めたのは、雑司ヶ谷ぞうしがやの墓地で、不意に先生を呼び掛けた時であった。私はその異様の瞬間に、今まで快く流れていた心臓の潮流をちょっと鈍らせた。しかしそれは単に一時の結滞けったいに過ぎなかった。私の心は五分と経たたないうちに平素の弾力を回復した。私はそれぎり暗そうなこの雲の影を忘れてしまった。ゆくりなくまたそれを思い出させられたのは、小春こはるの尽きるに間まのない或ある晩の事であった。
+　先生と話していた私は、ふと先生がわざわざ注意してくれた銀杏いちょうの大樹たいじゅを眼めの前に想おもい浮かべた。勘定してみると、先生が毎月例まいげつれいとして墓参に行く日が、それからちょうど三日目に当っていた。その三日目は私の課業が午ひるで終おえる楽な日であった。私は先生に向かってこういった。
+「先生雑司ヶ谷ぞうしがやの銀杏はもう散ってしまったでしょうか」
+「まだ空坊主からぼうずにはならないでしょう」
+　先生はそう答えながら私の顔を見守った。そうしてそこからしばし眼を離さなかった。私はすぐいった。
+「今度お墓参はかまいりにいらっしゃる時にお伴ともをしても宜よござんすか。私は先生といっしょにあすこいらが散歩してみたい」
+「私は墓参りに行くんで、散歩に行くんじゃないですよ」
+「しかしついでに散歩をなすったらちょうど好いいじゃありませんか」
+　先生は何とも答えなかった。しばらくしてから、「私のは本当の墓参りだけなんだから」といって、どこまでも墓参ぼさんと散歩を切り離そうとする風ふうに見えた。私と行きたくない口実だか何だか、私にはその時の先生が、いかにも子供らしくて変に思われた。私はなおと先へ出る気になった。
+「じゃお墓参りでも好いいからいっしょに伴つれて行って下さい。私もお墓参りをしますから」
+　実際私には墓参と散歩との区別がほとんど無意味のように思われたのである。すると先生の眉まゆがちょっと曇った。眼のうちにも異様の光が出た。それは迷惑とも嫌悪けんおとも畏怖いふとも片付けられない微かすかな不安らしいものであった。私は忽たちまち雑司ヶ谷で「先生」と呼び掛けた時の記憶を強く思い起した。二つの表情は全く同じだったのである。
+「私は」と先生がいった。「私はあなたに話す事のできないある理由があって、他ひとといっしょにあすこへ墓参りには行きたくないのです。自分の妻さいさえまだ伴れて行った事がないのです」
+
+私わたくしは不思議に思った。しかし私は先生を研究する気でその宅うちへ出入でいりをするのではなかった。私はただそのままにして打ち過ぎた。今考えるとその時の私の態度は、私の生活のうちでむしろ尊たっとむべきものの一つであった。私は全くそのために先生と人間らしい温かい交際つきあいができたのだと思う。もし私の好奇心が幾分でも先生の心に向かって、研究的に働き掛けたなら、二人の間を繋つなぐ同情の糸は、何の容赦もなくその時ふつりと切れてしまったろう。若い私は全く自分の態度を自覚していなかった。それだから尊たっといのかも知れないが、もし間違えて裏へ出たとしたら、どんな結果が二人の仲に落ちて来たろう。私は想像してもぞっとする。先生はそれでなくても、冷たい眼まなこで研究されるのを絶えず恐れていたのである。
+　私は月に二度もしくは三度ずつ必ず先生の宅うちへ行くようになった。私の足が段々繁しげくなった時のある日、先生は突然私に向かって聞いた。
+「あなたは何でそうたびたび私のようなものの宅へやって来るのですか」
+「何でといって、そんな特別な意味はありません。――しかしお邪魔じゃまなんですか」
+「邪魔だとはいいません」
+　なるほど迷惑という様子は、先生のどこにも見えなかった。私は先生の交際の範囲の極きわめて狭い事を知っていた。先生の元の同級生などで、その頃ころ東京にいるものはほとんど二人か三人しかないという事も知っていた。先生と同郷の学生などには時たま座敷で同座する場合もあったが、彼らのいずれもは皆みんな私ほど先生に親しみをもっていないように見受けられた。
+「私は淋さびしい人間です」と先生がいった。「だからあなたの来て下さる事を喜んでいます。だからなぜそうたびたび来るのかといって聞いたのです」
+「そりゃまたなぜです」
+　私がこう聞き返した時、先生は何とも答えなかった。ただ私の顔を見て「あなたは幾歳いくつですか」といった。
+　この問答は私にとってすこぶる不得要領ふとくようりょうのものであったが、私はその時底そこまで押さずに帰ってしまった。しかもそれから四日と経たたないうちにまた先生を訪問した。先生は座敷へ出るや否いなや笑い出した。
+「また来ましたね」といった。
+「ええ来ました」といって自分も笑った。
+　私は外ほかの人からこういわれたらきっと癪しゃくに触さわったろうと思う。しかし先生にこういわれた時は、まるで反対であった。癪に触らないばかりでなくかえって愉快だった。
+「私は淋さびしい人間です」と先生はその晩またこの間の言葉を繰り返した。「私は淋しい人間ですが、ことによるとあなたも淋しい人間じゃないですか。私は淋しくっても年を取っているから、動かずにいられるが、若いあなたはそうは行かないのでしょう。動けるだけ動きたいのでしょう。動いて何かに打ぶつかりたいのでしょう……」
+「私はちっとも淋さむしくはありません」
+「若いうちほど淋さむしいものはありません。そんならなぜあなたはそうたびたび私の宅うちへ来るのですか」
+　ここでもこの間の言葉がまた先生の口から繰り返された。
+「あなたは私に会ってもおそらくまだ淋さびしい気がどこかでしているでしょう。私にはあなたのためにその淋しさを根元ねもとから引き抜いて上げるだけの力がないんだから。あなたは外ほかの方を向いて今に手を広げなければならなくなります。今に私の宅の方へは足が向かなくなります」
+　先生はこういって淋しい笑い方をした。
+
+幸さいわいにして先生の予言は実現されずに済んだ。経験のない当時の私わたくしは、この予言の中うちに含まれている明白な意義さえ了解し得なかった。私は依然として先生に会いに行った。その内うちいつの間にか先生の食卓で飯めしを食うようになった。自然の結果奥さんとも口を利きかなければならないようになった。
+　普通の人間として私は女に対して冷淡ではなかった。けれども年の若い私の今まで経過して来た境遇からいって、私はほとんど交際らしい交際を女に結んだ事がなかった。それが源因げんいんかどうかは疑問だが、私の興味は往来で出合う知りもしない女に向かって多く働くだけであった。先生の奥さんにはその前玄関で会った時、美しいという印象を受けた。それから会うたんびに同じ印象を受けない事はなかった。しかしそれ以外に私はこれといってとくに奥さんについて語るべき何物ももたないような気がした。
+　これは奥さんに特色がないというよりも、特色を示す機会が来なかったのだと解釈する方が正当かも知れない。しかし私はいつでも先生に付属した一部分のような心持で奥さんに対していた。奥さんも自分の夫の所へ来る書生だからという好意で、私を遇していたらしい。だから中間に立つ先生を取り除のければ、つまり二人はばらばらになっていた。それで始めて知り合いになった時の奥さんについては、ただ美しいという外ほかに何の感じも残っていない。
+　ある時私は先生の宅うちで酒を飲まされた。その時奥さんが出て来て傍そばで酌しゃくをしてくれた。先生はいつもより愉快そうに見えた。奥さんに「お前も一つお上がり」といって、自分の呑のみ干した盃さかずきを差した。奥さんは「私は……」と辞退しかけた後あと、迷惑そうにそれを受け取った。奥さんは綺麗きれいな眉まゆを寄せて、私の半分ばかり注ついで上げた盃を、唇の先へ持って行った。奥さんと先生の間に下しものような会話が始まった。
+「珍らしい事。私に呑めとおっしゃった事は滅多めったにないのにね」
+「お前は嫌きらいだからさ。しかし稀たまには飲むといいよ。好いい心持になるよ」
+「ちっともならないわ。苦しいぎりで。でもあなたは大変ご愉快ゆかいそうね、少しご酒しゅを召し上がると」
+「時によると大変愉快になる。しかしいつでもというわけにはいかない」
+「今夜はいかがです」
+「今夜は好いい心持だね」
+「これから毎晩少しずつ召し上がると宜よござんすよ」
+「そうはいかない」
+「召し上がって下さいよ。その方が淋さむしくなくって好いから」
+　先生の宅うちは夫婦と下女げじょだけであった。行くたびに大抵たいていはひそりとしていた。高い笑い声などの聞こえる試しはまるでなかった。或ある時ときは宅の中にいるものは先生と私だけのような気がした。
+「子供でもあると好いんですがね」と奥さんは私の方を向いていった。私は「そうですな」と答えた。しかし私の心には何の同情も起らなかった。子供を持った事のないその時の私は、子供をただ蒼蠅うるさいもののように考えていた。
+「一人貰もらってやろうか」と先生がいった。
+「貰もらいッ子じゃ、ねえあなた」と奥さんはまた私の方を向いた。
+「子供はいつまで経たったってできっこないよ」と先生がいった。
+　奥さんは黙っていた。「なぜです」と私が代りに聞いた時先生は「天罰だからさ」といって高く笑った。
+
+私わたくしの知る限り先生と奥さんとは、仲の好いい夫婦の一対いっついであった。家庭の一員として暮した事のない私のことだから、深い消息は無論解わからなかったけれども、座敷で私と対坐たいざしている時、先生は何かのついでに、下女げじょを呼ばないで、奥さんを呼ぶ事があった。（奥さんの名は静しずといった）。先生は「おい静」といつでも襖ふすまの方を振り向いた。その呼びかたが私には優やさしく聞こえた。返事をして出て来る奥さんの様子も甚はなはだ素直であった。ときたまご馳走ちそうになって、奥さんが席へ現われる場合などには、この関係が一層明らかに二人の間あいだに描えがき出されるようであった。
+　先生は時々奥さんを伴つれて、音楽会だの芝居だのに行った。それから夫婦づれで一週間以内の旅行をした事も、私の記憶によると、二、三度以上あった。私は箱根はこねから貰った絵端書えはがきをまだ持っている。日光にっこうへ行った時は紅葉もみじの葉を一枚封じ込めた郵便も貰った。
+　当時の私の眼に映った先生と奥さんの間柄はまずこんなものであった。そのうちにたった一つの例外があった。ある日私がいつもの通り、先生の玄関から案内を頼もうとすると、座敷の方でだれかの話し声がした。よく聞くと、それが尋常の談話でなくって、どうも言逆いさかいらしかった。先生の宅は玄関の次がすぐ座敷になっているので、格子こうしの前に立っていた私の耳にその言逆いさかいの調子だけはほぼ分った。そうしてそのうちの一人が先生だという事も、時々高まって来る男の方の声で解った。相手は先生よりも低い音おんなので、誰だか判然はっきりしなかったが、どうも奥さんらしく感ぜられた。泣いているようでもあった。私はどうしたものだろうと思って玄関先で迷ったが、すぐ決心をしてそのまま下宿へ帰った。
+　妙に不安な心持が私を襲って来た。私は書物を読んでも呑のみ込む能力を失ってしまった。約一時間ばかりすると先生が窓の下へ来て私の名を呼んだ。私は驚いて窓を開けた。先生は散歩しようといって、下から私を誘った。先刻さっき帯の間へ包くるんだままの時計を出して見ると、もう八時過ぎであった。私は帰ったなりまだ袴はかまを着けていた。私はそれなりすぐ表へ出た。
+　その晩私は先生といっしょに麦酒ビールを飲んだ。先生は元来酒量に乏しい人であった。ある程度まで飲んで、それで酔えなければ、酔うまで飲んでみるという冒険のできない人であった。
+「今日は駄目だめです」といって先生は苦笑した。
+「愉快になれませんか」と私は気の毒そうに聞いた。
+　私の腹の中には始終先刻さっきの事が引ひっ懸かかっていた。肴さかなの骨が咽喉のどに刺さった時のように、私は苦しんだ。打ち明けてみようかと考えたり、止よした方が好よかろうかと思い直したりする動揺が、妙に私の様子をそわそわさせた。
+「君、今夜はどうかしていますね」と先生の方からいい出した。「実は私も少し変なのですよ。君に分りますか」
+　私は何の答えもし得なかった。
+「実は先刻さっき妻さいと少し喧嘩けんかをしてね。それで下くだらない神経を昂奮こうふんさせてしまったんです」と先生がまたいった。
+「どうして……」
+　私には喧嘩という言葉が口へ出て来なかった。
+「妻が私を誤解するのです。それを誤解だといって聞かせても承知しないのです。つい腹を立てたのです」
+「どんなに先生を誤解なさるんですか」
+　先生は私のこの問いに答えようとはしなかった。
+「妻が考えているような人間なら、私だってこんなに苦しんでいやしない」
+　先生がどんなに苦しんでいるか、これも私には想像の及ばない問題であった。
+
+二人が帰るとき歩きながらの沈黙が一丁も二丁もつづいた。その後あとで突然先生が口を利きき出した。
+「悪い事をした。怒って出たから妻さいはさぞ心配をしているだろう。考えると女は可哀かわいそうなものですね。私わたくしの妻などは私より外ほかにまるで頼りにするものがないんだから」
+　先生の言葉はちょっとそこで途切とぎれたが、別に私の返事を期待する様子もなく、すぐその続きへ移って行った。
+「そういうと、夫の方はいかにも心丈夫のようで少し滑稽こっけいだが。君、私は君の眼にどう映りますかね。強い人に見えますか、弱い人に見えますか」
+「中位ちゅうぐらいに見えます」と私は答えた。この答えは先生にとって少し案外らしかった。先生はまた口を閉じて、無言で歩き出した。
+　先生の宅うちへ帰るには私の下宿のつい傍そばを通るのが順路であった。私はそこまで来て、曲り角で分れるのが先生に済まないような気がした。「ついでにお宅たくの前までお伴ともしましょうか」といった。先生は忽たちまち手で私を遮さえぎった。
+「もう遅いから早く帰りたまえ。私も早く帰ってやるんだから、妻君さいくんのために」
+　先生が最後に付け加えた「妻君のために」という言葉は妙にその時の私の心を暖かにした。私はその言葉のために、帰ってから安心して寝る事ができた。私はその後ごも長い間この「妻君のために」という言葉を忘れなかった。
+　先生と奥さんの間に起った波瀾はらんが、大したものでない事はこれでも解わかった。それがまた滅多めったに起る現象でなかった事も、その後絶えず出入でいりをして来た私にはほぼ推察ができた。それどころか先生はある時こんな感想すら私に洩もらした。
+「私は世の中で女というものをたった一人しか知らない。妻さい以外の女はほとんど女として私に訴えないのです。妻の方でも、私を天下にただ一人しかない男と思ってくれています。そういう意味からいって、私たちは最も幸福に生れた人間の一対いっついであるべきはずです」
+　私は今前後の行ゆき掛がかりを忘れてしまったから、先生が何のためにこんな自白を私にして聞かせたのか、判然はっきりいう事ができない。けれども先生の態度の真面目まじめであったのと、調子の沈んでいたのとは、いまだに記憶に残っている。その時ただ私の耳に異様に響いたのは、「最も幸福に生れた人間の一対であるべきはずです」という最後の一句であった。先生はなぜ幸福な人間といい切らないで、あるべきはずであると断わったのか。私にはそれだけが不審であった。ことにそこへ一種の力を入れた先生の語気が不審であった。先生は事実はたして幸福なのだろうか、また幸福であるべきはずでありながら、それほど幸福でないのだろうか。私は心の中うちで疑うたぐらざるを得なかった。けれどもその疑いは一時限りどこかへ葬ほうむられてしまった。
+　私はそのうち先生の留守に行って、奥さんと二人差向さしむかいで話をする機会に出合った。先生はその日横浜よこはまを出帆しゅっぱんする汽船に乗って外国へ行くべき友人を新橋しんばしへ送りに行って留守であった。横浜から船に乗る人が、朝八時半の汽車で新橋を立つのはその頃ころの習慣であった。私はある書物について先生に話してもらう必要があったので、あらかじめ先生の承諾を得た通り、約束の九時に訪問した。先生の新橋行きは前日わざわざ告別に来た友人に対する礼義れいぎとしてその日突然起った出来事であった。先生はすぐ帰るから留守でも私に待っているようにといい残して行った。それで私は座敷へ上がって、先生を待つ間、奥さんと話をした。
+
+    </textarea>
+  </div>
+  <div id="prepro_status"></div>
+
+  <div class="hh">制御 オプション:</div>
+  <button id="learn" class="abutton">学習/再スタート</button>
+  <button id="resume" class="abutton">再開</button>
+  <button id="stop" class="abutton">一時停止</button>
+  <!-- <button id="gradcheck">gradcheck</button> -->
+  <textarea id="newnet" style="width:100%; height:200px;">
+
+// モデルのパラメータ
+generator = 'lstm'; // 'rnn' か 'lstm' のどちらかが可能です
+hidden_sizes = [20,20]; // 中間層のニューロン数のリスト
+letter_size = 5; // 文字埋め込み層のサイズ
+
+// 最適化のためのパラメータ
+regc = 0.000001; // L2 正則化項の値
+learning_rate = 0.01; // 学習係数
+clipval = 5.0; // 勾配クリップの値 勾配爆発を避けるため
+  </textarea><br />
+  パープレキシティが爆発して大きくなるようであれば，学習率を小さくしてみてください <!--if your perplexity is exploding with Infinity try lowering the initial learning rate-->
+  <br>
+  <div id="status">
+
+    <div>
+      <div class="hh">訓練時の情報:</div>
+      <div class="aslider">
+        <div class="slider_header">学習率: 徐々に緩める必要があるかも知れません<!--Learning rate: you want to anneal this over time if you're training for longer time.--></div>
+        <div class="theslider" id="lr_slider"></div>
+        <div class="slider_value" id="lr_text"></div>
+      </div>
+
+      <canvas id="pplgraph"></canvas>
+      <div id="ticktime"></div>
+      <div id="gradclip"></div>
+      <div id="epoch"></div>
+      <div id="ppl"></div>
+
+      <div style="clear:both;"></div>
+    </div>
+
+    <div class="hh">出力のサンプル:</div>
+    <div id="controls">
+      <div class="aslider">
+        <div class="slider_header"><!-- Softmax sample temperature: lower setting will generate more likely predictions, but you'll see more of the same common words again and again. Higher setting will generate less frequent words but you might see more spelling errors. -->Softmax 温度: 低めの温度に設定にすると それらしい予測単語 が が 生成 されます。 その場合には， おそらく 同じ高頻度語 が数多く出力されることになります。高めの温度に設定にすると 低頻度語語 は 出てこなくなります。ですが 非単語が多く出現します。</div>
+        <div class="theslider" id="temperature_slider"></div>
+        <div class="slider_value" id="temperature_text"></div>
+      </div>
+    </div>
+    <div id="samples"></div>
+    <div class="hh">最大値を与える値を貪欲探索した出力結果:</div>
+    <div id="argmax"></div>
+  </div>
+  <div id="io">
+    <div class="hh">モデルの保存と読み込み (JSON ファイル)</div>
+
+    <button id="savemodel" class="abutton">モデルの学習結果を保存</button>
+    <button id="loadmodel" class="abutton">学習したモデルパラメータの読み込み</button>
+    <div>
+      下のテキスト領域により，学習させたモデルのパラメータを JSON ファイルとして書き出したり，読み込んだりできます。
+    </div>
+    <textarea style="width:100%; height:200px;" id="tio"></textarea>
+
+    <br>
+    <div class="hh">訓練済モデル:</div>
+    <!-- You can also choose to load an example pretrained model with the button below to see what the predictions look like in later stages. The pretrained model is an LSTM with one layer of 100 units, trained for ~10 hours. After clicking button below you should see the perplexity plummet to about 3.0, and see the predictions become better. -->下のボタンで学習済みモデルを読み込んで 学習後期の段階 で 予測がどのように見えるかを確認することができます。
+    訓練済モデルは 1 層 100 台 の LSTM で 10時間訓練されています。
+    下のボタンをクリックした後、約 3.0 にパープレキシティの急落を見るべきであり 予測がより良いものになるのを参照してください。<br>
+    <button id="loadpretrained" class="abutton">load pretrained</button>
+
+  </div>
+</div>
+
+</body>
+</html>
