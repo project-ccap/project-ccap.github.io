@@ -58,3 +58,20 @@ $ bundle install
 $ cd project-ccap.github.io.git
 $ bundle exec jekyll serve
 ```
+
+---
+
+- pushでアクセス権限がないために起因するエラー 403 の回避方法
+自分のリポジトリを作ったアカウントのユーザー名とメールアドレスを登録していなかった場合、以下のコードで設定
+
+```bash
+git config --global user.name "<ユーザー名>"
+git config --global user.email <メールアドレス>
+push する際に https://github.com/<ユーザ名>/<リポジトリ名>.git となっていた URL にユーザー名を入れる
+```
+
+```bash
+git remote set-url origin https://<ユーザ名>@github.com/project-ccap/project-ccap.github.io.git
+```
+
+- 参照: https://hacknote.jp/archives/54105/
