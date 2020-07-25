@@ -20,7 +20,17 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 - [2020-0128cnps_handouts.pdf](2020-0128cnps_handouts.pdf)
 - [2020computational_neuropsychology.pdf](2020computational_neuropsychology.pdf)
 
----
+## 簡単なデモ プレイグラウンド
+- [TensorFlow Playgournd ニューラルネットワークの基本](https://project-ccap.github.io/tensorflow-playground)
+- [リカレントニューラルネットワークによる文字ベース言語モデル Javascript](https://komazawa-deep-learning.github.io/character_demo.html)
+- [効果的な t-SNE 使用方法](https://project-ccap.github.io/misread-tsne/index.html)
 
-- [プレイグラウンド](playground)
+## 2019CNPS 資料より
+
+- [Colab についての蘊蓄](https://jpa-bert.github.io/supp01_colab)
+- [Colab による外部ファイルとのインタフェース](https://jpa-bert.github.io/supp02_colab_file_management)
+- [Python と numpy の初歩](https://jpa-bert.github.io/python_numpy_intro_ja)
+- [CNN についての蘊蓄](https://jpa-bert.github.io/supp05_cnn)
+- [RNN についての蘊蓄](https://jpa-bert.github.io/supp06_rnn)
+- [NLP についての蘊蓄](https://jpa-bert.github.io/supp07_nlp)
 
