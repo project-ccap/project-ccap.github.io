@@ -15,6 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 ご了承ください。
 
 - [2020-0720PNT+Snodgrass の結果](2020-0720pnt_snodgrass_resnet18.pdf)
+- [2020-0604word2vec から見た TLPA 名詞200語のプロットtSNE_バージョン](figures/tlpa_tSNE.pdf)
 - [2020-0323ccap_handouts.pdf](2020-0323ccap_handouts.pdf)
 - [2020-0201bibliography.pdf](2020-0201bibliography.pdf)
 - [2020-0128cnps_handouts.pdf](2020-0128cnps_handouts.pdf)
