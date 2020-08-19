@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>tSNE CSV web demo</title>
+
+<!-- jquery and jqueryui -->
+<!--<script src="jquery-2.1.3.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+<!-- bootstrap -->
+<!--<script src="bootstrap.min.js"></script>-->
+<!--<link href="bootstrap.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>-->
+
+<!--<script src="d3.min.js"></script>-->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="tsne.js"></script>
+
+<!-- Tracking code -->
+<style>
+svg {
+  border: 1px solid #333;
+  margin-top: 20px;
+}
+body {
+  font-size: 16px;
+  color: #333;
+  padding: 20px;
+  width: 60%;
+}
+</style>
+
+<script>
+
+var T, opt;
+
+var Y; // tsne result stored here
+var data;
+
+function updateEmbedding() {
+
+  // get current solution
+  var Y = T.getSolution();
+  // move the groups accordingly
+  gs.attr("transform", function(d, i) { return "translate(" +
+                                          ((Y[i][0]*20*ss + tx) + 400) + "," +
+                                          ((Y[i][1]*20*ss + ty) + 400) + ")"; });
+
+}
+
+var svg;
+function initEmbedding() {
+  $("#embed").empty();
+  var div = d3.select("#embed");
+  svg = div.append("svg") // svg is global
+    .attr("width", 1140)
+    .attr("height", 1140);
+}
+
+var gs;
+var cs;
+var ts;
+function drawEmbedding() {
+
+    gs = svg.selectAll(".b")
+      .data(data)
+      .enter().append("g")
+      .attr("class", "u");
+
+    cs = gs.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", 5)
+      .attr('stroke-width', 1)
+      .attr('stroke', 'black')
+      .attr('fill', 'rgb(100,100,255)');
+
+    if(labels.length > 0) {
+      ts = gs.append("text")
+        .attr("text-anchor", "top")
+        .attr("transform", "translate(5, -5)")
+        .attr("font-size", 12)
+        .attr("fill", "#333")
+        .text(function(d,i) { return labels[i]; });
+    }
+
+    var zoomListener = d3.behavior.zoom()
+      .scaleExtent([0.1, 10])
+      .center([0,0])
+      .on("zoom", zoomHandler);
+    zoomListener(svg);
+}
+
+var tx=0, ty=0;
+var ss=1;
+function zoomHandler() {
+  tx = d3.event.translate[0];
+  ty = d3.event.translate[1];
+  ss = d3.event.scale;
+}
+
+var stepnum = 0;
+function step() {
+  if(dotrain) {
+    var cost = T.step(); // do a few steps
+    $("#cost").html("iteration " + T.iter + ", cost: " + cost);
+  }
+  updateEmbedding();
+}
+
+labels = [];
+function preProLabels() {
+  var txt = $("#inlabels").val();
+  var lines = txt.split("\n");
+  labels = [];
+  for(var i=0;i<lines.length;i++) {
+    var row = lines[i];
+    if (! /\S/.test(row)) {
+      // row is empty and only has whitespace
+      continue;
+    }
+    labels.push(row);
+  }
+}
+
+dataok = false;
+function preProData() {
+  var txt = $("#incsv").val();
+  var d = $("#deltxt").val();
+  var lines = txt.split("\n");
+  var raw_data = [];
+  var dlen = -1;
+  dataok = true;
+  for(var i=0;i<lines.length;i++) {
+    var row = lines[i];
+    if (! /\S/.test(row)) {
+      // row is empty and only has whitespace
+      continue;
+    }
+    var cells = row.split(d);
+    var data_point = [];
+    for(var j=0;j<cells.length;j++) {
+      if(cells[j].length !== 0) {
+        data_point.push(parseFloat(cells[j]));
+      }
+    }
+    var dl = data_point.length;
+    if(i === 0) { dlen = dl; }
+    if(dlen !== dl) {
+      // TROUBLE. Not all same length.
+      console.log('TROUBLE: row ' + i + ' has bad length ' + dlen);
+      dlen = dl; // hmmm... 
+      dataok = false;
+    }
+    raw_data.push(data_point);
+  }
+  data = raw_data; // set global
+}
+
+dotrain = true;
+iid = -1;
+$(window).load(function() {
+
+  initEmbedding();
+
+  $("#stopbut").click(function() {
+    dotrain = false;
+  });
+
+  $("#inbut").click(function() {
+
+    initEmbedding();
+    preProData();
+    if(!dataok) { // this is so terrible... globals everywhere #fasthacking #sosorry
+      alert('there was trouble with data, probably rows had different number of elements. See console for output.');
+      return;
+    }
+    preProLabels();
+    if(labels.length > 0) {
+      if(data.length !== labels.length) {
+        alert('number of rows in Text labels ('+labels.length+') does not match number of rows in Data (' + data.length + ')! Aborting.');
+        return;
+      } 
+    }
+
+    // ok lets do this
+    opt = {epsilon: parseFloat($("#lrtxt").val()), perplexity: parseInt($("#perptxt").val()), dim: data[0].length};
+    T = new tsnejs.tSNE(opt); // create a tSNE instance
+
+    var dfv = $('input[name=rdata]:checked', '#datatypeform').val();
+    if(dfv === 'raw') {
+      console.log('raw');
+      T.initDataRaw(data);
+    }
+    if(dfv === 'dist') {
+      console.log('dist');
+      T.initDataDist(data);
+    }
+    drawEmbedding();
+    iid = setInterval(step, 10);
+    dotrain = true;
+  
+  });
+});
+
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 style="text-align:center;">t-SNE CSV web demo</h1>
+  <div>
+    original: <a href="https://cs.stanford.edu/people/karpathy/tsnejs/csvdemo.html">https://cs.stanford.edu/people/karpathy/tsnejs/csvdemo.html</a>
+    </div>
+  <div>
+
+<h2>st2vec の tSNE </h2>
+<div>
+date: 2020-0819<br/>
+
+大門先生からいただいたスプレッドシートを加工して st2vec を tSNE にかけるページ
+</div><br/><br/>
+
+    下のデータテキストボックスに CSV 形式でデータを貼り付けて、t-SNEを2次元に埋め込むことができます。
+    各行は 1 データ点に対応しています。
+    各データ点にラベルを関連付けることができます。
+    下のアニメーション中に埋め込み文字列として表示されます。
+    データは、N x D 行列（N = データ点の数、1 行 に 1つづつ、D = 特徴量の数）として指定することができます。
+    この場合、ガウスカーネルがそれらの距離を計算するために使用されます。
+    あるいは，自分で距離行列を入力することもできます。
+<!--Paste your data in CSV format in the Data text box below to embed it with t-SNE in two dimensions. Each row corresponds to a datapoint. You can choose to associate a label with each datapoint (it will be shown as text next to its embedding), and also a group (each group will have its own color in the embedding) (Group not yet implemented). The data can be specified either as an NxD matrix (N = number of datapoints, one per row, D = number of features), in which case a gaussian kernel will be used to compute their distances. Alternatively you can also input some distance matrix yourself.-->
+
+    <br><br>
+    データ固有の 錯乱度 (perplexity) で遊んでみてください。
+    錯乱度 (perplexity) とは、大まかに言えば、埋め込み中に各ポイントが隣接点とみなす点の数（整数であることに注意）のことです。
+    したがって、錯乱度が高いほど埋め込みのグローバルな構造を強制し、錯乱度が小さいほどデータ雲状形状をより細かいレベルで切り刻むことになります。
+<!--Make sure you play with the <b>perplexity</b>, which is data specific. The perplexity is roughly speaking the number of points (note, it must be integer) that each point considers to be its neighbors while it is being embedded. High perplexities therefore enforce more global structure in the embedding, and smaller perplexities will cut up your data cloud on much finer level.-->
+</div>
+</div>
+
+<div class="container">
+  <hr>
+  <div class="row">
+    <div class="col-sm-6">
+      <b>(optional) Text labels:</b><br>
+      <textarea id="inlabels" style="width:100%; height:400px;">
+オレンジ-ピンク
+オレンジ-肌色
+紫-藍色
+茶色-赤
+肌色-ピンク
+紺-藍色
+黄土色-薄茶
+黄緑-緑
+黄緑-薄緑
+学校-校舎
+デパート-ビル
+デパート-商業ビル
+道路-歩道
+歩道橋-横断歩道
+階段-エレベーター
+階段-エスカレーター
+床-廊下
+押入れ-物置
+柱-足
+柱-縁側
+廊下-戸締り
+二階-間取り
+障子-扉
+タクシー-自動車
+三輪車-自転車
+三輪車-チャリンコ
+そり-ボブスレー
+いかだ-丸太
+目-目玉
+土踏まず-足
+目じり-目頭
+つむじ-はげ頭
+へそ-耳
+ふくらはぎ-ひざ
+ふくらはぎ-かかと
+鍋-やかん
+鉛筆-ヒーター
+マッチ-マッチ棒
+安全ピン-耳
+安全ピン-ピンセット
+天ぷら-たくあん
+まんじゅう-卵
+まんじゅう-あんこ
+角砂糖-かく
+角砂糖-かど
+角砂糖-ストロー
+角砂糖-フォーク
+鏡餅-餅
+ステーキ-パン
+ステーキ-コッペパン
+おせち料理-弁当
+松-木の枝
+梅-桜
+竹-たけのこ
+あじさい-フラワー
+カーネーション-バラ
+イチョウ-もみじ
+菖蒲-チューリップ
+蜜柑-柿
+人参-大根
+トマト-柿
+ごぼう-フキノトウ
+くるみ-栗
+白菜-レタス
+アスパラガス-フキ
+蓮根-クッキー
+動物園-きりん
+駅-女子高生
+歯-口
+顔-女性
+頬-鼻
+頬-口
+酒-おちょこ
+道路-車道
+柱-縁側の足
+つむじ-まだらはげ
+乳母車-ベビーカー
+海苔巻き-太巻き
+ねぎ-長ネギ
+柿-フキ
+落花生-ピーナッツ
+牛-乳牛
+首-首筋
+      </textarea>
+    </div>
+
+<!--    <div class="col-sm-6">
+      <b style="color:#999;">(optional) Data groups:</b><br>
+      <textarea id="ingroup" style="width:100%; height:100px;">not yet implemented</textarea>
+    </div>
+-->
+  </div>
+</div>
+
+<div class="container">
+<hr>
+<b>Data:</b><br>
+<textarea id="incsv" style="width:100%; height:400px;">
+5.4,4.1,0.2,8.5,5.9,9.2,7.8,7.3,0.6,7.9
+5,5.1,1.1,7.3,7.1,9,8.9,8.7,3.5,8.5
+6,2.2,6.6,7,7.6,8.4,9,9.8,6.3,9.3
+6.8,1.7,4.6,5.5,3.2,9.4,5.4,9.2,1.3,8
+8.2,5.6,7.8,7.2,7,9.6,9.5,8.5,7.9,9
+9,9.8,9,8.6,9.7,9.8,9.6,10,8.7,9.4
+7.3,7.9,9.3,10,6.7,8.9,9.7,9.6,6.9,7.1
+8,5.5,8.6,8.3,4.7,8.7,8.2,8,5.9,7.7
+3.8,9.8,7,10,8.9,9.7,9.6,9.1,8.5,8.8
+8.6,9.8,9.2,10,10,10,9.6,10,8.2,9.9
+6.5,6.1,8.5,9.5,3.3,9.6,7.7,10,2.4,8.2
+8.1,7.8,6.9,10,4.8,10,9.2,10,3,9.1
+8,7.4,5.6,9.1,4.4,9.3,5.2,10,3,8.4
+4.9,1.5,5.2,7.2,6.2,9.1,6.4,8.6,2.4,8.1
+7.6,6.3,7,6.3,4.6,7.5,4.9,9.5,2.2,0.9
+7.9,3.6,6.7,9.1,9,9.5,7.1,9.8,6.4,8.4
+5.8,7.6,5.8,8.5,6,9.5,9.6,9.7,1.5,8.4
+6.3,7.6,7.1,8.6,8.8,7.6,9.4,6.9,6.8,7.5
+2.5,0.3,0,0,0,0.3,5.1,0.6,1,1.7
+3.3,0.7,1.4,8.2,4.9,8.1,7.4,8.9,2,8.2
+1.5,0.3,0.1,0,1.5,2.4,0.4,1.1,0.5,1.2
+3,1.3,5.5,7.4,5.3,8.4,5.3,5.7,1.5,1.3
+5.5,1.8,6.4,8.8,4.5,9.2,8.7,9.3,3.4,8.8
+7.6,8.4,8.3,8.8,6.5,9.5,9.1,9.9,9.3,9.2
+7.4,8.5,5.9,7.7,5.8,10,7.3,9.1,6.7,8.7
+6.7,6.6,6.3,8.6,5.9,8.8,7.8,8.1,3.7,7
+8.7,2.8,9.6,8.5,6.3,7,8.4,10,5,9
+7.2,3.6,4.2,8.4,6.8,8.9,9.1,9.8,1.2,9.3
+8.2,9.8,8.8,10,10,10,9.7,10,9.4,9.5
+7.6,1.4,6.8,9,8.6,8.8,8,9.7,7.4,9.2
+7.9,8.4,7.1,8.6,7.3,9.6,5.4,9.5,4.3,8.3
+7.5,2.3,4,6.3,2.6,8.9,2.9,9.4,4.1,7.9
+2.4,0.6,0.6,0,4.4,7.7,0.3,8.5,0.6,7.5
+7.7,8.4,5,7.2,6.5,8.6,5.3,9.3,2.2,8.7
+4.9,2.4,6.1,8.6,2.9,8.1,6.5,8.5,2.8,8.9
+8.2,5.3,0.6,7.6,5.3,7.1,5.3,9.6,5.1,8.6
+0,0.3,0,0,0,0,0.1,0.7,0.6,0.2
+9,9.7,9.5,10,10,10,9.9,10,9.5,9.8
+5.4,0.3,0.3,0,0,1.2,0.2,1.3,0.3,0.2
+2.4,1,0.9,3.3,0,1.7,2,9.9,1.5,7.9
+2.6,1.1,0,1.1,1.4,5.5,0.5,5.7,1.7,2.2
+0.3,1.9,0.3,1.3,1.2,1.9,0.2,1.7,0.8,2.4
+3.6,4.4,6,9.4,7.3,8.8,8.5,8.1,4,7.7
+0.5,1.1,0.4,2.9,0,6.8,7.4,0,0.8,0.7
+0,0.7,0.2,2.2,0.9,0,0.6,0,1.1,1.9
+0,0.5,0.2,0,0,2.4,0.1,3.3,1,0.6
+0.4,0.6,0.3,0,0.4,4.2,0.1,1.1,0.4,0.2
+9.1,7.7,5.7,10,7.5,9.8,9.5,10,7.5,9.2
+0.5,0.7,0.2,1.7,2.6,1,0.1,3.7,2.9,5.1
+0.5,0.4,0.2,1.4,2.6,1.2,0.1,3.6,2.8,4.9
+6.5,1.2,5.3,8.8,5.5,9,5.5,9.7,6.3,7.9
+5.8,2,2.5,7.6,8.7,9.7,4.9,8.7,5.4,7.9
+8.9,9.2,7.8,9.5,8.7,9.5,9.5,9.8,6.2,9.6
+8.2,3.5,6.5,10,5.4,5.4,7.7,9.6,2.7,7.5
+7.4,3.3,5.8,10,2.3,9.2,9.8,9.8,3.4,8.1
+8.6,5.5,6.9,8.1,5.3,8.9,9.8,9.9,5.5,8.1
+9.4,7.2,2.6,9.4,6.5,9,7.2,8.7,2.4,8
+3.4,5.4,3.8,8.9,4.4,8.1,2.3,8.9,3.8,7.6
+6.8,8.4,5.4,9.6,8,9.3,5.3,9.8,5.2,9.1
+8,3.8,4.2,6.5,8.5,7.5,8.7,8.6,4.2,7.9
+2.5,3.8,2.4,8.9,5,9.4,0.5,7.1,1.4,8.7
+2.5,2.8,5.3,5.1,3.3,6.7,0.1,6.4,2.4,8.2
+7.6,8.7,7.4,9,7.5,6.2,7.4,8.1,4.8,7.9
+9.6,8.4,7.4,9.4,7.4,9.7,6.6,9.5,6.9,9.3
+5.7,7,2.5,7.8,4.7,8.7,1.9,9.1,5.5,7.6
+0.4,1.3,0.3,3.6,1.6,4.9,0.2,1.2,0.9,0.8
+8.6,3.7,5.1,8,8.1,7.9,7.8,7.5,7.2,5.1
+5.6,0.3,0.4,0,0.7,5,0.1,2.3,0.6,7.1
+7.6,8.9,9.4,9.7,9,9.6,9.8,10,7.9,9.6
+7.2,0.7,7.8,6.4,8.3,4.4,7.7,5.4,2.1,9.3
+7.2,2.1,0.7,8.5,6.2,8.4,5.3,9.6,3.1,7.5
+7.3,5.3,3.7,7.9,4.4,9.2,5.4,9.7,3.5,8.2
+8.1,4.9,5,8.4,7.8,9.7,7.8,9.2,7.3,8.7
+8.3,9.7,9.6,10,9.5,9.8,9.9,10,9.3,9.5
+2.6,1.7,3,7.9,1,7.5,7.4,9.8,4.8,8
+5.4,2.6,5,7.6,4.3,8.1,5.1,7.9,4.7,6.6
+9.4,9.8,9.1,10,10,10,9.8,10,8.7,9.8
+9.4,9.7,8.7,10,8.8,9.5,9.8,10,8.5,9.4
+9.7,9.7,9.7,10,10,10,9.9,10,9.2,9.3
+1.7,0.3,0.8,5.7,3.2,1,0.3,5.2,1.1,3.9
+9.6,9.8,9.8,10,10,10,9.9,10,9.2,9.8
+9.3,9.3,9.5,10,10,10,9.8,10,9.2,5.4
+9.7,7.5,9.5,10,10,9.7,9.8,10,9.4,9.7
+</textarea>
+
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-sm-6">
+Delimiter (default is comma (CSV)): <input type="text" id="deltxt" maxlength="3" value="," style="width:20px;">
+<br>
+学習率(Learning rate <10): <input type="text" id="lrtxt" maxlength="10" value="10" style="width:50px;">
+錯乱度 (Perplexity): <input type="text" id="perptxt" maxlength="10" value="30" style="width:40px;">
+<br>
+  </div>
+  <div class="col-sm-4">
+
+My data is:
+<form action="" id="datatypeform">
+<input type="radio" name="rdata" value="raw" checked> Raw NxD data (each row are features)<br>
+<input type="radio" name="rdata" value="dist"> NxN Distance
+</form>
+  </div>
+  <div class="col-sm-4">
+
+<form action="">
+</form>
+
+  </div>
+</div>
+</div>
+
+<div class="container">
+<button type="button" id="inbut" class="btn btn-primary" style="width:200px; height:50px;"><!--Run t-SNE!-->t-SNE 実行</button>
+<button type="button" id="stopbut" class="btn btn-danger" style="width:200px; height:50px;"><!--Stop-->停止</button>
+
+<br>
+
+<!--<div id="cost" style="text-align:left; font-family: Impact;"></div>-->
+<div id="cost" style="text-align:center"><!--; font-family: Impact;">--></div>
+<div id="embed"></div>
+
+
+</div>
+
+
+<div class="container">
+  <hr>
+<a href="https://github.com/karpathy/tsnejs">tsnejs documentation</a><br>
+Maintained by <a href="https://twitter.com/karpathy">@karpathy</a>.
+</div>
+
+</body>
+
+</html>
