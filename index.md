@@ -14,7 +14,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 止む無くこのような形にしました。
 ご了承ください。
 
-- [WEVER++ デモ 2020-1204 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo_ipynb_.ipynb)
+- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
 - [2020-0819 st2vec の tSNE](2020-0819st2vec_tsne/2020-0819st2vec_tsne.html)
 - [2020-0720PNT+Snodgrass の結果](2020-0720pnt_snodgrass_resnet18.pdf)
 - [2020-0604word2vec から見た TLPA 名詞200語のプロットtSNE_バージョン](figures/tlpa_tSNE.pdf)
