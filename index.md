@@ -15,6 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 ご了承ください。
 
 - [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
+	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 - [2020-0819 st2vec の tSNE](2020-0819st2vec_tsne/2020-0819st2vec_tsne.html)
 - [2020-0720PNT+Snodgrass の結果](2020-0720pnt_snodgrass_resnet18.pdf)
 - [2020-0604word2vec から見た TLPA 名詞200語のプロットtSNE_バージョン](figures/tlpa_tSNE.pdf)
