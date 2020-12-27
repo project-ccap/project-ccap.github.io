@@ -14,6 +14,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 止む無くこのような形にしました。
 ご了承ください。
 
+- [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
 - [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
 	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 - [2020-0819 st2vec の tSNE](2020-0819st2vec_tsne/2020-0819st2vec_tsne.html)
