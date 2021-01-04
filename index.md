@@ -14,7 +14,8 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 止む無くこのような形にしました。
 ご了承ください。
 
-## WEAVER++ のサンプル (colab files)
+## WEAVER++, Dell モデルの再現シミュレーション colab files 
+- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
 - [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
 - [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
 - [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
