@@ -1,5 +1,5 @@
 ---
-title: "Roelofs (2019) Anomia cueing, WEAVER++ のシミュレーションプログラムまとめ
+title: "Roelofs (2019) Anomia cueing, WEAVER++ のシミュレーションプログラムまとめ"
 author: Shin Asakawa
 ---
 

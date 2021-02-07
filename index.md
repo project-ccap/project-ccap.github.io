@@ -15,6 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 ご了承ください。
 
 ## WEAVER++, Dell モデルの再現シミュレーション colab files 
+- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
 - [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
 - [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
 - [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
