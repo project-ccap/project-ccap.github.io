@@ -15,6 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 ご了承ください。
 
 ## WEAVER++, Dell モデルの再現シミュレーション colab files 
+- [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
 - [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
   -  [word2vec による単語連想 + 頻度 デモ](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
 
