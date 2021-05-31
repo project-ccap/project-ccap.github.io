@@ -10,19 +10,21 @@ CCAP is the abbrivatation of Computational Clinical Aphasia Project:
 
 CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の名付け親は橋本先生
 
-Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，
-止む無くこのような形にしました。
+Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
-## WEAVER++, Dell モデルの再現シミュレーション colab files 
-- [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
-- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
-  -  [word2vec による単語連想 + 頻度 デモ](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
 
-- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
-- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
-- [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000)](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
-- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
+- [日本語wikipedia による word2vec Colab 版 2021年5月 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2015corona/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
+
+## WEAVER++, Dell モデルの再現シミュレーション colab files 
+- [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
+- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
+  -  [word2vec による単語連想 + 頻度 デモ <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
+
+- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
+- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
+- [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
+- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
 	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 
 ## その他情報
