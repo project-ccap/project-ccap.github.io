@@ -13,8 +13,16 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
+## 2021_0722
 
-- [日本語wikipedia による word2vec Colab 版 2021年5月 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2015corona/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
+<center>
+	<img src="figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:66%"><br/>
+	Roelofs (2004) Fig. 2 
+</center>
+
+- [2021_0705 リカレントニューラルネットワーク 概説 (再)](2016RNNcamp2handout.pdf){:target="_blank"}
+- [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
+
 
 ## WEAVER++, Dell モデルの再現シミュレーション colab files 
 - [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
