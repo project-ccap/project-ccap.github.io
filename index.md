@@ -13,6 +13,11 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
+## 2021_0805
+
+### 文献資料
+- [発話産出への計算機的アプローチの橋渡し：意味(S)-語彙(L)-聴覚(A)-運動(M) モデル, Walker and Hickok (2016) Bridging computational approaches to speech production: The semantic–lexical–auditory–motor model (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
+
 ## 2021_0728
 
 ### 文献資料
