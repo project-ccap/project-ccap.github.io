@@ -13,9 +13,10 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
-## 2021_0805
+## 2021_08
 
 ### 文献資料
+- [失語症の命名課題における無回答エラーモデル, Dell et al.(2004) Models of errors of omission in aphasic naming](https://project-ccap.github.io/2004Dell_Models_of_errors_of_omission_in_aphasic_naming.pdf){:target="_blank"}
 - [発話産出への計算機的アプローチの橋渡し：意味(S)-語彙(L)-聴覚(A)-運動(M) モデル, Walker and Hickok (2016) Bridging computational approaches to speech production: The semantic–lexical–auditory–motor model (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
 - [ゴール駆動型深層学習モデルを用いた感覚皮質の理解 Yamins(2016) Nature](https://project-ccap.github.io/2016YaminsDiCarlo_Using_goal-driven_deep_learning_models_to_understand_sensory_cortex.pdf){:target="_blank"}
 
