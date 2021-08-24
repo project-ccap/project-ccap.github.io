@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="大門 正太郎^1, ⾼倉 祐樹^2, 上間 清司^3, 吉原 将大^4, 寺尾 康^5, 橋本 幸成^6, 浅川伸一^7" />
+  <title>潜在空間モデルによる単語間の意味的類似度の定量化試案</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="/Users/asakawa/study/css/asa_markdown.css" />
+  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+  </script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">潜在空間モデルによる単語間の意味的類似度の定量化試案</h1>
+<p class="author">大門 正太郎<span class="math inline">\(^1\)</span>, ⾼倉 祐樹<span class="math inline">\(^2\)</span>, 上間 清司<span class="math inline">\(^3\)</span>, 吉原 将大<span class="math inline">\(^4\)</span>, 寺尾 康<span class="math inline">\(^5\)</span>, 橋本 幸成<span class="math inline">\(^6\)</span>, 浅川伸一<span class="math inline">\(^7\)</span></p>
+</header>
+<ol type="1">
+<li><strong>意味性錯語のプロットはやっていない。</strong></li>
+<li><strong>tSNE 上のプロットは 2 次元，かつ，分散 1 なので，項目間の相関係数が共分散に等しいのではないかな</strong></li>
+</ol>
+<center>
+<p><span class="math inline">\(^1\)</span>クラーク病院, <span class="math inline">\(^2\)</span>北海道大学, <span class="math inline">\(^3\)</span>イムス板橋リハビリテーション病院, <span class="math inline">\(^4\)</span>国際交流基金, <span class="math inline">\(^5\)</span>静岡県立大学, <span class="math inline">\(^6\)</span>目白大学, <span class="math inline">\(^7\)</span>東京女子大学</p>
+<p style="text-align:left; width:88%; background-color:cornsilk">
+<strong>要旨</strong>: 一般に，物品呼称課題あるいは絵画命名課題における心的処理プロセスは，語の意味に関する処理を含むと考えられている。 先行研究では意味の評価指標として，頻度・親密度・心像性の 3 つが用いられてきたものの，これらの指標はいずれも意味を直接表現してはいない。 本発表では，自然言語処理分野で用いられている単語埋め込みモデルを用いることにより，言語の持つ多様な意味表象を多次元ベクトルとして表現することを試みた。 これにより，意味性錯語や実験結果を定量的に記述・評価・視覚化することが可能となる。 例えば，「医者」という語の産出を意図した訓練場面において，または，心理実験場面において，「病院」や「学校」を手がかり語（あるいはプライム語）とした場合の効果量を，単語間の類似度として数値化可能である。 従来指標に比べて，単語埋め込みモデルによる単語間の類似度は，より意味を直接的に説明することを可能にすると考えられる。<br/> <strong>キーワード</strong>: 意味性錯語, 単語海込みモデル, 潜在空間, tSNE,
+</p>
+</center>
+<h1 id="はじめに">1. はじめに</h1>
+<p>語の意味を定量化する試みは，長年試みられている。 とりわけ，刺激語と表出語との間の類似性を定量化できれば，診断，治療，回復計画などへの示唆が期待できる。 我々は，単語埋め込みモデルと潜在空間への確率的隣接埋め込みモデルを用いて，語の定量化を試み，意味性錯語の計量化を試みたので報告する。</p>
+<p>ここでは，単語表象として，word2vec<span class="citation" data-cites="2013Mikolov_VectorSpace 2013Mikolov_skip-gram_NIPS">(Mikolov, Yih, and Zweig 2013; Mikolov et al. 2013)</span> を，潜在空間モデルとして tSNE <span class="citation" data-cites="2008tSNE">(Maaten and Hinton 2008)</span> を用いることとした。 Word2vec や transformer<span class="citation" data-cites="2017Vaswani_transformer">(Vaswani et al. 2017)</span> のごとき単語埋め込みモデルと， tSNE などの確率的隣接埋め込みモデルを用いた次元削減技法とは，共に機械学習，人工知能分野では人口に膾炙している。 しかし，我々の知る限り，これら両手法を用いて，意味性錯語の定量化を試みた例は少ないようである。 ここでに示す手法を用いることにより，従来手法に比べて，意味性錯語の評価に対して，目的語と表出語との間に，直接的な定量化が可能となる。</p>
+<p>神経心理学において，単語の計量データとしては，頻度，親密度，心像性などが用いられる。 TLPA の 200 項目には，親密度の高低が区別されているが，親密度や心像性は，意味そのものの表現ではない<span class="citation" data-cites="2000fujita_tlpa">(藤田 et al. 2000)</span>。 それらは，評価データであり，課題遂行を記述するための独立変数というよりも，従属変数であると考えられる。 他の根拠から，これら評価値を独立変数として扱う研究も散見される。 しかし，従属変数を独立変数としてみなすことは，現象を直接説明するのではなく，間接的な説明になる。 このため，構成概念としての評価値を用いた，間接的な評価になる。 さらには，循環論法に陥る可能性もある。 そのため，直接的な独立変数を採択することが望まれる。</p>
+<p>得られた単語表現を潜在空間へ射影することの意味は，脳内の領野間の結合については，確率的なサンプリングとして考えることが提案されている。 例えば，ドロップアウト<span class="citation" data-cites="2012Hinton_dropout">(Hinton et al. 2012)</span>, 予測符号化<span class="citation" data-cites="2006Friston_FreeEnergyPrinciple">(Friston, Kilner, and Harrison 2006)</span>, 変分自動符号化器<span class="citation" data-cites="2019Kingma_Welling_VAE">(Kingma and Welling 2019)</span>, ヘルムホルツマシン<span class="citation" data-cites="1995DayanHinton_Helmholtz">(Dayan et al. 1995)</span> などが挙げられる。 これらのモデルは，ボトムアップおよびトップダウンの大脳皮質処理経路の機能に関連するモデルとして提案されてきた。 本稿で提案する，単語表象と潜在意味空間との間には，上位層と下位層と間での前向き，逆向きの確率的依存関係が仮定される。 すなわち，種々の言語課題において，目標語と産出語との関係は互いに確率的認識モデル，生成モデルの関係と解釈される。</p>
+確率モデル例として下図に<span class="citation" data-cites="2006Friston_FreeEnergyPrinciple">(Friston, Kilner, and Harrison 2006)</span> の図 5 を示した。
+<center>
+<p><img src="figures/2006Friston_fig5.jpg" style="width:66%"></p>
+<p style="text-align:left; width:88%; background-color:powderblue">
+シミュレーションに用いた生成モデル (左) とそれに対応する認識モデル (右) を示す図。 左図：単一の原因 <span class="math inline">\(v(1)\)</span>, 2 つの動的状態 <span class="math inline">\(x_1,x_2\)</span>, 4 つの出力 <span class="math inline">\(y_1,\dots,y_4\)</span> を用いた生成モデル。 線はそれぞれの変数の依存関係を示しており，上式で要約されている (この例では， どちらの式も単純な線形マッピング)。 これは事実上， 線形畳み込みモデルであり， 1 つの原因を 4 つの出力に写像し， それらが認識モデルの入力となる (実線の矢印)。 対応する認識モデルのアーキテクチャを右に示す。 予測誤差ユニット <span class="math inline">\(\hat{e}_u^{(i)}\)</span> が含まれていることを除けば，同様のアーキテクチャである。 前向き推論 (赤線) と後向き推論 (黒線) を組み合わせることで， 自己組織化するリカレントダイナミクスが可能になる (認識式 <span class="math inline">\(\hat{\dot{u}}_u^{(i)}=h\left(\hat{\epsilon}^{(i)},\hat{\epsilon}^{(i)}\right)\)</span> に従う)。 予測誤差を抑制し， できれば予測誤差をなくすことで， 推測される原因と実際の原因が一致する。 <span class="citation" data-cites="2006Friston_FreeEnergyPrinciple">(Friston, Kilner, and Harrison 2006)</span> Fig. 5 より <!--(この図の凡例にある色の違いの解釈については，本論文のウェブ版を参照)。-->
+</p>
+</center>
+<p>ここでは，2 節で word2vec と tSNE とを概説し，3 節で，数値実験結果と臨床例の解釈を示す。 4 節ではそれらのまとめて考察を加えている，5 節で結論を述べる。</p>
+<h1 id="関連研究">2. 関連研究</h1>
+<p>単語埋め込みモデルは，単語をベクトルとして表現する手法である。 これには，潜在意味解析 LSA <span class="citation" data-cites="Landauer_Dumais1997">(Landauer and Dumais 1997)</span>，潜在ディレクリ配置 LDA <span class="citation" data-cites="2003Blei_LDA">(Blei, Ng, and Jordan 2003)</span>，など先駆的研究が挙げられる。 しかし，LSA や LDA では word2vec の示すような特徴，すなわち意味と文法知識とを同時に扱うことが，可能であるとしても困難である。 加えてニューラルネットワークによる実装を考えても，単語埋め込みモデルの方が有利であると考える。</p>
+<p>これらのモデルと単語埋め込みモデルが異なるのは，単語の意味は，その前後の単語によって定まるとする点にある。 単語の意味を，前後の隣接語から定義する試みは，言語学の初期から提案されてきた<span class="citation" data-cites="1954Harris 1957Firth_synopsis">(Harris 1954; Firth 1957)</span>。 我々も，文中に未知単語を見つけた場合には，前後の文から未知単語を類推しようと試みることからも，このような意味の定義は納得できるものと考える。 <!--得られた二次元附置から，意味性錯語を評価した。--> <!-- 我々は，類似性データの視覚化手法として標準的な手法となっている t 分布による確率的隣接埋め込み法 (tSNE) を用いて意味空間を視覚化することとし， --> <!-- tSNE によって得られた空間上で意味性錯語を評価することを提案する。 --> <!-- tSNE は， データの局所的な構造を保持しつつ， 重要な大域的な構造，たとえば TLPA の各検査項目が意図している，意味概念のクラスタなど，を明らかにすることができるものと期待される。 --> <!-- 我々は，両手法を失語症患者の評価に適応すること試みた。 --> <!--
+潜在ディレクリ配置 (LDA) や，潜在意味解析 (LSA) などは語の意味に確率的な役割を付与する。
+一般に，単語埋め込みモデル，たとえば word2vec や glove のようなモデルでは確率的な意味付けは積極的ではない。
+ただし，ドロップアウトや CTC \cite{2006Grave_CTC} のごとく，処理と解釈とに確率を導入することは行われてきている。
+--></p>
+<p>得られた単語表現から，その類似度に基づいて 2 次元の附置を得る手法のうち tSNE を採択した。 tSNE を採択した理由は，その潜在空間との確率的解釈を持ちいて附置得る点にある。 一般に，データは決定論的に得られるわけではなく，むしろ確率的解釈が適当な事例が存在する。 量子論的宇宙観から神経心理学検査におけるデータの再現性まで，確率論的解釈は各所に偏在している。 また，ディープニューラルネットワークにおけるドロップアウト手法<span class="citation" data-cites="2012Hinton_dropout">(Hinton et al. 2012)</span> は，中間層表現に確率的解釈を導入する試みとも解釈できる。 このため，確率的解釈を行うことは，神経心理学データの解釈のみならず，昨今の機械学習手法の趨勢を鑑みても妥当な手法であると考えられる。</p>
+<p>本稿では，両手法の取り上げた理由を概説し(2節)，数値例を示す(3節)。 これにより，神経心理学への適用可能性を議論する(4節)。</p>
+<h2 id="単語埋め込みモデル-word2vec">2.1 単語埋め込みモデル word2vec</h2>
+単語埋め込みモデル Word2vec には，2 種類ある。それらは CBOW と skip-gram と呼ばれる。 CBOW は，単語を逐次入力して，前後の単語から中央の単語を予測する。 一方 skip-gram は，反対に中央の単語から周辺のの単語を予測するモデルである(下図)。 word2vec の両モデルとも，3 層のフィードフォワードモデルである。 このとき，中間層ニューロン数と，単語前後の窓幅はハイパーパラメータである。 本稿では，中間層ニューロン数を 200 とし，単語窓幅は 20 とした。
+<center>
+<img src="figures/2013Mikolov_skip-gram_cbow.svg" style="width:66%"><br/>
+<p style="text-align: left; width:77%;background-color:cornsilk">
+左: CBOW モデル。右: skip-gram モデル。いずれのモデルでも同様の結果を得ることができる。 両モデルの中間層の活性値を，その単語の意味表現と考えるのが word2vec である。 より
+</div>
+</center>
+<p>Word2vec の特徴としては，単語ベクトルを用いて演算を行うことができることである。 「王」ー「男」＋「女」＝「女王」という類推が知られている(下図左)。 このような単語の意味に関するベクトルの加減算を用いた類推以外に，単語の単数形と複数形のような文法知識 (下図中央)，あるいは，国名とその首都の関係 (下図右)が挙げられる。 下図右は，各国の国名と対応する首都名を取り出して，PCA による附置である。 横軸の右側に国名，左側に対応する首都名が附置されている。 一方，縦軸は上から下に向かって，ユーラシア大陸を東から西に大まかに並んでいるのが見て取れる。</p>
+<center>
+<img src="figures/2013Mikolov_KingQueenFig.svg" style="width:43%"> <img src="figures/2013Mikolov_FigCountries.svg" style="width:44%"><br/>
+<p style="text-align:left;width:88%;background-color:cornsilk">
+word2vec の結果の附置の例。左: 単語の性を表す対応関係。中央: 単語と対応する複数形を表す。 word2vec は単語の意味関係だけでなく，複数形のような，文法的知識も表現可能である。 右: 各国名と対応する首都の関係の附置。
+</p>
+</center>
+<p>上述のごとく，word2vec などの単語埋め込みモデルは，単語の意味の持つ多様な側面を捉えているとみなしうる。 このような単語の特質は，親密度や心像性といった評価値では捉えることが難しい側面であると考えられる。 このような単語埋め込みモデルの持つ，単語の意味特性を用いることで，意味性錯語を定量化することが可能であろうと考えられる。</p>
+<h2 id="確率的隣接埋め込みモデル">2.2 確率的隣接埋め込みモデル</h2>
+<p>意味性錯語を捉える場合に，単語の表現を低次元の地図に附置すると視覚化が容易になる。 機械学習分野では，高次元データを低次元附置をえる次元削減手法が種々提案されている。 伝統的には，主成分分析 (PCA) <span class="citation" data-cites="1901Pearson_PCA">(Pearson 1901)</span>，コホネンの自己組織化マップ<span class="citation" data-cites="Kohonen1997">(コホネン 1997)</span> などが枚挙に暇がない。 その中で，t 分布を用いた確率的隣接埋め込みモデル (tSNE) は人口に膾炙している (例えば https://colah.github.io/posts/2014-10-Visualizing-MNIST/)。</p>
+<p>ここでは，tSNE の概略を説明し，TLPA による意味性錯語例がどのように解釈されるかを示すこととする。 高次元データを効率よく次元圧縮するためには，PCA などに加えて， 確率的解釈を導入することにより見通し良く視覚化できる。 確率的隣接埋め込みモデルとは，データ対の類似度，あるいは距離を，低次元の地図点に移す際に， 確率モデルを導入する。</p>
+<p>tSNE は， データ点間の高次元ユークリッド距離を， 類似性を表す条件付き確率に変換する。 データ点 <span class="math inline">\(x_j\)</span> とデータ点 <span class="math inline">\(x_i\)</span> の類似性は， <span class="math inline">\(x_i\)</span> を中心とするガウス分布の下で確率密度に比例して隣接点が選ばれた場合に，<span class="math inline">\(x_i\)</span> が <span class="math inline">\(x_j\)</span> を隣接点として選ぶ条件付き確率 <span class="math inline">\(p_{j\vert i}\)</span> とする。 近傍にデータ点がある場合， <span class="math inline">\(p_{j\vert i}\)</span> は類似度を高くし，遠く離れたデータ点間の場合，<span class="math inline">\(p_{j\vert i}\)</span> はほぼ無限大にする (ガウスの分散 <span class="math inline">\(\sigma_i\)</span> が妥当な値の場合)。数学的には， 条件付き確率 <span class="math inline">\(p_{j\vert i}\)</span> は次のように与えられる:</p>
+<p><span class="math display">\[
+p_{j\vert i} = \frac{\exp\left(-\frac{1}{2}\frac{\left\|x_i-x_j\right\|^2}{\sigma_i^2}\right)}
+{\sum_{k\ne j}\exp\left(-\frac{1}{2}\frac{\left\|x_i-x_k\right\|^2}{\sigma_i^2}\right)},
+\]</span></p>
+<p>ここで <span class="math inline">\(\sigma_i\)</span> は，データ点 <span class="math inline">\(x_i\)</span> を中心とするガウス分布の分散である。 ここでは， 一対の類似性のモデル化にのみ関心があるので，<span class="math inline">\(p_{i\vert i}\)</span> の値をゼロに設定する。 高次元データ点 <span class="math inline">\(x_i\)</span> と <span class="math inline">\(x_j\)</span> の低次元対応点 <span class="math inline">\(y_i\)</span> と<span class="math inline">\(y_j\)</span> については， 類似した条件付き確率を計算することが可能であり， これを <span class="math inline">\(q_{j\vert i}\)</span> とする。 条件付確率 <span class="math inline">\(q_{j\vert i}\)</span> の計算に用いられるガウスの分散を <span class="math inline">\(\frac{1}{\sqrt{2}}\)</span> とする。 したがって， 地図点 <span class="math inline">\(y_j\)</span> と地図点 <span class="math inline">\(y_i\)</span> の類似性を次のようにモデル化する:</p>
+<p><span class="math display">\[
+q_{j\vert i} = \frac{\exp\left(-\left\|y_i-y_j\right\|^2\right)}
+{\sum_{k\ne j}\exp\left(-\left\|y_i-y_k\right\|^2\right)},
+\]</span> ここで， 我々は対ごとの類似性をモデル化することにのみ関心があるので，<span class="math inline">\(q_{i\vert i}=0\)</span> とする。</p>
+<p>地図点 <span class="math inline">\(y_i\)</span> と <span class="math inline">\(y_j\)</span> が高次元地図点 <span class="math inline">\(x_i\)</span> と <span class="math inline">\(x_j\)</span> の類似性を正しくモデル化していれば， 条件付確率 <span class="math inline">\(p_{j\vert i}\)</span> と<span class="math inline">\(q_{j\vert i}\)</span> は等しくなる。 この観察結果に触発され， SNE は <span class="math inline">\(p_{j\vert i}\)</span> と <span class="math inline">\(q_{j\vert i}\)</span> の間のミスマッチを最小化する低次元データ表現 を見つけることを目的とする。 <span class="math inline">\(q_{j\vert i}\)</span> が <span class="math inline">\(p_{j\vert i}\)</span> をモデル化する忠実さの自然な尺度は， Kullback-Leibler divergence（この場合加法定数までのクロスエントロピーに等しい) である。 SNE は， 勾配降下法を用いて， すべてのデータポイントにおける KLダイバージェンス の合計を最小化する。 コスト関数 C は以下のように与えられる:</p>
+<p><span class="math display">\[
+C = \sum_i \text{KL}\left(P_i\vert\vert Q_i\right)=\sum_i\sum_j p_{j\vert i}\log\frac{p_{j\vert i}}{q_{j\vert i}}
+\]</span></p>
+<p>ここで，<span class="math inline">\(P_i\)</span> はデータ点 <span class="math inline">\(x_i\)</span> に対する他のすべてのデータ点の条件付き確率分布を表し，<span class="math inline">\(Q_i\)</span> は地図点 <span class="math inline">\(y_i\)</span> に対する他のすべての地図点の条件付き確率分布を表す。 KL ダイバージェンスは対称ではないため， 低次元地図の対毎の距離の異なるタイプの誤差は均等に重み付けされない。 特に， 近くのデータ点を表現するために大きく離れた地図点を使用する (つまり， 大きな <span class="math inline">\(p_{j\vert i}\)</span> をモデル化するために小さな <span class="math inline">\(q_{j\vert i}\)</span> を使用する) ことには大きなコストがかかるが， 大きく離れたデータ点を表現するために近くの地図点を使用することには小さなコストしかかからない。 この小さなコストは， 関連する <span class="math inline">\(Q\)</span> 分布の確率量の一部を無駄にしていることに由来する。 言い換えれば， SNE コスト関数は， 地図内のデータの局所的な構造を保持することに重点を置いている (高次元空間におけるガウスの分散の妥当な値 <span class="math inline">\(\sigma_i\)</span> の場合)。</p>
+<p>高次元空間では， ガウス分布を用いて距離を確率に変換する。 低次元地図では， ガウス分布よりもはるかに重い尾を持つ確率分布を使って， 距離を確率に変換することができる。 これにより， 高次元空間での適度な距離は， 地図上でははるかに大きな距離によって忠実にモデル化され， その結果，適度に似ていないデータ点を表す地図上の点間の不要な引力を排除することができる。</p>
+<p>t-SNE では， 低次元地図の重尾分布として， 自由度 1 のスチューデントの t 分布 (コーシー分布に等しい) を採用している。 この分布を用いて， 結合確率 <span class="math inline">\(q_{ij}\)</span> を以下のように定義する: <!-- In t-SNE, we employ a Student t-distribution with one degree of freedom (which is the same as a Cauchy distribution) as the heavy-tailed distribution in the low-dimensional map. 
+Using this distribution, the joint probabilities qij are defined as: --></p>
+<p><span class="math display">\[
+q_{ij} = \frac{\left(1+\left\|y_i-y_j\right\|^2\right)^{-1}}{\sum_{k\ne l}\left(1+\left\|y_k-y_l\right\|^2\right)^{-1}}.
+\]</span></p>
+<p>低次元の地図において， 大きな対の距離 <span class="math inline">\(\left|y_i-y_j\right|^2\)</span> に対して， <span class="math inline">\(\left(1+|y_i-y_j|^2\right)^{-1}\)</span> が逆二乗法に近づくという， 特に優れた特性を持っているからである。 これにより， マップの結合確率の表現は， 遠く離れた地図点の地図の尺度の変化に (ほとんど) 影響されない。 また， 遠く離れた点の大規模なクラスターは， 個々の点と同じように相互作用するため， 最適化は微細なスケールを除いて同じように作用することになる。 スチューデントの t 分布を選択した理論的な理由は， スチューデントの t 分布がガウス分布の無限混合であるように， ガウス分布と密接に関連しているからである。</p>
+<hr />
+<p>t 分布確率的隣接埋め込みモデル (tSNE) を用いて，意味空間を視覚化することにより，意味空間を把握しやすくなる。 具体的には，高次元の意味空間を P とし，P より低次元の意味空間を Q とする。 P から Q への写像は，確率的なされると考える。 このとき，P と Q と両分布の距離を最小にするような写像を考える。両分布の相違をカルバック・ライブラーのダイバージェンスで定義すれば:</p>
+<p><span class="math display">\[
+C = \text{KL}\left(P\vert\vert Q\right)=\sum_i\sum_j p_{ji}\log\frac{p_{ji}}{q_{ji}}
+\]</span></p>
+<center>
+<img src="figures/norm_and_t_dist.svg" style="width:49%"><br/>
+</center>
+<center>
+<img src="figures/tSNE_concept.svg" style="width:49%"><br/>
+</center>
+<center>
+<img src="figures/2008vanderMaaten_Hinton_fig2.svg" style="width:39%"><br/> 手書き文字認識データセット MNIST 6000 字を可視化したもの。 <!-- Figure 2: Visualizations of 6,000 handwritten digits from the MNIST data set. -->
+</center>
+<p>tSNE を理解を促すために，優れたサイトが公開されている。 今回，その邦訳を用意した。関心があれば参照されたい <a href="https://project-ccap.github.io/misread-tsne/index.html">効率よく t-SNE を使う方法</a></p>
+<h1 id="数値実験">3. 数値実験</h1>
+<p>単語埋め込みモデルとして，日本語ウィキペディア (https://dumps.wikimedia.org/jawiki/latest/) を mecab + NEologd (https://github.com/neologd/mecab-ipadic-neologd}) によってて分かち書きし， word2vec (https://code.google.com/archive/p/word2vec/} により単語埋め込みベクトル化した。 Skip-gram を使用し，ベクトル化した際のパラメータは，埋め込みベクトル次元:200，ウィンドウ幅:20，負例サンプリング:20 とした。 出現頻度 5 回以上の単語のみを考慮することとし，総語彙数 180,543 語を得た。</p>
+<h2 id="tlpa">3.1 TLPA</h2>
+TLPA 200 語の結果を下図に示す。 下図左が tSNE，右図は PCA のプロットである。
+<center>
+<img src="notebooks/2021_0814tlpa_tSNE_plot.svg" style="width:49%"> <img src="notebooks/2021_0814tlpa_pca_plot.svg" style="width:49%"><br/>
+<p style="text-align: left; width:88%; background-color:cornsilk">
+左図: TLPA 200 語の tSNE プロット，色の違いはカテゴリの違いを表す。<br/> 右図: 左と同じデータをもちいた PCA プロット。 カテゴリーは，乗り物, 色, 植物, 加工食品, 建造物, 道具, 野菜果物，身体部位, 屋内部位, 動物 の 10 種類
+</p>
+</center>
+<!--
+<center>
+<img src="figures/2021＿0814tlpa_tSNE_plot.svg" style="width:66%"><br/>
+</center>
+-->
+<p>TLPA はカテゴリー毎の記述があるので，カテゴリー毎に色分けして描いた。 左右両図とも，大まかにカテゴリ毎に群化しているように見受けられる。 しかし，左図 tSNE の方が，群化が著しいように見受けられる。</p>
+<p><strong>各カテゴリーごとにまとめて，分散を tSNE と PCA で比較すると群化の程度が数値化できるけど，まだやっていない。</strong></p>
+<p>上記結果を確認するためのコードを用意した。 <a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/2021cnps/notebooks/2021_0812cnps_tlpa_tSNE_plot.ipynb">tSNE による TLPA 検査語彙 200 項目のプロット ソースコード <img src="https://komazawa-deep-learning.github.io/assets/colab_icon.svg"></a></p>
+<h2 id="sala">3.2 SALA</h2>
+<p>SALA PR20 呼称 I 96 語と PR24 呼称 II 90 語の計 196 語を用いて同様のプロットを作成した図を以下に示す。</p>
+<center>
+<img src="notebooks/2021_0814sala_tSNE_plot.svg" style="width:49%"> <img src="notebooks/2021_0814sala_pca_plot.svg" style="width:49%"><br/>
+<div data-align="left" style="width:88%;background-color:cornsilk">
+<p>SALA PR20 呼称 I 96 語と PR24 呼称 II 90 語の tSNE プロット。色の違いは， PR20, PR24 の違いを表している。</p>
+</div>
+</center>
+<h2 id="resnet-による視覚情報のプロット">3.3 ResNet による視覚情報のプロット</h2>
+意味的関係が適切に群化される一方で，視覚入力情報は，どのように潜在空間へ写像されるのだろうか。 このことを確認するため，上述の TLPA, SALA と描画と同じ手法を用いて ResNet<span class="citation" data-cites="2015ResNet">(He et al. 2015)</span> の最終直下層の情報を描画した(下図)。
+<center>
+<img src="figures/2020-0713SALA_ResNet_tSNE_plot.svg" style="width:48%"> <img src="figures/2020-0713PNT_ResNet_tSNE_plot.svg" style="width:48%"><br/>
+<p style="text-align:left; width:88%; background-color:cornsilk;">
+図 視覚入力の tSNE プロット。 左: SALA, 右: TLPA
+</p>
+</center>
+<h1 id="考察">4. 考察</h1>
+<h1 id="まとめ">5. まとめ</h1>
+<p>今後の検討に期待する。 うんだらかんたら，以下略。</p>
+<h1 class="unnumbered" id="文献">文献</h1>
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-2003Blei_LDA">
+<p>Blei, David M., Andrew Y. Ng, and Michael I. Jordan. 2003. “Latent Dirichlet Allocation.” <em>Journal of Machine Learning Research</em> 3: 993–1022.</p>
+</div>
+<div id="ref-1995DayanHinton_Helmholtz">
+<p>Dayan, Peter, Geoffrey E. Hinton, Radford M. Neal, and Richard S. Zemel. 1995. “The Helmholtz Machine.” <em>Neural Computation</em> 7: 889–904.</p>
+</div>
+<div id="ref-1957Firth_synopsis">
+<p>Firth, John R. 1957. <em>A Synopsis of Linguistic Theory 1930-55.</em> Vols. 1952-59. Oxford: The Philological Society.</p>
+</div>
+<div id="ref-2006Friston_FreeEnergyPrinciple">
+<p>Friston, Karl, James Kilner, and Lee Harrison. 2006. “A Free Energy Principle for the Brain.” <em>Journal of Physiology</em> 100: 70–87.</p>
+</div>
+<div id="ref-1954Harris">
+<p>Harris, Zellig S. 1954. “Distributional Structure.” <em>Word</em> 10 (2-3): 146–62. <a href="https://doi.org/10.1080/00437956.1954.11659520">https://doi.org/10.1080/00437956.1954.11659520</a>.</p>
+</div>
+<div id="ref-2015ResNet">
+<p>He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2015. “Deep Residual Learning for Image Recognition.” <em>ArXiv:1512.033835</em>.</p>
+</div>
+<div id="ref-2012Hinton_dropout">
+<p>Hinton, Geoffrey E., Nitish Srivastava, Alex Krizhevsky, Ilya Sutskever, and Ruslan R. Salakhutdinov. 2012. “Improving Neural Networks by Preventing Co-Adaptation of Feature Detectors.” <em>The Computing Research Repository (CoRR)</em> abs/1207.0580. <a href="http://arxiv.org/abs/1207.0580">http://arxiv.org/abs/1207.0580</a>.</p>
+</div>
+<div id="ref-2019Kingma_Welling_VAE">
+<p>Kingma, Diederik P., and Max Welling. 2019. “An Introduction to Variational Autoencoders.” <em>Foundations and Trends in Machine Learning:</em> 12 (4): 307–92. <a href="https://doi.org/doi:10.1561/2200000056">https://doi.org/doi:10.1561/2200000056</a>.</p>
+</div>
+<div id="ref-Landauer_Dumais1997">
+<p>Landauer, Thomas K., and Susan T. Dumais. 1997. “A Solution to Plato’s Problem: The Latent Semantic Analysis Theory of Acquistion, Induction, and Representation of Knowledge.” <em>Psychological Review</em> 104: 211–40.</p>
+</div>
+<div id="ref-2008tSNE">
+<p>Maaten, Laurens van der, and Geoffrey Hinton. 2008. “Visualizing Data Using T-Sne.” <em>Journal of Machine Learning Research</em> 9: 2579–2605.</p>
+</div>
+<div id="ref-2013Mikolov_skip-gram_NIPS">
+<p>Mikolov, Tomas, Ilya Sutskever, Kai Chen, Greg S. Corrado, and Jeff Dean. 2013. “Distributed Representations of Words and Phrases and Their Compositionality.” In <em>Advances in Neural Information Processing Systems 26</em>, edited by C. J. C. Burges, L. Bottou, M. Welling, Zoubin Ghahramani, and K. Q. Weinberger, 3111–9. Curran Associates, Inc. <a href="http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf">http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf</a>.</p>
+</div>
+<div id="ref-2013Mikolov_VectorSpace">
+<p>Mikolov, Tomas, Wen-tau Yih, and Geoffrey Zweig. 2013. “Linguistic Regularities in Continuous Space Word Representations.” In <em>Proceedings of the 2013 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies NAACL</em>. Atlanta, WA, USA.</p>
+</div>
+<div id="ref-1901Pearson_PCA">
+<p>Pearson, Karl. 1901. “On Lines and Planes of Closest Fit to Systems of Points in Space.” <em>Philosophical Magazine</em> 2: 559–72. <a href="http://pbil.univ-lyon1.fr/R/pearson1901.pdf">http://pbil.univ-lyon1.fr/R/pearson1901.pdf</a>.</p>
+</div>
+<div id="ref-2017Vaswani_transformer">
+<p>Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, and Łukasz Kaiser. 2017. “Attention Is All You Need.” <em>arXiv Preprint</em> [cs.CL] (1706.03762).</p>
+</div>
+<div id="ref-Kohonen1997">
+<p>コホネンT. 1997. <em>自己組織化マップ</em>. 2nd ed. 東京: シュプリンガー・フェアラーク.</p>
+</div>
+<div id="ref-2000fujita_tlpa">
+<p>藤田郁代, 物井寿子, 奥平奈保子, 植田恵, 小野久里子, 下垣由美子, 藤原由子, 古谷二三代, and 笹沼澄子. 2000. “「失語症語彙検査」の開発.” <em>音声言語医学</em> 42: 179–2002.</p>
+</div>
+</div>
+</body>
+</html>
