@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="浅川伸一^1, ⾼倉 祐樹^2, 上間 清司^3, 吉原 将大^4, 大門 正太郎^5, 寺尾 康^6, 橋本 幸成^7" />
+  <title>相互活性化モデルの改善に向けた絵画命名課題の簡便解法</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #2a211c;
+        color: #bdae9d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #bdae9d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #bdae9d; background-color: #2a211c; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ffff00; } /* Alert */
+    code span.an { color: #0066ff; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { } /* Attribute */
+    code span.bn { color: #44aa43; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #43a8ed; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #049b0a; } /* Char */
+    code span.cn { } /* Constant */
+    code span.co { color: #0066ff; font-weight: bold; font-style: italic; } /* Comment */
+    code span.do { color: #0066ff; font-style: italic; } /* Documentation */
+    code span.dt { text-decoration: underline; } /* DataType */
+    code span.dv { color: #44aa43; } /* DecVal */
+    code span.er { color: #ffff00; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #44aa43; } /* Float */
+    code span.fu { color: #ff9358; font-weight: bold; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #0066ff; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #43a8ed; font-weight: bold; } /* Keyword */
+    code span.op { } /* Operator */
+    code span.pp { font-weight: bold; } /* Preprocessor */
+    code span.sc { color: #049b0a; } /* SpecialChar */
+    code span.ss { color: #049b0a; } /* SpecialString */
+    code span.st { color: #049b0a; } /* String */
+    code span.va { } /* Variable */
+    code span.vs { color: #049b0a; } /* VerbatimString */
+    code span.wa { color: #ffff00; font-weight: bold; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="/Users/asakawa/study/css/asa_markdown.css" />
+  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+  </script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">相互活性化モデルの改善に向けた絵画命名課題の簡便解法</h1>
+<p class="author">浅川伸一<span class="math inline">\(^1\)</span>, ⾼倉 祐樹<span class="math inline">\(^2\)</span>, 上間 清司<span class="math inline">\(^3\)</span>, 吉原 将大<span class="math inline">\(^4\)</span>, 大門 正太郎<span class="math inline">\(^5\)</span>, 寺尾 康<span class="math inline">\(^6\)</span>, 橋本 幸成<span class="math inline">\(^7\)</span></p>
+</header>
+<p><span class="math inline">\(^1\)</span> 東京女子大学, <span class="math inline">\(^2\)</span> 北海道大学, <span class="math inline">\(^3\)</span> イムス板橋リハビリテーション病院, <span class="math inline">\(^4\)</span> 国際交流基金, <span class="math inline">\(^5\)</span> クラーク病院, <span class="math inline">\(^6\)</span> 静岡県立大学, <span class="math inline">\(^7\)</span> 目白大学</p>
+<div data-align="left" style="width:88%;background-color:cornsilk;">
+<p>橋本先生： 視覚的に類似した単語への置換：[ヒトデ]→葉っぱ　[バター]→ 豆腐　[角砂糖]→豆腐 意味的に類似した単語への置換：[鼻]→耳　[蜜柑]→りんご</p>
+<p><strong>要旨</strong>: 相互活性化 (IA) モデルをはじめとする神経心理学的モデルを用いて，絵画命名課題をシミュレーションする研究は多く報告されてきた。 しかし， IA モデルは計算コストが大きく，高速演算可能な計算資源が要求されるため，専門家以外の研究者や臨床家がシミュレーションを行うことは容易でない。 モデルのパラメータ探索用に Web サイトが用意されてはいるものの，Web サイトでは，その影響を検討することが不可能なパラメータも存在する。 そのため，Web サイトの利用者は，後者のパラメータを普遍で所与の値として受け入れざるを得なかった。 そこで，IA モデルの計算コストを削減しつつ，各種パラメータの意味を再考することを企図して，新しい簡便法を開発した。 また，従来のパラメータに加え，本提案手法では新規パラメータ（温度パラメータ）を導入した。 温度パラメータの導入による反応確率の解釈についても本報告で議論する。<br/> <strong>キーワード</strong>: 絵画命名課題, 相互活性化モデル, パラメータ推定, ソフトマックス関数, ワンホット表現, ボルツマン分布, 温度パラメータ<br/> <strong>keywords</strong>: Picture naming tasks, Interactive activation model, parameter estimation, softmax function, one-hot expression, Boltzmann distribution, thermal parameter</p>
+</div>
+<!-- 
+* 登録者: 浅川伸一 東京女子大学情報処理センター 会員である
+* 著者: ⾼倉 祐樹 (北海道大学), 上間 清司 (イムス板橋リハビリテーション病院), 吉原 将大 (国際交流基金), 大門 正太郎 (クラーク病院), 寺尾 康 (静岡県立大学), 橋本 幸成 (目白大学)
+* 演題: 相互活性化モデルの改善に向けた絵画命名課題の簡便解法
+* 要旨: 相互活性化 (IA) モデルをはじめとする神経心理学的モデルを用いて，絵画命名課題をシミュレーションする研究は多く報告されてきた。 
+しかし， IA モデルは計算コストが大きく，高速演算可能な計算資源が要求されるため，専門家以外の研究者や臨床家がシミュレーションを行うことは容易でない。
+モデルのパラメータ探索用に Web サイトが用意されてはいるものの，Web サイトでは，その影響を検討することが不可能なパラメータも存在する。
+そのため，Web サイトの利用者は，後者のパラメータを普遍で所与の値として受け入れざるを得なかった。
+そこで，IA モデルの計算コストを削減しつつ，各種パラメータの意味を再考することを企図して，新しい簡便法を開発した。
+また，従来のパラメータに加え，本提案手法では新規パラメータ（温度パラメータ）を導入した。
+温度パラメータの導入による反応確率の解釈についても本報告で議論する。
+* 分野: 神経心理，脳科学, 認知，認知モデル, 言語学，心理学, 臨床検査，医学・リハビリ応用, 実験，臨床データ解析, 理論，モデル論，機械学習，AI，シミュレーション, 調査，分析
+* 研究会からのメール: どのセッションに割り振られても結構です。一連の発表の 1 番目です。
+ -->
+<h1 id="はじめに">1. はじめに</h1>
+<p>絵画命名課題を説明する従来の IA モデルの持つ問題点を取り上げ，その簡便法を提案する。 従来手法では，結果を検討するための web インターフェイスが用意されているものの，ハイパーパラメータが固定されていた。 このため，シミュレーション結果を解釈することが容易でなかった。 本稿に示す提案手法に従えば，従来手法では調整が困難であったパラメータの検討が容易になる。</p>
+<p>絵画命名課題は，計算論的臨床失語症プロジェクトの中心課題の一つである。 言語関連の認知神経心理学課題の中で，視覚入力を音声出力へと変換する課題は， 記憶や注意などの，高次認知機能とは独立に計測可能だと考えられてきたこと， 関連する認知心理学モデル (パンデモニアム<span class="citation" data-cites="1958Selfridge_pandemonium">(Selfridge 1958)</span> やロゴジェンモデル<span class="citation" data-cites="Morton1980">(Morton 1980)</span> など) と親和することから多くの研究がなされてきた。 <!-- 聴理解，読解，呼称・説明，復唱，（文字）音読，書き取り，--> 1980 年代に提唱された相互活性化モデル (以下 IA)<span class="citation" data-cites="1981McClelland_Rumelhart_IA1">(McClelland and Rumelhart 1981)</span> に基づいて，絵画命名課題を説明するモデルである 2 段階相互活性化モデル<span class="citation" data-cites="1988Dell">(Dell 1988)</span> は，それらの中の代表的な一モデルとなっている。 本稿では IA モデルの改良を試みた。 取り上げたモデルは <strong>二段階相互活性化モデル</strong> e.g. Levelt<span class="citation" data-cites="1989Levelt_speaking">(Levelt 1989)</span>, Dell<span class="citation" data-cites="1986Dell_spread_activation">(Dell 1986)</span>, Roelofs<span class="citation" data-cites="1992Roelofs">(Roelofs 1992)</span> に基づくものである。</p>
+<p>ここでは，第 2 節で IA モデルの概略を述べ，続いて，その問題点を指摘する(第 3 節)。 第 4 節では改善法を略解し，5 節で数値実験結果を示す。 最後の 6 節では，モデルの可能な解釈と一般化に向けた議論を行っている。</p>
+<h1 id="相互活性化モデル-および関連モデル">2 相互活性化モデル および関連モデル</h1>
+<center>
+<img src="figures/2016Walker-Hickok_fig1.jpg" style="width:43%"> <img src="figures/2019Roelofs_Aphasiology_fig1ja.svg" style="width:49%"><br/>
+<div data-align="left" style="width:88%;background-color:powderblue;">
+<p>図 1 従来モデルの概観。左: IA （Dell, 1997; Foygell &amp; Dell, 2000) モデル， 右: WEAVER++/ARC モデル。Roelofs (2020) Fig. 1 を改変。<br/> 20 年以上の伝統のあるモデルであるが，現代的な視点からは問題点が指摘できる。</p>
+</div>
+</center>
+<!-- <center>
+<img src="figures/2016Walker-Hickok_fig1.jpg" style="width:43%">
+<img src="figures/2016Walker-Hickok_fig3.jpg" style="width:45%"><br/>
+<div align="left" style="width:88%">
+図 1 従来モデルの概観。左: IA （Dell, 1997; Foygell & Dell, 2000) モデル，右: SLAM (Walker and Hickok, 2016, Fig. 3 より) モデル。
+20 年以上の伝統のあるモデルであるが，現代的な視点からは問題点が指摘できる。
+</div>
+</center>
+
+<center>
+<img src="figures/1999Levelt_Roelofs_fig1.jpg" style="width:18%">
+<img src="figures/2019Roelofs_Aphasiology_fig1ja.svg" style="width: 66%"><br/>
+図 3: 右: WEAVER++/ARC モデル Roelofs (2020) Fig. 1 を改変
+</center>
+-->
+<center>
+<img src="figures/2003webfit_page1.jpg" style="width:43%"> <img src="figures/2003webfit_page2.jpg" style="width:43%"><br/>
+<div data-align="left" style="width:88%">
+<p>図 2 結果の確認サイト (http://langprod.cogsci.illinois.edu/cgi-bin/webfit.cgi) のスクリーンショット。 左：データ適合のためのインターフェイス。パラメータは固定。右：パラメータを変動させて挙動を確認するインターフェイス。 残念ながら，右図で変動させたパラメータを反映させて，左図で確認する手段は提供されていない。 そのため，左図でのモデル推定は，予め定められた固定のパラメータで実行した結果を検討することしかできない。</p>
+</div>
+</center>
+<ul>
+<li>http://langprod.cogsci.illinois.edu/cgi-bin/webfit.cgi</li>
+<li>http://cogsci.uci.edu/~alns/webfit.html</li>
+</ul>
+<p>上図に沿って，Dell の IA モデルに用いられるパラメータを概説する。 上図左は，SP, WD 両モデルで用いられるパラメータ推定のための web インターフェイスである。 ユーザは，6 つの反応カテゴリに各反応頻度，あるいは回数を入力し，続けて Fit! ボタンを押すことで，パラメータを推定することができる。</p>
+<p>右図中段に書かれているとおり，非単語欄に数値を入力して実行すると，2004 年の論文で遡上に挙げられた，語彙-編集モデルとなる。 一方，全欄に数値を入力して実行すると，独立あるいはしきい値モデルに相当することとなる。</p>
+<p>一方，上図右は，推定に用いられるハイパーパラメータを変化させるために用いられる。 図に示されている数字は，右図の入力である 6 つの反応カテゴリーの割合を生じさせるために用いられる。 すなわち，右図は，左図のパラメータ，とりわけ，左図上部の 4 パラメータを探索する目的で使用される。 一方，左図のパラメータを定めると右図の入力である 6 つの反応カテゴリーの比率が生じることとなる。 従って，左右の図は，互いにその数値の発生因となるという相互活性化の関係にある。</p>
+<p>上図左に示された数値は，機械学習でいうハイパーパラメータに相当する。 モデルの動作に影響を与えるパラメータであるが，オリジナルのモデルでは固定されていると推察される。 ここで，次のような疑問を上げることが可能である。</p>
+<ol type="1">
+<li><strong>ステップ (Steps) は 8 で固定で良いのか？</strong> ステップ数と反応産出時間との関連は重要なはずである。 なぜなら，減衰パラメータの値によってはモデルは発散，減衰，振動などの振る舞いが想定されるからである。 時刻打ち切り基準を定めておくことにより，何をシミュレートしているのか不明である</li>
+<li><strong>固有ノイズ (Intrinsic Noise) を 0.01 に固定する意味は何か？</strong></li>
+<li><strong>活性ノイズ (Activation Noise) を 0.04 に固定する意味は何か？</strong></li>
+</ol>
+<p>モデル中の任意のニューロン <span class="math inline">\(a\)</span> の活性値は次式で与えられる: <span class="math display">\[
+a_{i,t+1} = (1-d) a_{i,t} + w \sum_{i\ne j} a_{j,t} + \text{Noise}
+\]</span></p>
+<p>Dell モデルでは，ノイズには 2 つの成分がある。 すなわち，上式右辺最終項で Noise とは，2 つの正規分布からなる。 これらの明示的に式に表現すれば次式を得る:</p>
+<p><span class="math display">\[
+a_{i,t+1} = (1-d) \left(a_{i,t} \left(1+\mathcal{N}(0,0.4^2)\right)\right) + w \sum_{i\ne j} a_{j,t} + \mathcal{N}(0,0.1^2)
+\]</span></p>
+<ol type="1">
+<li><strong>初期活性値 (Initial Activation) を 10 にする意味は何か？</strong></li>
+<li><strong>Jolt 活性値 (Jolt Activation) を 100 にする意味は何か？</strong></li>
+</ol>
+<!-- Dell 1997 本文
+A(j,t) = A(j,t-1)(1-q) + \sum w(i,j) A(i,t-1) + Noise, 
+where A(j,t) is the activation of node j at time step t, q is a decay parameter, w(i,j) is the connection weight from node i to node j. 
+For the implemented model, it is assumed that each of these weights is the same, designated by p. 
+Each node's activation also is perturbed by normally distributed noise during each time step. 
+This noise is the sum of two components. 
+One component, intrinsic noise, has a mean of zero and standard deviation SD1; 
+the second, activation noise, has a mean of zero and standard deviation SD2 * A(j,t). 
+The more active a node is, the greater the noise. 
+However, a node with zero activation still has some noise. 
+Because noise can result in an activation level less than zero, one further assumplion is required: A source node with a negative activation level sends no activation.
+
+
+同 最終ページ
+
+モデルの減衰率 q を増加させると，固有ノイズの標準偏差 (SD1) を増加させるのと同様の効果がある。
+これを示すために， モデルのエラーパターンを正しさのレベルを約 0.88, 0.33, 0.18 の 3 つに分けて提示した  (表B1)。
+それぞれのレベルで，純粋な崩壊病変(1), 主に崩壊病変(2), 主に重み病変(3), 純粋な重み病変(4) のパターンを示している。
+そして，正しさのレベルごとにノイズパラメータの純粋な病変を与える(5)。
+このノイズ病変は，主に崩壊パターンと同等であるが，純粋な崩壊ではない。
+さらに、主に重量である病変への減衰成分は， 減衰成分をノイズ成分で置き換えることで模倣できることを示す (6)。
+要約すると， ノイズ病変は崩壊病変とほぼ同じである。
+なお， ノイズ病変やノイズ病変成分は， ジョルトサイズの病変によって模倣することができる。
+例えば，ノイズの 50 倍の増加は， ジョルトサイズの 50 倍の減少に相当する。
+Increasing the decay rate q in the model has similar effects as increasing the standard deviation of intrinsic noise (SD1). 
+We show this by presenting model error patterns at three levels of correctness, approximately 0.88, 0.33, and 0.18 (see Table B1). 
+At each level, we show the pattern with a pure decay lesion (1), a lesion that is primarily decay (2), a lesion that is primarily weight (3), and a pure weight lesion (4).
+We then give a pure lesion in the noise parameter for each level of correctness (5). 
+The noise lesion is equivalent to the pattern that is primarily decay, but not purely decay. 
+We further show that the decay component to a lesion that is primarily in weight can be mimicked by replacing the decay component wid1 a noise component (6). 
+In summary, noise lesions are much the same as decay lesions. 
+Note that each noise lesion or noise lesion component, can be mimicked by a lesion in the jolt size. 
+For example, a 50-fold increase in noise is cyuivalent to a 50-fold decrease in jolt size. -->
+<h1 id="ia-モデルの問題点">3. IA モデルの問題点</h1>
+<p>IA モデルでは上層が入力層である意味入力，中が語彙層，下が音素を表現している。 典型的な場合のニューロン数は入力層が 57，中間層が 6, 出力層が 32 である。 中間層の 6 つはそれぞれの 語彙，またはレンマを表現している。 具体的には cat, dog, mat, rat, mat, log である。 ミューレションでは，入力刺激は，常に 1 種類しか存在しない。 すなわち入力は常に ネコ を表す意味ベクトルである。 このため，175 回ネコを見せられていることに相当する。 正解であるネコの意味ベクトル入力に対して，cat を発話すれば，正解，dog を発話すれば，<strong>意味エラー semantic errors</strong> と解釈される。 同様にして，出力が mat なら <strong>形態エラー formal errors</strong>, rat なら <strong>混合エラー mixed errors</strong>, mat なら <strong>無関連エラー unrelated errors</strong>, log なら <strong>非単語 non-word errors</strong> あるいは 新造語エラー，とみなされる。 フィラデルフィア絵画命名検査 PNT<span class="citation" data-cites="1996Roach_Philadelphia_Naming_Test">(Roach et al. 1996)</span> では 175 枚の刺激図版が個別に被検査者に提示される。 PNT では，各図版を逐次被検査者に提示し，図版に描かれた内容を口頭で答えることが求められる。 ところが，シミュレーション研究では，上のネットワークが用いられている。 すなわち，IA モデルによる絵画命名課題のシミュレーションでは，ネコ画像を 175 回提示して，どの種のエラーが報告されたかを計数している。 初期のモデルは 1980 年代に提案された <strong>オモチャ toy モデル</strong> であったことを斟酌しても，現代的な意味ではおもちゃにすぎるほど拙く幼稚なモデルであるとの誹りを免れない。 失語症検査では現実世界の多様な内容を可能な限り汲み取ることを意図して，多様な図版が用いられる。 そのような図版から，失語症の多様な病態を把握することが失語症検査の要件であると推察される。 駄菓子菓子，驚くべきことに 2019年 に公刊された論文，例えば <span class="citation" data-cites="2019Roelofs_cueing">(Roelofs 2019)</span> であっても，中間層の語彙層数は 6 ニューロンに限定されたままである。 検査に使用される図版は，被検査者の言語機能を調べる目的で広範な題材から選ばれたものであることから， それぞれの図版をその都度評価することで現実的なモデルに近づけることが可能となると考えられる。 このことから，本稿では実際の図版をモ入力画像として，ニューラルネットワークモデルを訓練することとした。 実際の失語検査で用いられる図版を入力刺激とし，対応する正解を口頭出力するまでをモデル化した。 訓練済モデルを健常者モデルとし，健常者モデルの一部パラメータを変更することで失語症モデルとみなすこととした。</p>
+<ul>
+<li>入力表現が恣意的である。各概念は 10 ニューロンを活性化し，かつ，ターゲット語 CAT と意味関連語の DOG の間では，3 個のニューロンの活性を共有している。</li>
+<li>jolt と呼ばれるブーストが起こるが，時刻と値に恣意性が残る。意味ブーストは t=1 のとき 10, 語彙ブーストは t=8 のとき 100 に固定。</li>
+<li>反復回数は 175 回に固定されている。この回数は PNT の図版数と揃えてある。だが，175 に固執する必要はない。コンピュータは疲れを知らないので，精度を向上させるためには多数回繰り返すことを検討すべきだ。</li>
+<li>175 回繰り返して得られた 6 種類の反応カテゴリの比率を最も良く表出するパラメータの値を探索するため，パラメータ値を定めて，175 回演算を繰り返し，得られた値からパラメータを探索する。</li>
+</ul>
+<h1 id="提案アルゴリズム">4. 提案アルゴリズム</h1>
+<p>患者に対して絵画命名検査を実施して得られた臨床データを教師データとして，モデルを既述パラメータを勾配降下法によって求めることを提案する。 Dell らのモデルとの対応では，<span class="math inline">\(s, p\)</span> または <span class="math inline">\(w, d\)</span> が探索すべきパラメータである。 SP モデルでは <span class="math inline">\(d\)</span> は固定であり，WD モデルでは <span class="math inline">\(s=p=w\)</span> である。 提案モデルでは，これら 4 つのパラメータ <span class="math inline">\(\{s,p,w,d\}\)</span> を推定することを試みた。 このとき <span class="math inline">\(s\ne p\)</span> であれば，SP モデルを近似することになり，一方 <span class="math inline">\(s\simeq p\)</span> であれば WP モデルを近似することになる。 Dell は，SP と WD 両モデルの比較に関心があったため，両モデルでパラメータ数を揃える必要から，モデルのパラメータ数に制約を置いたと推察される。 2 つのモデルだけが存在し，かつ，これら 2 つのモデルのうちどちらかが正しいことが保証されるという事態を想定することは難しいと考える。 なぜなら，相互活性化モデルでは <span class="math inline">\(s\)</span> の低下を <span class="math inline">\(p\)</span> が補うなど (<span class="math inline">\(w,d\)</span> についても同様) 補完関係が想定できるからである。 また，ある種の患者のリハビリテーションによる機能代替や，失われた機能の代替的回復モデルなどを考慮すれば，異なる組み合わせのパラメータ集合が同一の結果を生じる可能性が否定できないからである。</p>
+<p>そこで本稿では，SP モデルか WD モデルかという，モデル間の比較には立ち入らず，パラメータ推定問題と捉えることとした。 従って，推定すべきパラメータは <span class="math inline">\(\theta=\{s,p,w\}\)</span> である。 各反応カテゴリーの生起確率は，ソフトマックス関数に従う確率密度関数に従うと仮定する。 従って，カテゴリ <span class="math inline">\(x_i\)</span> の生起する確率は次式で与えられる:</p>
+<p><span class="math display">\[
+p(x_i;\beta) = \frac{\exp\left(f(x_i)/\beta\right)}{\sum_j \exp\left(f(x_j)/\beta\right)},
+\]</span> ここで，<span class="math inline">\(f(x_i)\)</span> は <span class="math inline">\(i\)</span> 番目の反応カテゴリの音韻ユニットの出力である。 <span class="math inline">\(\beta\)</span> は統計力学からの類推から温度パラメータと呼ぶことにする。 ソフトマックス関数は，統計力学におけるボルツマン分布と同一であって，<span class="math inline">\(x_i\)</span> のエネルギー順位を与える式である。 このとき，<span class="math inline">\(\lim\beta\rightarrow0\)</span> の極限では系は決定論的に振る舞い，<span class="math inline">\(\lim\beta\rightarrow\infty\)</span> ではあらゆるエネルギー準位をとることとなる。 温度パラメータの導入意図は，このように系が確率的変動を許容する程度を表すものと解釈できる。 絵画命名課題において，健常者は <span class="math inline">\(\beta\)</span> が小さい，従って温度低く安定した反応を生じることに対応する。 一方，反応が検査の都度変動するような，ある種の患者の回答は，温度パラメータ <span class="math inline">\(\beta\)</span> が大きい，従って温度が高いとみなしうる。</p>
+<p>ソフトマックス関数は，ニューラルネットワークで分類課題に用いられている意味で汎用性が高い。 また相互活性化モデルの確率論的改訂である多項相互活性化モデル MIA (Multinomial Interactive Activation) モデル<span class="citation" data-cites="2013McClelland_IA_review 2014McClelland_IA">(McClelland 2013; McClelland et al. 2014)</span> でも類似の概念が用いられている。 すなわち，本稿で提案するモデルは，オリジナルの IA モデルを拡張した MIA モデルの概念を援用して， 絵画命名課題の妥当な解釈を行っているものとみなしうる。 ただし， MIA モデルでは，温度概念を推定すべきパラメータとして扱っていない。 温度パラメータ <span class="math inline">\(\beta\)</span> を反応の安定性，あるいは多様性をとみなす考え方は，本稿独自のものである。</p>
+<p>また，ソフトマックス関数に温度パラメータを導入するアイデアは，ボルツマンマシン<span class="citation" data-cites="BoltzmannMachine1985 BoltzmannMachine1986">(Ackley, Hinton, and Sejnowski 1985; Hinton and Sejnowski 1986)</span> からの伝統である。 加えて，近年精度向上が著しい深層学習分野での自己半教師あり学習 (Self semi-suupervised learning) でも採用されている概念でもある<span class="citation" data-cites="2018Oord_Vinyals_contrastive 2020Jaiswal_ssl 2020Chen_Hinton_SIMCLR">(Oord, Li, and Vinyals 2018; Jaiswal et al. 2020; Chen et al. 2020)</span>。</p>
+<p><span class="math display">\[
+\ell \equiv \sum_i t_i\log p_i + (1-t_i)\log(1-p_i),
+\]</span></p>
+<p>Dell のパラメータ推定法と本提案手法との相違は，以下のとおりである。 Dell のパラメータの推定方法は，一回の試行で最大出力を示す音韻層ユニットのカテゴリを反応とみなし，これを 175 回繰り返す。 得られたデータを集計して，各反応カテゴリーの確率を求める。求めた反応確率の値が，患者から得られたデータと異なる場合には，パラメータを修正して， シミュレーションを繰り返す。これを，実際の患者のデータと合致する反応確率が偉えるまで繰り返す，というものである。 GPU を使って 6 次元の確率分布を得るために，予め数千のデータ点を事前に計算し，事前に計算した点に合致するパラメータの値を出力する，であった。 従って，一組のパラメータを得るためにシミュレーションを 175 回繰り返し，さらに，探索空間を徘徊するため，膨大な計算時間を要した。</p>
+<p>一方，本提案手法では，機械学習やニューラルネットワークで一般に用いられている勾配降下法を使って，得られたデータに合致するパラメータを探索する。 このため，パラメータの探索は一度で済む。</p>
+<h1 id="数値実験">5. 数値実験</h1>
+<center>
+<img src="figures/2021_0810Dell_beta_sim.svg" style="width:33=%">
+</center>
+<p>Foygell &amp; Dell (2000) の 表2 に記載されている患者の成績をすべて実施した結果を以下に示した。</p>
+<center>
+<img src="figures/2021_0811W_B.svg" style="width:33%"> <img src="figures/2021_0811T_T_.svg" style="width:33%"> <img src="figures/2021_0811J_Fr_.svg" style="width:33%"> <img src="figures/2021_0811V_C_.svg" style="width:33%"> <img src="figures/2021_0811L_B_.svg" style="width:33%"> <img src="figures/2021_0811J_B_.svg" style="width:33%"> <img src="figures/2021_0811J_L_.svg" style="width:33%"> <img src="figures/2021_0811G_S_.svg" style="width:33%"> <img src="figures/2021_0811L_H_.svg" style="width:33%"> <img src="figures/2021_0811J_G_.svg" style="width:33%"> <img src="figures/2021_0811E_G_.svg" style="width:33%"> <img src="figures/2021_0811B_Me_.svg" style="width:33%"> <img src="figures/2021_0811B_Mi_.svg" style="width:33%"> <img src="figures/2021_0811J_A_.svg" style="width:33%"> <img src="figures/2021_0811A_F_.svg" style="width:33%"> <img src="figures/2021_0811N_C_.svg" style="width:33%"> <img src="figures/2021_0811I_G_.svg" style="width:33%"> <img src="figures/2021_0811H_B_.svg" style="width:33%"> <img src="figures/2021_0811J_F_.svg" style="width:33%"> <img src="figures/2021_0811G_L_.svg" style="width:33%"> <img src="figures/2021_0811W_R_.svg" style="width:33%">
+</center>
+<p>ところで，上記シミュレーションで参考にした Foygell &amp; Dell (2000) Tab. 2 だが， 6 つの各反応カテゴリを合算しても 1.0 にならない。 加えて，小数点以下 4 桁まで表示している意味は不明である。 なぜなら，各患者のデータは PNT 検査の結果であるから，175 枚の図版に対する応答である。 すなわち，各カテゴリの正答率は倍精度浮動小数点で次のようになる。 1/175 = 0.005714285714285714 各患者の正答率は，この値の整数倍である。 実際に，小数点第 4 位で四捨五入すると，</p>
+<p>164 正解で 0.9371, 165 正解だと 0.9429 となり，W.B. の correct 反応 0.9400 になることはない。 このことから，Dell らのグループでは，演算精度に関して無頓着ではないかと推察される。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> p<span class="op">=</span><span class="dv">0</span><span class="op">;</span> u <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">175</span><span class="op">;</span> constant <span class="op">=</span> <span class="dv">160</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    n <span class="op">=</span> i <span class="op">+</span> constant</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&#39;正解数:</span><span class="sc">{n}</span><span class="ss"> その確率:</span><span class="sc">{np.</span><span class="bu">round</span>(u <span class="op">*</span> n, decimals<span class="op">=</span><span class="dv">4</span>)<span class="sc">:.04f}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+<!--Table 2 に記載のデータ。小数点以下４桁目が必要なのか疑問。理由は PNT の検査図版は 175 枚しかない。
+どんなに努力しても一回の検査で得られるデータは 175 しかないのだから，小数点以下 2 桁で十分ではないかなー
+各行のデータ，最後の 4 列は weight, decay と s, f パラメータの推定値を表す. 
+ただし s, f は table 4 より引用
+-->
+<ol type="1">
+<li>‘W.B’: [0.9400,0.0200,0.0100,0.0100,0.0100,0.0000,0.0200,0.5600],<br/></li>
+<li>‘T.T.’: [0.9300,0.0100,0.0100,0.0000,0.0200,0.0000,0.0200,0.5600],<br/></li>
+<li>‘J.Fr.’:[0.9200,0.0100,0.0100,0.0200,0.0200,0.0000,0.0200,0.5600],<br/></li>
+<li>‘V.C.’: [0.8700,0.0200,0.0100,0.0300,0.0100,0.0000,0.0200,0.5700],<br/></li>
+<li>‘L.B.’: [0.8200,0.0400,0.0200,0.0900,0.0100,0.0100,0.0070,0.5000],<br/></li>
+<li>‘J.B.’: [0.7600,0.0600,0.0100,0.0500,0.0200,0.0100,0.0065,0.5000],<br/></li>
+<li>‘J.L.’: [0.7600,0.0300,0.0100,0.0600,0.0300,0.0100,0.0250,0.6000],<br/></li>
+<li>‘G.S.’: [0.7000,0.0200,0.0600,0.1500,0.0100,0.0200,0.0057,0.5000],<br/></li>
+<li>‘L.H.’: [0.6900,0.0300,0.0700,0.1500,0.0100,0.0200,0.0057,0.5000],<br/></li>
+<li>‘J.G.’: [0.5500,0.0600,0.0800,0.1800,0.0400,0.0300,0.0450,0.7000],<br/></li>
+<li>‘E.G.’: [0.9300,0.0300,0.0000,0.0100,0.0200,0.0000,0.1000,0.6000],<br/></li>
+<li>‘B.Me.’:[0.8400,0.0300,0.0100,0.0000,0.0500,0.0100,0.1000,0.8200],<br/></li>
+<li>‘B.Mi.’:[0.8300,0.0500,0.0100,0.0100,0.0200,0.0100,0.0550,0.7000],<br/></li>
+<li>‘J.A.’: [0.7800,0.0400,0.0000,0.0200,0.0300,0.0100,0.0580,0.7000],<br/></li>
+<li>‘A.F.’: [0.7500,0.0200,0.0300,0.0700,0.0600,0.0400,0.1000,0.8500],<br/></li>
+<li>‘N.C.’: [0.7500,0.0300,0.0700,0.0800,0.0100,0.0000,0.1000,0.8500],<br/></li>
+<li>‘I.G.’: [0.6900,0.0900,0.0500,0.0200,0.0300,0.0100,0.1000,0.8600],<br/></li>
+<li>‘H.B.’: [0.6100,0.0600,0.1300,0.1800,0.0200,0.0100,0.0500,0.7130],<br/></li>
+<li>‘J.F.’: [0.5600,0.1400,0.0100,0.0200,0.1100,0.0100,0.1000,0.8600],<br/></li>
+<li>‘G.L.’: [0.2800,0.0400,0.2100,0.3000,0.0300,0.0900,0.0790,0.8500],<br/></li>
+<li>‘W.R.’: [0.0800,0.0600,0.1500,0.2800,0.0500,0.3300,0.1000,0.9400],<br/></li>
+</ol>
+<h1 id="考察">5. 考察</h1>
+<h2 id="モデルの拡張">5.1 モデルの拡張</h2>
+<p>視覚入力に関しては <strong>畳み込みニューラルネットワーク(CNN)</strong> による視覚認識モデルのうち公開されている訓練済モデルを援用する (e.g. ResNet<span class="citation" data-cites="2015ResNet">(He et al. 2015)</span>, EfficientNet<span class="citation" data-cites="2019Tan_Le_EfficentNet">(Tan and Le 2019)</span> and other recently proosed SOTA models)。 これらモデルを <strong>転移学習</strong> により，失語症検査である PNT<span class="citation" data-cites="1996Roach_Philadelphia_Naming_Test">(Roach et al. 1996)</span>, WAB<span class="citation" data-cites="1986sugishita_wab">(守弘 1986)</span>, TLPA<span class="citation" data-cites="2000fujita_tlpa">(藤田 et al. 2000)</span>, SALA に適用する。 既存の訓練済モデルの <strong>最終直下層 penultimiate layer</strong> を各視覚認識課題に合わせて付け替えて訓練し，最終直下層より下層の結合係数については固定とした。 この転移学習により高速な学習が可能となる。 結果の一部は <span class="citation" data-cites="2020Asakawa_jhbdf">(浅川 et al. 2020)</span> で示されている。 * 上の深層学習モデルの援用は，<strong>文字音読課題 Reading Aloud Task: RAT</strong> にも転用する。 具体的には最終直下層を文字認識用に付け替えることで文字認識に適用した。 このことにより，視覚入力装置を共有する同一し，<strong>絵画単語干渉課題 picture word interference</strong> も同時に扱うことが可能なモデルとになる。 複数の検査下位課題，文字呼称課題と絵画命名課題との両者を同時に説明するモデルとなる。 このため，<strong>単語音読モデル</strong> e.g. Logogen<span class="citation" data-cites="Morton1980">(Morton 1980)</span>, DRC<span class="citation" data-cites="2001Coltheart_DRC">(Coltheart et al. 2001)</span>, Triangle models<span class="citation" data-cites="Seidenberg1989">(Seidenberg and McClelland 1989)</span> との統合が可能となると要さされる。 加えて弱視や視野欠損，半側空間無視など初期視覚異常を伴う視覚障害者の能力比較も可能となると予想される。</p>
+<center>
+<img src="figures/2021ccap_transfer_learning.svg" style="width:49%"><br/>
+</center>
+<ul>
+<li>lemma から誘発される辞書的意味として {} e.g. word2vec<span class="citation" data-cites="2013Mikolov_VectorSpace">(Mikolov, Yih, and Zweig 2013)</span> を用いた。 これにより多様な <strong>意味エラー</strong> 意味的な言い間違えの生成が可能となった。 Lemma 間の意味的類似性は，単語埋め込みモデル間の類似性として定義される。 これにより，任意のターゲット単語から意味的に類似した単語への言い誤りを計量的に表現することが可能となった。 モデル実装としては，任意の単語からの距離に基づき，ソフトマックス関数により確率分布へと変換した。 得られた確率分布に基づくサンプリングで意味エラー，意味的言い間違えをモデル化可能である。 このような単語埋め込みモデルの距離に基づいた単語間の遷移行列を仮定することで，連続単語再生課題への適用が可能となる。 単語埋め込みモデルによる連想単語生成は <span class="citation" data-cites="2018Rotaru_dynamic_semantic">(Rotaru, Vigliocco, and Frank 2018)</span> によって提案された手法に基づくものである。 ただし，単語産出過程に単語間の距離をソフトマックス関数により確率分布に変換した遷移行列を用いた点が本提案モデルとの差異である。 加えて，画像処理から得られる画像類似性と単語埋め込みモデルから得られる語義的類似性との相互作用とを実現することが可能である。</li>
+</ul>
+<p>変分自己符号化器モデルにより内部表象の柔軟な表現が可能になると考えることができる。 * 出力機構は，音節単位あるいは拍 (モーラ) 単位 の音韻表現と対応する構音プログラムの実装には <strong>LSTM</strong><span class="citation" data-cites="1997LSTM">(Hochreiter and Schmidhuber 1997, 2000Gers)</span> を採択した。 LSTM は，入力，出力，忘却 の 3 ゲートを持つ。 LSTM のゲートの開平動作の異常を用いて，保続，言い間違え，を表現可能である。 * 上の LSTM による実装に加えて，lemma 表象からの相互作用を仮定する。 これにより提案モデルは <strong>SLAM</strong><span class="citation" data-cites="2016Walker_Hickok_SLAM">(Walker and Hickok 2016)</span> モデルと同様の構成となる。</p>
+<h1 id="結論">6. 結論</h1>
+<ul>
+<li>Lemma 選択，あるいは lemma 特定は，密から疎へ dense to sparse の変換と考える。 これにより実ベクトルから <strong>ワンホット one hot 表現</strong> を得ることができる。 ワンホット表現は <strong>ソフトマックス softmax 関数</strong> として実現した。 ソフトマックス関数に <strong>温度パラメータ</strong> を導入することで，決定論的意思決定と確率論的意思決定の橋渡しを行う。 あわせて，温度バラメータの高低により，信頼できる推論結果を安定して得ることができる場合と，不安定な反応とを表現できる。 前者は健常者の反応と見なしうる。一方，後者は言語に障害のある患者の課題成績と見なしうる。 このことにより，健常モデルと障害者のモデルとを継ぎ目なく，かつ，単一パラメータで表現可能となる</li>
+</ul>
+<h1 id="付録">付録</h1>
+<h2 id="roelofs-の-c-コード-を変換したもの"><a href="osf.io/ue4bn">Roelofs の C コード</a> を変換したもの</h2>
+<ol type="1">
+<li><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb">Roelofs (2019) Phonological cueing of word finding in aphasia: insights from simulations of immediate and treatment effects <img src="https://ShinAsakawa.github.io/assets/colab_icon.svg"></a>, <a href="https://osf.io/5gvtf/">オリジナルソースコード</a></li>
+<li><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb">Roelofs, A., Piai, V., Garrido Rodriguez, G., &amp; Chwilla, D. J. (2016). Electrophysiology of cross-language interference and facilitation in picture naming <img src="https://ShinAsakawa.github.io/assets/colab_icon.svg"></a>, <a href="https://osf.io/bw4pv/">オリジナルソースコード</a></li>
+<li><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb">Roelofs, (2018) A unified computational account of cumulative semantic, semantic blocking, and semantic distractor effects in picture naming <img src="https://ShinAsakawa.github.io/assets/colab_icon.svg"></a> オリジナルソースコード， 論文中にはソースコードのアドレスとして https://osf.io/b2mvu/ が記載されているが，アップデートされている。 新 URLは https://osf.io/6ysp2/</li>
+</ol>
+<hr />
+<p>付録 所与のパラメータとは以下のような値である:</p>
+<ol type="1">
+<li>jolt のタイミングが t=8 に固定されている。jolt は処理途中のどこかで一回だけ意思決定が行われ，その影響が最終出力に決定的な影響を与える。</li>
+<li>シミュレーションの反復回数は 16 に固定されている。ところがこの 16 回を正当化する根拠は示されていない</li>
+<li>jolt の値が 100 である。だがこの値の意味づけがなされていない</li>
+</ol>
+<ul>
+<li>Garret, Levelt, Dell, Hickok, など伝統である意味入力は，詳細に分割する。</li>
+<li>各構成要素間の情報は確率論的な推論が用いられると仮定する。例えば lemma 情報 へ／から の入出力は確率論的な推論が行われること仮定する。 各構成要素から別の要素への情報の伝達は，確率分布からのサンプリングされた結果であるとみなす。 これにより確率分布が偏っていることをもって，反応表出の偏りや，反応の一貫性，再現性の無さ，再現性の不安定な状態，を表現可能である</li>
+<li>提案するモデルの基本構造は <strong>二段階相互活性化モデル</strong> e.g. Levelt<span class="citation" data-cites="1989Levelt_speaking">(Levelt 1989)</span>, Dell<span class="citation" data-cites="1986Dell_spread_activation">(Dell 1986)</span>, Roelofs<span class="citation" data-cites="1992Roelofs">(Roelofs 1992)</span> に基づくものである。 すなわち，入力，中央の内部表象，出力 の 3 部からなる。</li>
+<li>提案モデルでは，各部位 から／へ の情報伝達にも確率的な推論と <strong>サンプリング sampling</strong> が行われる。 このサンプリングを仮定することにより，我々の脳内では統一的な処理原理が採択されていることを仮定している。 加えて，このサンプリングを採択することにより 提案モデルでは，<strong>音韻手がかり cue による促進効果</strong>，課題成績の改善，<strong>正負のプライミング</strong>，<strong>累積意味干渉 cumulative semantic interference</strong> <span class="citation" data-cites="2006Howard_Coltheart">(Howard et al. 2006)</span>，が実現できる。 実装には <strong>変分自己符号化器 variational auto-encoders</strong> モデル<span class="citation" data-cites="2019Kingma_Welling_VAE">(Kingma and Welling 2019)</span> を採択した。 発話における自己モニタリング機構と同一視できるため WEAVER++<span class="citation" data-cites="1999Levelt_WEAVER">(Levelt, Roelofs, and Meyer 1999)</span> のニューラルネットワークを用いた実現と見なしうる。 また，この構造は翻訳モデルである seq2sec<span class="citation" data-cites="2014Sutskever_Sequence_to_Sequence">(Sutskever, Vinyals, and Le 2014)</span> と，翻訳モデルに <strong>注意</strong> を導入したモデル<span class="citation" data-cites="2014Bahdanau_NMT">(Bahdanau, Cho, and Bengio 2015)</span> と同一構造と見なしうる。<br />
+</li>
+<li>反応潜時は Luce<span class="citation" data-cites="Luce1986">(Luce 1986)</span> に基づく。従って <strong>WEAVER モデル</strong><span class="citation" data-cites="1997Roelofs_WEAVER">(Roelofs 1997)</span> と同一の機構によって実現されると仮定する。</li>
+<li>提案モデルを支持する生理学的対応物を示す多くの研究が存在する。 典型定期には，言語における <strong>腹側経路</strong> と <strong>背側経路</strong> との区別<span class="citation" data-cites="2004Hickok_Poeppel_Dorsal_ventral_anatomy_of_language">(Hickok and Poeppel 2004)</span>,</li>
+<li><strong>弓状束 arcuate fasciculus</strong>, <strong>最外包 extreme capule</strong>, <strong>鉤状束 Uncinate fasciculus</strong>, <strong>上縦束 longitudinal fasciculus</strong> をネットワークが想定される。</li>
+</ul>
+<h1 class="unnumbered" id="文献">文献</h1>
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-BoltzmannMachine1985">
+<p>Ackley, D. H., Geoffrey E. Hinton, and Terry J. Sejnowski. 1985. “A Learning Algorithm for Boltzmann Machines.” <em>Cognitive Science</em> 9: 147–69.</p>
+</div>
+<div id="ref-2014Bahdanau_NMT">
+<p>Bahdanau, Dzmitry, Kyunghyun Cho, and Yoshua Bengio. 2015. “Neural Machine Translation by Jointly Learning to Align and Translate.” In <em>Proceedings in the International Conference on Learning Representations (ICLR)</em>, edited by Yoshua Bengio and Yann LeCun. San Diego, CA, USA. <a href="http://arxiv.org/abs/1409.0473">http://arxiv.org/abs/1409.0473</a>.</p>
+</div>
+<div id="ref-2020Chen_Hinton_SIMCLR">
+<p>Chen, Ting, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton. 2020. “A Simple Framework for Contrastive Learning of Visual Representations.” <em>ArXiv Preprint</em> [cs.LG] (arXiv:2002.05709).</p>
+</div>
+<div id="ref-2001Coltheart_DRC">
+<p>Coltheart, Max, Kathleen Rastle, Corad Perry, Robyn Langdon, and Johannes Ziegler. 2001. “DRC: A Dual Route Cascaded Model of Visual Word Recognition and Reading Aloud.” <em>Psychological Review</em> 108: 204–56.</p>
+</div>
+<div id="ref-1986Dell_spread_activation">
+<p>Dell, Gary S. 1986. “A Spreading-Activation Theory of Retrieval in Sentence Production.” <em>Psychological Review</em> 93 (3): 283–321.</p>
+</div>
+<div id="ref-1988Dell">
+<p>———. 1988. “The Retrieval of Phonological Forms in Production: Tests of Predictions from a Connectionist Model.” <em>Journal of Memory and Language</em> 27: 124–42.</p>
+</div>
+<div id="ref-2015ResNet">
+<p>He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2015. “Deep Residual Learning for Image Recognition.” <em>ArXiv:1512.033835</em>.</p>
+</div>
+<div id="ref-2004Hickok_Poeppel_Dorsal_ventral_anatomy_of_language">
+<p>Hickok, Gregory, and David Poeppel. 2004. “Dorsal and Ventral Streams: A Framework for Understanding Aspects of the Functional Anatomy of Language.” <em>Cognition</em> 92: 67–99.</p>
+</div>
+<div id="ref-BoltzmannMachine1986">
+<p>Hinton, Geoffrey E., and Terry J. Sejnowski. 1986. “Learning and Relearning in Boltzmann Machines.” In <em>Parallel Distributed Processing: Explorations in the Microstructures of Cognition</em>, edited by James L. McClelland and David E. Rumelhart, 1:282–317. Cambridge, MA: MIT Press.</p>
+</div>
+<div id="ref-1997LSTM">
+<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9: 1735–80.</p>
+</div>
+<div id="ref-2006Howard_Coltheart">
+<p>Howard, David, Lyndsey Nickels, Max Coltheart, and Jennifer Cole-Virtueb. 2006. “Cumulative Semantic Inhibition in Picture Naming: Experimental and Computational Studies.” <em>Cognition</em> 100: 464–82. <a href="https://doi.org/10.1016/j.cognition.2005.02.006">https://doi.org/10.1016/j.cognition.2005.02.006</a>.</p>
+</div>
+<div id="ref-2020Jaiswal_ssl">
+<p>Jaiswal, Ashish, Ashwin Ramesh Babu, Mohammad Zaki Zadeh, Debapriya Banerjee, and Fillia Makedon. 2020. “A Survey on Contrastive Self-Supervised Learning.” <em>ArXiv Preprint</em> [cs.CV] (arXiv:2011.00362).</p>
+</div>
+<div id="ref-2019Kingma_Welling_VAE">
+<p>Kingma, Diederik P., and Max Welling. 2019. “An Introduction to Variational Autoencoders.” <em>Foundations and Trends in Machine Learning:</em> 12 (4): 307–92. <a href="https://doi.org/doi:10.1561/2200000056">https://doi.org/doi:10.1561/2200000056</a>.</p>
+</div>
+<div id="ref-1989Levelt_speaking">
+<p>Levelt, Willem J. M. 1989. <em>Speaking from Intention to Articulation</em>. ACL-MIT Press Series in Natural-Language Processing. MIT Press.</p>
+</div>
+<div id="ref-1999Levelt_WEAVER">
+<p>Levelt, Willem J. M., Ardi Roelofs, and Antje S. Meyer. 1999. “A Theory of Lexical Access in Speech Production.” <em>Behavioral and Brain Sciences</em> 22: 1–38.</p>
+</div>
+<div id="ref-Luce1986">
+<p>Luce, R. D. 1986. <em>Response Times</em>. New York: Oxford University Press.</p>
+</div>
+<div id="ref-2013McClelland_IA_review">
+<p>McClelland, James L. 2013. “Integrating Probabilistic Models of Perception and Interactive Neural Networks: A Historical and Tutorial Review.” <em>Frontiers in Psychology</em> 4 (503). <a href="https://doi.org/doi:10.3389/fpsyg.2013.00503">https://doi.org/doi:10.3389/fpsyg.2013.00503</a>.</p>
+</div>
+<div id="ref-2014McClelland_IA">
+<p>McClelland, James L., Daniel Mirman, Donald J. Bolger, and Pranav Khaitan. 2014. “Interactive Activation and Mutual Constraint Satisfaction in Perception and Cognition.” <em>Cognitive Science</em> 38: 1139–89. <a href="https://doi.org/10.1111/cogs.12146">https://doi.org/10.1111/cogs.12146</a>.</p>
+</div>
+<div id="ref-1981McClelland_Rumelhart_IA1">
+<p>McClelland, James L., and David E. Rumelhart. 1981. “An Interactive Activation Model of Context Effects in Letter Perception, I: An Account of Basic Findings.” <em>Psychological Review</em> 88 (5): 375–407.</p>
+</div>
+<div id="ref-2013Mikolov_VectorSpace">
+<p>Mikolov, Tomas, Wen-tau Yih, and Geoffrey Zweig. 2013. “Linguistic Regularities in Continuous Space Word Representations.” In <em>Proceedings of the 2013 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies NAACL</em>. Atlanta, WA, USA.</p>
+</div>
+<div id="ref-Morton1980">
+<p>Morton, J. 1980. “The Logogen Model and Orthographic Structure.” In <em>Cognitive Processes in Spelling</em>, edited by U. Firth. Academic Press.</p>
+</div>
+<div id="ref-2018Oord_Vinyals_contrastive">
+<p>Oord, Aaron van den, Yazhe Li, and Oriol Vinyals. 2018. “Representation Learning with Contrastive Predictive Coding.” <em>ArXiv Preprint</em> [cs.LG] (arXiv:1807.03748).</p>
+</div>
+<div id="ref-1996Roach_Philadelphia_Naming_Test">
+<p>Roach, April, Myrna F. Schwartz, Nadine Martin, Rita S. Grewal, and Adelyn Brecher. 1996. “The Philadelphia Naming Test: Scoring and Rationale.” <em>Clinical Aphasiology</em> 24: 121–33.</p>
+</div>
+<div id="ref-1992Roelofs">
+<p>Roelofs, Ardi. 1992. “A Spreading-Activation Theory of Lemma Retrieval in Speaking.” <em>Cognition</em> 42: 107–42.</p>
+</div>
+<div id="ref-1997Roelofs_WEAVER">
+<p>———. 1997. “The Weaver Model of Word-Form Encoding in Speech Production.” <em>Cognition</em> 64: 249—284.</p>
+</div>
+<div id="ref-2019Roelofs_cueing">
+<p>———. 2019. “Phonological Cueing of Word Finding in Aphasia: Insights from Simulations of Immediate and Treatment Effects.” <em>Aphasiology</em>. <a href="https://doi.org/https://doi.org/10.1080/02687038.2019.1686748">https://doi.org/https://doi.org/10.1080/02687038.2019.1686748</a>.</p>
+</div>
+<div id="ref-2018Rotaru_dynamic_semantic">
+<p>Rotaru, Armand S., Gabriella Vigliocco, and Stefan L. Frank. 2018. “Modeling the Structure and Dynamics of Semantic Processing.” <em>Cognitive Science</em>, 1–28. <a href="https://doi.org/10.1111/cogs.12690">https://doi.org/10.1111/cogs.12690</a>.</p>
+</div>
+<div id="ref-Seidenberg1989">
+<p>Seidenberg, Mark S., and James L. McClelland. 1989. “A Distributed, Developmental Model of Word Recognition and Naming.” <em>Psychological Review</em> 96 (4): 523–68.</p>
+</div>
+<div id="ref-1958Selfridge_pandemonium">
+<p>Selfridge, Oliver G. 1958. “Pandemonium: A Paradigm for Learning.” In <em>Mechanisation of Thought Processes: Proceedings of a Symposium Held at the National Physical Laboratory</em>, 1:513–26. London, HMSO.</p>
+</div>
+<div id="ref-2014Sutskever_Sequence_to_Sequence">
+<p>Sutskever, Ilya, Oriol Vinyals, and Quoc V. Le. 2014. “Sequence to Sequence Learning with Neural Networks.” In <em>Advances in Neural Information Processing Systems (NIPS)</em>, edited by Zoubin Ghahramani, M. Welling, C. Cortes, N. D. Lawrence, and K. Q. Weinberger, 27:3104–12. Montreal, BC, Canada. <a href="http://arxiv.org/abs/1409.3215v3">http://arxiv.org/abs/1409.3215v3</a>.</p>
+</div>
+<div id="ref-2019Tan_Le_EfficentNet">
+<p>Tan, Mingxing, and Quoc V. Le. 2019. “EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.” <em>ArXiv Preprint</em> [cs.LG] (arXiv:1905.11946).</p>
+</div>
+<div id="ref-2016Walker_Hickok_SLAM">
+<p>Walker, Grant M., and Gregory Hickok. 2016. “Bridging Computational Approaches to Speech Production: The Semantic–Lexical–Auditory–Motor Model (SLAM).” <em>Psychonomic Bulletin and Review</em> 23: 339–52. <a href="https://doi.org/10.3758/s13423-015-0903-7">https://doi.org/10.3758/s13423-015-0903-7</a>.</p>
+</div>
+<div id="ref-1986sugishita_wab">
+<p>守弘杉下. 1986. <em>WAB 失語症検査 日本語版</em>. 医学書院.</p>
+</div>
+<div id="ref-2020Asakawa_jhbdf">
+<p>浅川伸一, ⼤⾨正太郎, 橋本幸成, ⾼倉祐樹, 上間清司, and 吉原将⼤. 2020. “深層学習モデルを⽤いた 呼称課題における誤答分析 (線画と語彙の特徴分析)の試み.” In <em>第44回日本高次脳機能障害学会学術総会</em>.</p>
+</div>
+<div id="ref-2000fujita_tlpa">
+<p>藤田郁代, 物井寿子, 奥平奈保子, 植田恵, 小野久里子, 下垣由美子, 藤原由子, 古谷二三代, and 笹沼澄子. 2000. “「失語症語彙検査」の開発.” <em>音声言語医学</em> 42: 179–2002.</p>
+</div>
+</div>
+</body>
+</html>

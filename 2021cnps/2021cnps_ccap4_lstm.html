@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="寺尾 康^1, 大門 正太郎^2, ⾼倉 祐樹^3, 上間 清司^4, 吉原 将大^5, 橋本 幸成^6, 浅川伸一^7," />
+  <title>LSTMを用いた言い誤りの産出モデル</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="/Users/asakawa/study/css/asa_markdown.css" />
+  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+  </script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">LSTMを用いた言い誤りの産出モデル</h1>
+<p class="author">寺尾 康<span class="math inline">\(^1\)</span>, 大門 正太郎<span class="math inline">\(^2\)</span>, ⾼倉 祐樹<span class="math inline">\(^3\)</span>, 上間 清司<span class="math inline">\(^4\)</span>, 吉原 将大<span class="math inline">\(^5\)</span>, 橋本 幸成<span class="math inline">\(^6\)</span>, 浅川伸一<span class="math inline">\(^7\)</span>,</p>
+</header>
+<center>
+<p><span class="math inline">\(^1\)</span>静岡県立大学, <span class="math inline">\(^2\)</span>クラーク病院, <span class="math inline">\(^3\)</span>北海道大学, <span class="math inline">\(^4\)</span>イムス板橋リハビリテーション病院, <span class="math inline">\(^5\)</span>国際交流基金, <span class="math inline">\(^6\)</span>目白大学, <span class="math inline">\(^7\)</span>東京女子大学</p>
+<p style="text-align:left; width:88%; background-color:powderblue;">
+<strong>要約</strong> 物品呼称課題，あるいは，絵画命名課題 (PNT) に関する従来モデルは，（当然のことながら）未だ多くの問題点を抱えている。 たとえば，WEAVER++ や DIVA などのモデルには，語彙表象の選択から音韻出力に至る過程に，内的もしくは外的な制御構造（ループあるいはフィードバック）を仮定する必要があると考えられる。 また，扱える語彙は単音節語に限られるなど，対象とする語彙数の制約が存在するモデルもある。 さらに，従来モデルは一般に，健常者や失語症者の言い誤りを直接的に生成することができない。 我々は，柔軟な制御構造の実装と多音節語への拡張を企図し，加えて言い誤りの機序としてゲートを仮定した LSTM (Long Short-Term Memory) モデルを用いた新規モデルを作成した。 目標語の音韻表象と表出される単語表象としてLSTM の中間層表現を利用し，かつ，LSTM のゲート開閉の不具合として言い誤りを算出させることを試みた。本発表では，提案モデルのシミュレーション結果について報告する。
+</p>
+</center>
+<h1 id="はじめに">1. はじめに</h1>
+<p>従来モデルを下図に示した。 語彙形態が十分に活性化し，発話プログラムに指令が伝達される状況を仮定する。</p>
+<p>従来モデルの問題点としては，以下の点が指摘できる。</p>
+<ol type="1">
+<li>語彙層から，構音層と運動層との間の結合が固定であるか，または，説明が少数例の既述である。</li>
+<li>単音節語の実装しか考慮していないモデルが多く，このため拡張性に欠ける</li>
+</ol>
+<center>
+<img src="figures/2012Hickok_fig5a_ja.svg" stylie="width:33%"> <img src="figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:33%">
+</center>
+<center>
+<!--<img src="figures/2016Walker-Hickok_fig1.jpg" style="width:43%">-->
+<img src="figures/1988Dell_fig1.svg" style="width:38%"> <img src="figures/2016Walker-Hickok_fig3.jpg" style="width:58%"><br/>
+<p style="text-align: left; width:88%; background-color:cornsilk;">
+図 1 従来モデルの概観。 左図: 2 段階相互活性化モデル <span class="citation" data-cites="1997Dell_DSMSG">(Dell et al. 1997)</span> Fig.1 より。 右図: SLAM モデル<span class="citation" data-cites="2016Walker_Hickok_SLAM">(Walker and Hickok 2016)</span> Fig. 3 より。 20 年以上の伝統のあるモデルであるが，現代的な視点からは問題点が指摘できる。
+</div>
+</center>
+<p>たとえば，上図左では，語彙と語形とを結ぶネットワークが示されている <span class="citation" data-cites="1988Dell">(Dell 1988)</span> 意図したフレーズは <code>deal back</code> であり， 単語ノード上の番号付きフラグで示されている。 単語 <code>deal</code> は現在の単語である。 語彙ネットワークのノード間の接続はすべて興奮性で双方向である。 点線は、語彙ネットワークと語形ネットワークの間の接続を示す。 語形ネットワークの音素カテゴリーノード間の矢印は， その活性化の順序を示す。</p>
+<h2 id="カルマンフィルター-lstm">1.1 カルマンフィルター = LSTM</h2>
+<center>
+<img src="figures/2005Roelofs_weaver_plusplus.svg" style="width:33%"> <img src="figures/1960Kalman_fig4.svg" style="width:49%">
+<p style="text-align: left; width:88%; background-color:cornsilk">
+図 2 図左: WEAVER++ モデルの概念図 <span class="citation" data-cites="2005Roelofs_weaverplusplus">(Roelofs 2005)</span> Fig. 1 より。 図右: カルマンフィルター <span class="citation" data-cites="1960Kalman">(Kalman 1960)</span> Fig. 4 より。 2 重ループによる発話制御は，最適フィルタによる制御理論と相同である。
+</p>
+</center>
+<!-- 図左: WEAVER++ モデルの概念図 [@2005Roelofs_weaverplusplus] Fig. 1 より。
+図右: カルマンフィルター [@1960Kalman] Fig. 4 より。
+ -->
+<h1 id="長-短期記憶-lstm">2. 長-短期記憶 LSTM</h1>
+<p><strong>長=短期記憶</strong> (Long Short-Term Memory: LSTM, henceforth) は Shumithuber らにより提案された長距離依存解消のためのニューラルネットワークモデルである<span class="citation" data-cites="1997LSTM 2015LSTM_SpaceOdessy">(Hochreiter and Schmidhuber 1997; Greff et al. 2015)</span>。 長距離依存を解消するためには， ある内容を保持し続けて必要に応じてその内容を取り出すことができなければならない。 このことを実現するために，ニューロンへの入力に gate を設置することが LSTM の特徴である。 下図に長=短期記憶モデルの概念図を示した。</p>
+<center>
+<img src="figures/2015Greff_LSTM_ja.svg" style="width:49%"> <img src="figures/2016RNNcamp_forget_gate.svg" style="width:43%"><br>
+<p style="text-align: left; width:66%; background-color:cornsilk;">
+図 <strong>LSTM の概念図</strong> 左図: <span class="citation" data-cites="2016Asakawa_AIdict">(浅川 2016)</span> を改変。 右図: ゲートを制御する信号は 3 種類である。
+</p>
+</center>
+<p>上図 LSTM は一つのニューロンに該当する。 このニューロンには 3 つの gate が付いている。 3 つのゲートは，それぞれ，入力， 出力， 忘却ゲートと呼ばれる。 入力ゲートと出力ゲートが閉じていれば，中央のセルの内容が保持されることになる。 出力ゲートが開いている場合には，セル内容が出力される。 一方出力ゲートが閉じていればそのセル内容は出力されない。 このように入力ゲートと出力ゲートはセル内容の入出力に関与する。 忘却ゲートはセル内容の保持に関与する。 忘却ゲートが開いていれば一時刻前のセル内容が保持されることを意味する。 反対に忘却ゲートが閉じていれば一時刻前のセル内容は破棄される。 全セルの忘却ゲートが全閉ならば通常の多層ニューラルネットワークであることと同義である。 すなわち記憶内容を保持しないことを意味する。 エルマンネットなどの，単純再帰型ニューラルネットワークでフィードバック信号がが存在しない場合に相当する。</p>
+<p>以上をまとめると，セルへの入力は，1) 下層からの信号，2) 上層からの信号 (Jordan ネットの帰還信号) 3) 自分自身の内容，(Elman ネットの帰還信号) が用いられる。 これら入力信号が，1) 入力信号そのもの, 2) 入力ゲートの開閉制御用信号, 3) 出力ゲートの開閉制御用信号, 4) 忘却ゲートの開閉制御用信号 という 4 種類に用いられる。 すなわち，LSTM のパラメータ数は SRN に比べて 4 倍となる。</p>
+<p>セルの出力関数として ハイパーボリックタンジェント関数 (<span class="math inline">\(\tanh\)</span>) が，ゲートの出力関数にはシグモイド関数 <span class="math inline">\([1/(1+e(-x)]^{-1}\)</span> が持ちいられる。 その理由はハイパーボリックタンジェント関数の方が収束が早いこと，シグモイド関数は値域が <span class="math inline">\([0,1]\)</span> であるためゲートの開閉に直接対応しているからである。</p>
+<h2 id="lstm-におけるゲートの生理学的対応物">2.1 LSTM におけるゲートの生理学的対応物</h2>
+<!--Physiological correlates of gates in LSTM-->
+<p>LSTM のゲートは，前シナプス抑制と関連すると考えられる <span class="citation" data-cites="2016McComas_presynaptic_inihibition">(McComas 2016)</span>。 また，ウミウシのエラ引っ込め反応時に，ニューロンへの入力信号ではなく，入力信号を修飾する結合が存在する(下図)。 運動野，感覚野に見られる神経機構であるので，ニューラルネットワークへの生物学的対応物であると考えられる。</p>
+<center>
+<img src="figures/2016McComas_presynaptic_inhibition.jpg" style="width:33%"> <img src="figures/shunting-inhibition.jpg" style="width:33%"><br><br/>
+<p style="text-align: left; width:88%; background-color:cornsilk;">
+<strong>前シナプス抑制の概念図</strong> 左上: 入力された 1 次求心性線維(A), 2 次ニューロン(運動ニューロンまたは感覚リレーニューロン C), 制御性シナプス前線維(B) の間のシナプス配置の模式図。<br/> 左下: 一次求心性線維 (A) と二次ニューロン(C) を， 求心性線維のみの刺激 (A) とシナプス前抑制性線維との刺激 (A <span class="math inline">\(\pm\)</span> B) によって誘発される反応を仮想的に記録したもの。 <span class="citation" data-cites="2016McComas_presynaptic_inihibition">(McComas 2016)</span> Fig. 2 より。<br/> 右: 画像 <a href="http://kybele.psych.cornell.edu/~edelman/Psych-3140/shunting-inhibition.jpg" class="uri">http://kybele.psych.cornell.edu/~edelman/Psych-3140/shunting-inhibition.jpg</a> <!-- Top: schematic of synaptic arrangements between incoming primary afferent fiber (A), a second-order neuron (motoneuron or sensory relay neuron, C), and a regulatory presynaptic fiber (B). 
+Bottom: hypothetical recordings of responses evoked in the primary afferent fiber (A) and second-order neuron (C) by stimulation of the afferent fiber alone (A) and with the presynaptic inhibitory fiber (A pm B). -->
+</p>
+</center>
+<center>
+<!-- sea slug, ウミウシ。Mollush 軟体動物，-->
+<img src="figures/C87-fig2_25.jpg" style="width:48%"> <!-- <img src="figures/shunting-inhibition.jpg" style="width:29%"><br> --> <img src="figures/C87-fig2_24.jpg" style="width:27%"> <br>
+<p style="text-align:left; width:88%; background-color:cornsilk;">
+<!-- アメフラシ (Aplysia) のエラ引っ込め反応(a.k.a. 防御反応)の模式図<    br/>
+<http://kybele.psych.cornell.edu/~edelman/Psych-2140/week-2-2.html> の 222ページより<br>
+画像はそれぞれ <http://kybele.psych.cornell.edu/~edelman/Psych-2140/shunting-inhibition.jpg>, <br> -->
+画像はそれぞれ <a href="http://kybele.psych.cornell.edu/~edelman/Psych-2140/C87-fig2.24.jpg" class="uri">http://kybele.psych.cornell.edu/~edelman/Psych-2140/C87-fig2.24.jpg</a> <a href="http://kybele.psych.cornell.edu/~edelman/Psych-2140/C87-fig2.25.jpg" class="uri">http://kybele.psych.cornell.edu/~edelman/Psych-2140/C87-fig2.25.jpg</a> より<br>
+</p>
+</center>
+<!-- 
+また古くは PDP のバイブルにもシグマパイユニット ($\sigma\pi$ units) として既述が見られます。各ユニットを掛け算
+ ($\pi$) してから足し算 ($\sum$) するのでこのように命名されたのでしょう。
+
+<center>
+
+<img src="../assets/sigma-pi.jpg" style="width:64%"><br>
+From [@PDPbook] chaper 7
+</center>
+
+ -->
+<h2 class="unnumbered" id="文献">文献</h2>
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-1988Dell">
+<p>Dell, Gary S. 1988. “The Retrieval of Phonological Forms in Production: Tests of Predictions from a Connectionist Model.” <em>Journal of Memory and Language</em> 27: 124–42.</p>
+</div>
+<div id="ref-1997Dell_DSMSG">
+<p>Dell, Gary S., Myrna F. Schwartz, Nadine Martin, Eleanor M. Saffran, and Deborah A. Gagnon. 1997. “Lexical Access in Aphasic and Nonaphasic Speakers.” <em>Psychological Review</em> 104 (4): 801–38.</p>
+</div>
+<div id="ref-2015LSTM_SpaceOdessy">
+<p>Greff, Klaus, Rupesh Kumar Srivastava, Jan Koutník, Bas R. Steunebrink, and Jürgen Schmidhuber. 2015. “LSTM: A Search Space Odyssey.” <em>ArXiv:1503.04069</em>.</p>
+</div>
+<div id="ref-1997LSTM">
+<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9: 1735–80.</p>
+</div>
+<div id="ref-1960Kalman">
+<p>Kalman, Richard E. 1960. “A New Approach to Linear Filtering and Prediction Problems.” <em>Transactions of the ASME–Journal of Basic Engineering</em> 82 (Series D): 35–45.</p>
+</div>
+<div id="ref-2016McComas_presynaptic_inihibition">
+<p>McComas, Alan J. 2016. “Hypothesis: Hughlings Jackson and Presynaptic Inhibition: Is There a Big Picture?” <em>Journal of Neurophysiology</em> 116: 41–50. <a href="https://doi.org/10.1152/jn.00371.2015">https://doi.org/10.1152/jn.00371.2015</a>.</p>
+</div>
+<div id="ref-2005Roelofs_weaverplusplus">
+<p>Roelofs, Ardi. 2005. “Spoken Word Planning, Comprehending, and Self-Monitoring: Evaluation of Weaver++.” In <em>Phonological Encoding and Monitoring in Normal and Pathological Speech</em>, edited by R. J. Hartsuiker, R. Bastiaanse, A. Postma, and F. Wijnen, 42–63. Psychology Press.</p>
+</div>
+<div id="ref-2016Walker_Hickok_SLAM">
+<p>Walker, Grant M., and Gregory Hickok. 2016. “Bridging Computational Approaches to Speech Production: The Semantic–Lexical–Auditory–Motor Model (SLAM).” <em>Psychonomic Bulletin and Review</em> 23: 339–52. <a href="https://doi.org/10.3758/s13423-015-0903-7">https://doi.org/10.3758/s13423-015-0903-7</a>.</p>
+</div>
+<div id="ref-2016Asakawa_AIdict">
+<p>浅川伸一. 2016. “リカレントニューラルネットワーク.” In <em>人工知能学事典新版</em>. 東京: 共立出版.</p>
+</div>
+</div>
+</body>
+</html>
