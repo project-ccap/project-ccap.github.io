@@ -113,6 +113,9 @@
 <li><p><strong>keywords</strong>: Picture naming tasks, the Interactive Activation model, parameter estimation, softmax function, one-hot expression, Boltzmann distribution, thermal parameter</p></li>
 <li><p><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021cnps_ccap1_simpleDell.ipynb"><img src="https://ShinAsakawa.github.io./assets/colab_icon.svg"> Dell モデルの簡便解法デモ</a></p></li>
 </ul>
+<center>
+<img src="figures/2021cnps_new_Dell_proposed.svg" style="width:49%">
+</center>
 <!-- $^1$ 東京女子大学, $^2$ 北海道大学, $^3$ イムス板橋リハビリテーション病院, $^4$ 国際交流基金, $^5$ クラーク病院, $^6$ 静岡県立大学, $^7$ 目白大学-->
 <!-- 
 橋本先生：
@@ -245,7 +248,7 @@ C: Consequences of feedback-formal neighbors of the target are active at the L l
 温度パラメータの導入による反応確率の解釈についても本報告で議論する。
 * 分野: 神経心理，脳科学, 認知，認知モデル, 言語学，心理学, 臨床検査，医学・リハビリ応用, 実験，臨床データ解析, 理論，モデル論，機械学習，AI，シミュレーション, 調査，分析
 * 研究会からのメール: どのセッションに割り振られても結構です。一連の発表の 1 番目です。
- -->
+-->
 <h1 id="はじめに">1. はじめに</h1>
 <p>絵画命名課題を説明する従来の IA モデルの持つ問題点を取り上げ，その簡便法を提案する。 従来手法では，結果を検討するための <a href="http://langprod.cogsci.illinois.edu/cgi-bin/webfit.cgi">web インターフェイスが用意されている</a><!-- * http://cogsci.uci.edu/~alns/webfit.html-->ものの，ハイパーパラメータが固定されていた。 このため，シミュレーション結果を解釈することが容易でなかった。 本稿に示す提案手法に従えば，従来手法では調整が困難であったパラメータの検討が容易になる。</p>
 <p>絵画命名課題は，計算論的臨床失語症プロジェクトの中心課題の一つである。 言語関連の認知神経心理学課題の中で，視覚入力を音声出力へと変換する課題は， 記憶や注意などの，高次認知機能とは独立に計測可能だと考えられてきたこと， 関連する認知心理学モデル (パンデモニアム<span class="citation" data-cites="1958Selfridge_pandemonium">(Selfridge 1958)</span> やロゴジェンモデル<span class="citation" data-cites="1969Morton_logogen">(Morton 1969)</span> など) と親和することから多くの研究がなされてきた。 <!-- 聴理解，読解，呼称・説明，復唱，（文字）音読，書き取り，--> 1980 年代に提唱された相互活性化モデル (以下 IA)<span class="citation" data-cites="1981McClelland_Rumelhart_IA1">(McClelland and Rumelhart 1981)</span> に基づいて，絵画命名課題を説明するモデルである 2 段階相互活性化モデル<span class="citation" data-cites="1988Dell">(Dell 1988)</span> は，それらの中の代表的な一モデルとなっている。 本稿では IA モデルの改良を試みた。 取り上げたモデルは <strong>二段階相互活性化モデル</strong> e.g. Levelt<span class="citation" data-cites="1989Levelt_speaking">(Levelt 1989)</span>, Dell<span class="citation" data-cites="1986Dell_spread_activation">(Dell 1986)</span>, Roelofs<span class="citation" data-cites="1992Roelofs">(Roelofs 1992)</span> に基づくものである。</p>
@@ -495,6 +498,7 @@ z\left(\mathbf{x}_{t-1};a_1^,a_2^2\right)
 -->
 <h1 id="考察">5. 考察</h1>
 <p>提案手法は，凸 関数なのか？という疑問がある。 パラメータ空間を探索する際に，大域解が一意に定まることを数学的に証明できていない。 極言すれば，双安定になる可能性が考えられるかも知れない。 以下では，双安定について，言語的な既述を試みる。 例えば，s の損傷を p からのフィードバックによって補完し，補完された項目により p が強化されることが考えられる。 その p により，見かけ上 s の損傷の値が変容することが考えられる。</p>
+<p>これについては，相互活性化モデルの性質上，ある層の変化を別の層の変化が補うことが起こりうる。 逆に考えれば，</p>
 <h2 id="モデルの拡張">5.1 モデルの拡張</h2>
 <p><cennter> <img src="figures/2021cnps_Dell_model_revised.svg" style="width:66%"><br/> 図 想定可能なモデル </cennter></p>
 <!-- 
@@ -544,29 +548,35 @@ LSTM のゲートの開平動作の異常を用いて，保続，言い間違え
 <li><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb"><img src="https://ShinAsakawa.github.io/assets/colab_icon.svg"> Roelofs, A., Piai, V., Garrido Rodriguez, G., &amp; Chwilla, D. J. (2016) 絵画命名課題における言語間の干渉と促進の電気生理学的研究 Electrophysiology of cross-language interference and facilitation in picture naming</a>, <a href="https://osf.io/bw4pv/">オリジナルソースコード</a></li>
 <li><a href="https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb"><img src="https://ShinAsakawa.github.io/assets/colab_icon.svg"> Roelofs, (2018) 絵画命名時の累積意味効果， 意味遮断効果， 意味撹乱効果の統一的な計算論的説明 A unified computational account of cumulative semantic, semantic blocking, and semantic distractor effects in picture naming</a> オリジナルソースコード， 論文中にはソースコードのアドレスとして https://osf.io/b2mvu/ が記載されているが，アップデートされている。 新 URLは https://osf.io/6ysp2/</li>
 </ol>
-<h1 id="付録-所与のパラメータとは以下のような値である">付録 所与のパラメータとは以下のような値である:</h1>
-<ol type="1">
-<li>jolt のタイミングが t=8 に固定されている。jolt は処理途中のどこかで一回だけ意思決定が行われ，その影響が最終出力に決定的な影響を与える。</li>
-<li>シミュレーションの反復回数は 16 に固定されている。ところがこの 16 回を正当化する根拠は示されていない</li>
-<li>jolt の値が 100 である。だがこの値の意味づけがなされていない</li>
-</ol>
-<ul>
-<li>Garret, Levelt, Dell, Hickok, など伝統である意味入力は，詳細に分割する。</li>
-<li>各構成要素間の情報は確率論的な推論が用いられると仮定する。例えば lemma 情報 へ／から の入出力は確率論的な推論が行われること仮定する。 各構成要素から別の要素への情報の伝達は，確率分布からのサンプリングされた結果であるとみなす。 これにより確率分布が偏っていることをもって，反応表出の偏りや，反応の一貫性，再現性の無さ，再現性の不安定な状態，を表現可能である</li>
-<li>提案するモデルの基本構造は <strong>二段階相互活性化モデル</strong> e.g. Levelt<span class="citation" data-cites="1989Levelt_speaking">(Levelt 1989)</span>, Dell<span class="citation" data-cites="1986Dell_spread_activation">(Dell 1986)</span>, Roelofs<span class="citation" data-cites="1992Roelofs">(Roelofs 1992)</span> に基づくものである。 すなわち，入力，中央の内部表象，出力 の 3 部からなる。</li>
-<li>提案モデルでは，各部位 から／へ の情報伝達にも確率的な推論と <strong>サンプリング sampling</strong> が行われる。 このサンプリングを仮定することにより，我々の脳内では統一的な処理原理が採択されていることを仮定している。 加えて，このサンプリングを採択することにより 提案モデルでは，<strong>音韻手がかり cue による促進効果</strong>，課題成績の改善，<strong>正負のプライミング</strong>，<strong>累積意味干渉 cumulative semantic interference</strong> <span class="citation" data-cites="2006Howard_Coltheart">(Howard et al. 2006)</span>，が実現できる。 実装には <strong>変分自己符号化器 variational auto-encoders</strong> モデル<span class="citation" data-cites="2019Kingma_Welling_VAE">(Kingma and Welling 2019)</span> を採択した。 発話における自己モニタリング機構と同一視できるため WEAVER++<span class="citation" data-cites="1999Levelt_WEAVER">(Levelt, Roelofs, and Meyer 1999)</span> のニューラルネットワークを用いた実現と見なしうる。 また，この構造は翻訳モデルである seq2sec<span class="citation" data-cites="2014Sutskever_Sequence_to_Sequence">(Sutskever, Vinyals, and Le 2014)</span> と，翻訳モデルに <strong>注意</strong> を導入したモデル<span class="citation" data-cites="2014Bahdanau_NMT">(Bahdanau, Cho, and Bengio 2015)</span> と同一構造と見なしうる。<br />
-</li>
-<li>反応潜時は Luce<span class="citation" data-cites="Luce1986">(Luce 1986)</span> に基づく。従って <strong>WEAVER モデル</strong><span class="citation" data-cites="1997Roelofs_WEAVER">(Roelofs 1997)</span> と同一の機構によって実現されると仮定する。</li>
-<li>提案モデルを支持する生理学的対応物を示す多くの研究が存在する。 典型定期には，言語における <strong>腹側経路</strong> と <strong>背側経路</strong> との区別<span class="citation" data-cites="2004Hickok_Poeppel_Dorsal_ventral_anatomy_of_language">(Hickok and Poeppel 2004)</span>,</li>
-<li><strong>弓状束 arcuate fasciculus</strong>, <strong>最外包 extreme capule</strong>, <strong>鉤状束 Uncinate fasciculus</strong>, <strong>上縦束 longitudinal fasciculus</strong> をネットワークが想定される。</li>
-</ul>
+<!-- 
+# 付録 所与のパラメータとは以下のような値である: 
+
+1. jolt のタイミングが t=8 に固定されている。jolt は処理途中のどこかで一回だけ意思決定が行われ，その影響が最終出力に決定的な影響を与える。
+2. シミュレーションの反復回数は 16 に固定されている。ところがこの 16 回を正当化する根拠は示されていない 
+3. jolt の値が 100 である。だがこの値の意味づけがなされていない
+-->
+<!-- 
+* Garret, Levelt, Dell, Hickok, など伝統である意味入力は，詳細に分割する。
+* 各構成要素間の情報は確率論的な推論が用いられると仮定する。例えば lemma 情報 へ／から の入出力は確率論的な推論が行われること仮定する。
+各構成要素から別の要素への情報の伝達は，確率分布からのサンプリングされた結果であるとみなす。
+これにより確率分布が偏っていることをもって，反応表出の偏りや，反応の一貫性，再現性の無さ，再現性の不安定な状態，を表現可能である
+* 提案するモデルの基本構造は **二段階相互活性化モデル** e.g. Levelt[@1989Levelt_speaking], Dell[@1986Dell_spread_activation], Roelofs[@1992Roelofs] に基づくものである。
+すなわち，入力，中央の内部表象，出力 の 3 部からなる。
+* 提案モデルでは，各部位 から／へ の情報伝達にも確率的な推論と **サンプリング sampling** が行われる。
+このサンプリングを仮定することにより，我々の脳内では統一的な処理原理が採択されていることを仮定している。
+加えて，このサンプリングを採択することにより 提案モデルでは，**音韻手がかり cue による促進効果**，課題成績の改善，**正負のプライミング**，**累積意味干渉 cumulative semantic interference** [@2006Howard_Coltheart]，が実現できる。
+実装には **変分自己符号化器 variational auto-encoders** モデル[@2019Kingma_Welling_VAE] を採択した。
+発話における自己モニタリング機構と同一視できるため WEAVER++[@1999Levelt_WEAVER] のニューラルネットワークを用いた実現と見なしうる。
+また，この構造は翻訳モデルである seq2sec[@2014Sutskever_Sequence_to_Sequence] と，翻訳モデルに **注意** を導入したモデル[@2014Bahdanau_NMT] と同一構造と見なしうる。        
+* 反応潜時は Luce[@Luce1986] に基づく。従って **WEAVER モデル**[@1997Roelofs_WEAVER] と同一の機構によって実現されると仮定する。
+* 提案モデルを支持する生理学的対応物を示す多くの研究が存在する。
+典型定期には，言語における **腹側経路** と **背側経路** との区別[@2004Hickok_Poeppel_Dorsal_ventral_anatomy_of_language], 
+* **弓状束 arcuate fasciculus**, **最外包 extreme capule**, **鉤状束 Uncinate fasciculus**, **上縦束 longitudinal fasciculus** をネットワークが想定される。
+-->
 <h1 class="unnumbered" id="文献">文献</h1>
 <div id="refs" class="references hanging-indent" role="doc-bibliography">
 <div id="ref-BoltzmannMachine1985">
 <p>Ackley, D. H., Geoffrey E. Hinton, and Terry J. Sejnowski. 1985. “A Learning Algorithm for Boltzmann Machines.” <em>Cognitive Science</em> 9: 147–69.</p>
-</div>
-<div id="ref-2014Bahdanau_NMT">
-<p>Bahdanau, Dzmitry, Kyunghyun Cho, and Yoshua Bengio. 2015. “Neural Machine Translation by Jointly Learning to Align and Translate.” In <em>Proceedings in the International Conference on Learning Representations (ICLR)</em>, edited by Yoshua Bengio and Yann LeCun. San Diego, CA, USA. <a href="http://arxiv.org/abs/1409.0473">http://arxiv.org/abs/1409.0473</a>.</p>
 </div>
 <div id="ref-2020Chen_Hinton_SIMCLR">
 <p>Chen, Ting, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton. 2020. “A Simple Framework for Contrastive Learning of Visual Representations.” <em>ArXiv Preprint</em> [cs.LG] (arXiv:2002.05709).</p>
@@ -583,29 +593,17 @@ LSTM のゲートの開平動作の異常を用いて，保続，言い間違え
 <div id="ref-1997Dell_DSMSG">
 <p>Dell, Gary S., Myrna F. Schwartz, Nadine Martin, Eleanor M. Saffran, and Deborah A. Gagnon. 1997. “Lexical Access in Aphasic and Nonaphasic Speakers.” <em>Psychological Review</em> 104 (4): 801–38.</p>
 </div>
-<div id="ref-2004Hickok_Poeppel_Dorsal_ventral_anatomy_of_language">
-<p>Hickok, Gregory, and David Poeppel. 2004. “Dorsal and Ventral Streams: A Framework for Understanding Aspects of the Functional Anatomy of Language.” <em>Cognition</em> 92: 67–99.</p>
-</div>
 <div id="ref-BoltzmannMachine1986">
 <p>Hinton, Geoffrey E., and Terry J. Sejnowski. 1986. “Learning and Relearning in Boltzmann Machines.” In <em>Parallel Distributed Processing: Explorations in the Microstructures of Cognition</em>, edited by James L. McClelland and David E. Rumelhart, 1:282–317. Cambridge, MA: MIT Press.</p>
 </div>
-<div id="ref-2006Howard_Coltheart">
-<p>Howard, David, Lyndsey Nickels, Max Coltheart, and Jennifer Cole-Virtueb. 2006. “Cumulative Semantic Inhibition in Picture Naming: Experimental and Computational Studies.” <em>Cognition</em> 100: 464–82. <a href="https://doi.org/10.1016/j.cognition.2005.02.006">https://doi.org/10.1016/j.cognition.2005.02.006</a>.</p>
-</div>
 <div id="ref-2020Jaiswal_ssl">
 <p>Jaiswal, Ashish, Ashwin Ramesh Babu, Mohammad Zaki Zadeh, Debapriya Banerjee, and Fillia Makedon. 2020. “A Survey on Contrastive Self-Supervised Learning.” <em>ArXiv Preprint</em> [cs.CV] (arXiv:2011.00362).</p>
-</div>
-<div id="ref-2019Kingma_Welling_VAE">
-<p>Kingma, Diederik P., and Max Welling. 2019. “An Introduction to Variational Autoencoders.” <em>Foundations and Trends in Machine Learning:</em> 12 (4): 307–92. <a href="https://doi.org/doi:10.1561/2200000056">https://doi.org/doi:10.1561/2200000056</a>.</p>
 </div>
 <div id="ref-1989Levelt_speaking">
 <p>Levelt, Willem J. M. 1989. <em>Speaking from Intention to Articulation</em>. ACL-MIT Press Series in Natural-Language Processing. MIT Press.</p>
 </div>
 <div id="ref-1999Levelt_WEAVER">
 <p>Levelt, Willem J. M., Ardi Roelofs, and Antje S. Meyer. 1999. “A Theory of Lexical Access in Speech Production.” <em>Behavioral and Brain Sciences</em> 22: 1–38.</p>
-</div>
-<div id="ref-Luce1986">
-<p>Luce, R. D. 1986. <em>Response Times</em>. New York: Oxford University Press.</p>
 </div>
 <div id="ref-2013McClelland_IA_review">
 <p>McClelland, James L. 2013. “Integrating Probabilistic Models of Perception and Interactive Neural Networks: A Historical and Tutorial Review.” <em>Frontiers in Psychology</em> 4 (503). <a href="https://doi.org/doi:10.3389/fpsyg.2013.00503">https://doi.org/doi:10.3389/fpsyg.2013.00503</a>.</p>
@@ -642,9 +640,6 @@ LSTM のゲートの開平動作の異常を用いて，保続，言い間違え
 </div>
 <div id="ref-1958Selfridge_pandemonium">
 <p>Selfridge, Oliver G. 1958. “Pandemonium: A Paradigm for Learning.” In <em>Mechanisation of Thought Processes: Proceedings of a Symposium Held at the National Physical Laboratory</em>, 1:513–26. London, HMSO.</p>
-</div>
-<div id="ref-2014Sutskever_Sequence_to_Sequence">
-<p>Sutskever, Ilya, Oriol Vinyals, and Quoc V. Le. 2014. “Sequence to Sequence Learning with Neural Networks.” In <em>Advances in Neural Information Processing Systems (NIPS)</em>, edited by Zoubin Ghahramani, M. Welling, C. Cortes, N. D. Lawrence, and K. Q. Weinberger, 27:3104–12. Montreal, BC, Canada. <a href="http://arxiv.org/abs/1409.3215v3">http://arxiv.org/abs/1409.3215v3</a>.</p>
 </div>
 </div>
 </body>
