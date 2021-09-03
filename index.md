@@ -13,6 +13,11 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
+
+## 2021_09
+
+- [BERT の超簡単な使い方 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_0903BERT_demo.ipynb){:target="_blank"}
+
 ## 2021_08
 
 - [認知神経心理学研究会](2021cnps){:target="_blank"}
