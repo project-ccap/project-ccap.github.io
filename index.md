@@ -16,6 +16,8 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_09
 
+- [ResNet18 による各検査図版の視覚的特徴 <img src="https://img.icons8.com/color/48/000000/microsoft-excel-2019--v1.png" style="width: 28px"/>](https://project-ccap.github.io/2020-0713ccap_ResNet.xlsx){:target="_blank"}
+ResNet18 に各検査図版を入力して，最終直下層の出力を得ました。ここで言う検査とは次の 4 検査です: TLPA, SALA, PNT, Snodgrass and Vanderwert. **各図版には著作権がついている可能性がありますが，各ベクトルのデータの著作権は浅川が保持しています**。 一枚の図版あたり 512 次元のベクトルです。 このベクトルを各検査図版ごとにエクセルファイルにしました。
 - [BERT の超簡単な使い方 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_0903BERT_demo.ipynb){:target="_blank"}
 
 ## 2021_08
