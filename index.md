@@ -16,6 +16,8 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_09
 
+- [Goldrick (2016) SLAM と既存の証拠との統合: Walker and Hickok (2015) へのコメント](https://project-ccap.github.io/2016Goldrick_Integrating_SLAM_with_existing_evidence_Comment_on_Walker_and_Hickok2015.pdf){:target="_blank"}
+- [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
 - [ResNet18 による各検査図版の視覚的特徴 <img src="https://img.icons8.com/color/48/000000/microsoft-excel-2019--v1.png" style="width: 28px"/>](https://project-ccap.github.io/2020-0713ccap_ResNet.xlsx){:target="_blank"}
 ResNet18 に各検査図版を入力して，最終直下層の出力を得ました。ここで言う検査とは次の 4 検査です: TLPA, SALA, PNT, Snodgrass and Vanderwert. **各図版には著作権がついている可能性がありますが，各ベクトルのデータの著作権は浅川が保持しています**。 一枚の図版あたり 512 次元のベクトルです。 このベクトルを各検査図版ごとにエクセルファイルにしました。
 - [BERT の超簡単な使い方 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_0903BERT_demo.ipynb){:target="_blank"}
@@ -27,7 +29,6 @@ ResNet18 に各検査図版を入力して，最終直下層の出力を得ま�
 ### 文献資料
 - [名詞の意味に関連した人間の脳活動の予測, Mitchell, 2018, Predicting Human Brain Activity Associated with the Meanings of Nouns](https://shinasakawa.github.io/2008Mitchell_Predicting_Human_Brain_Activity_Associated_with_the_Meanings_of_Nounsscience.pdf){:target="_blank"}
 - [失語症の命名課題における無回答エラーモデル, Dell et al.(2004) Models of errors of omission in aphasic naming](https://project-ccap.github.io/2004Dell_Models_of_errors_of_omission_in_aphasic_naming.pdf){:target="_blank"}
-- [発話産出への計算機的アプローチの橋渡し：意味(S)-語彙(L)-聴覚(A)-運動(M) モデル, Walker and Hickok (2016) Bridging computational approaches to speech production: The semantic–lexical–auditory–motor model (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
 - [ゴール駆動型深層学習モデルを用いた感覚皮質の理解 Yamins(2016) Nature](https://project-ccap.github.io/2016YaminsDiCarlo_Using_goal-driven_deep_learning_models_to_understand_sensory_cortex.pdf){:target="_blank"}
 
 ## 2021_0728
