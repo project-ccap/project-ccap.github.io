@@ -16,6 +16,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_09
 
+- [McClelland (2014) 知覚と認知における相互作用的な活性化と相互制約充足](https://project-ccap.github.io/2014McClelland_Interactive_Activation_and_Mutual_Constraint_Satisfaction_in_Perception_and_Cognition.pdf){:target="_blank"}
 - [Goldrick (2016) SLAM と既存の証拠との統合: Walker and Hickok (2015) へのコメント](https://project-ccap.github.io/2016Goldrick_Integrating_SLAM_with_existing_evidence_Comment_on_Walker_and_Hickok2015.pdf){:target="_blank"}
 - [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
 - [wrod2vec による TLPA, SALA 図版の意味ベクトル <img src="https://img.icons8.com/color/48/000000/microsoft-excel-2019--v1.png" style="width: 28px"/>](https://project-ccap.github.io/2021_0905ccap_tlpa_word2vec.xlsx){:target="_blank"}
