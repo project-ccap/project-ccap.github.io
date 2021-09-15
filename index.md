@@ -16,6 +16,8 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_09
 
+- [Bates et al (2003) ボクセルに基づく病変・症状マッピング](https://project-ccap.github.io/2003Bates_Dronkers_Voxel-based_lesi-symptom_mapping.pdf){:target="_blank"}
+- [Catani and Mesalum (2008) 言語と失語症における弓状束と離断のテーマ：歴史と現在の状況](https://project-ccap.github.io/2008Catani_Mesulam_arcuate_fasciculus_and_the_disconnection_theme_in_language_and_aphasia_History_and_current_state.pdf){:target="_blank"}
 - [McClelland (2014) 知覚と認知における相互活性化と相互制約充足](https://project-ccap.github.io/2014McClelland_Interactive_Activation_and_Mutual_Constraint_Satisfaction_in_Perception_and_Cognition.pdf){:target="_blank"}
 - [Goldrick (2016) SLAM と既存の証拠との統合: Walker and Hickok (2015) へのコメント](https://project-ccap.github.io/2016Goldrick_Integrating_SLAM_with_existing_evidence_Comment_on_Walker_and_Hickok2015.pdf){:target="_blank"}
 - [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
