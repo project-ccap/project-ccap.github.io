@@ -16,6 +16,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_09
 
+- [Roelofs (2014) 失語症の言語生成における背側経路の説明 WEAVER＋＋／ARCモデル](https://project-ccap.github.io/2014Roelofs_A_dorsal-pathway_account_of_aphasic_language_production_The_WEAVER++ARC_model.pdf){:target="_blank"}
 - [Bates et al (2003) ボクセルに基づく病変・症状マッピング](https://project-ccap.github.io/2003Bates_Dronkers_Voxel-based_lesi-symptom_mapping.pdf){:target="_blank"}
 - [Catani and Mesalum (2008) 言語と失語症における弓状束と離断のテーマ：歴史と現在の状況](https://project-ccap.github.io/2008Catani_Mesulam_arcuate_fasciculus_and_the_disconnection_theme_in_language_and_aphasia_History_and_current_state.pdf){:target="_blank"}
 - [McClelland (2014) 知覚と認知における相互活性化と相互制約充足](https://project-ccap.github.io/2014McClelland_Interactive_Activation_and_Mutual_Constraint_Satisfaction_in_Perception_and_Cognition.pdf){:target="_blank"}
