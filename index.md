@@ -15,7 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_10
 
-- [JNPS プレゼンテーションビデオ](2021jnps_presentation.mp4)
+- [JNPS プレゼンテーションビデオ](https://drive.google.com/file/d/10Qu7oARF_ms9xBOTxoKyx8ZCjRD3I0Ks/view?usp=sharing){:target="_blank"}
 
 ## 2021_09
 
