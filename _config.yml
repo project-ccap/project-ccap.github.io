@@ -1,1 +1,12 @@
 theme: minima
+title: "ccap プロジェクト"
+
+markdown: kramdown
+permlink: pretty
+highlighter: rouge
+port: 4004
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
