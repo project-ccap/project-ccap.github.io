@@ -15,6 +15,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 
 ## 2021_10
 
+- [tiny celeba dataset](data/tiny_celeba.tgz)
 - [JNPS プレゼンテーションビデオ](2021jnps_presentation.mp4)
 
 ## 2021_09
