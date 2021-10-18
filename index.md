@@ -16,7 +16,7 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 ## 2021_10
 
 - [10月18日資料 1 Harm & Seidenberg, 1999](https://project-ccap.github.io/1999Harm_Seidenberg_ja.pdf){:target="_blank"}
-- [10月18日資料 2 Ijuin & Wydell, 2018](https://project-ccap.github.io/2018Ijun_Wydell_ja.pdf){:target="_blank"}
+- [10月18日資料 2 Ijuin & Wydell, 2018](https://project-ccap.github.io/2018Ijuin_Wydell_ja.pdf){:target="_blank"}
 - [JNPS プレゼンテーションビデオ](https://drive.google.com/file/d/10Qu7oARF_ms9xBOTxoKyx8ZCjRD3I0Ks/view?usp=sharing){:target="_blank"}
 
 ## 2021_09
