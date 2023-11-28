@@ -5,6 +5,8 @@ author: CCAP プロジェクト
 ---
 <link href="asamarkdown.css" rel="stylesheet">
 
+<img src="2023DaSiC_QRcode.png" style="width:12%">
+
 <!-- # [DaSiC2023 ワークショップ](https://sites.google.com/view/dasic7-2023){:target="_blank"} -->
 
 # [DaSiC203 ワークショップホームページ](https://sites.google.com/view/dasic7-2023/workshop?authuser=0){:target="_blank"}
