@@ -13,6 +13,8 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
+## [DaSiC2023](2023dasic)
+
 ## 2021_10
 
 - [10月18日資料 1 Harm & Seidenberg, 1999](https://project-ccap.github.io/1999Harm_Seidenberg_ja.pdf){:target="_blank"}
@@ -58,15 +60,15 @@ ResNet18 に各検査図版を入力して，最終直下層の出力を得ま�
 ## 2021_0722
 
 <center>
-	<img src="figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:66%"><br/>
-	Roelofs (2004) Fig. 2 
+<img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:66%"><br/>
+Roelofs (2004) Fig. 2
 </center>
 
 - [2021_0705 リカレントニューラルネットワーク 概説 (再)](2016RNNcamp2handout.pdf){:target="_blank"}
 - [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
 
 
-## WEAVER++, Dell モデルの再現シミュレーション colab files 
+## WEAVER++, Dell モデルの再現シミュレーション colab files
 - [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
 - [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
   -  [word2vec による単語連想 + 頻度 デモ <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
