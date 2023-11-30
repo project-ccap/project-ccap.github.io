@@ -1,14 +1,14 @@
 ---
 title: "DaSiC7 (2023) 発表資料"
 author: 浅川伸一
-layout: home
+layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
 
-<link href="asamarkdown.css" rel="stylesheet"></link>
+<!-- <link href="asamarkdown.css" rel="stylesheet"></link> -->
 
-# [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+## [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
 <div class="figcentner">
 <img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif">
@@ -18,42 +18,25 @@ codemirror_mime_type: text/x-cython
 画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
 </div></div>
 
-## 導入的資料
 
 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。
 
-<!-- ## 自己紹介
 
-* 氏名: 浅川 伸一 (あさかわ しんいち) asakawa@ieee.org
-* 東京女子大学 情報処理センター
+## 実習
 
-浅川伸一: 博士 (文学) 東京女子大学情報処理センター勤務。
-早稲田大学在学時はピアジェの発生論的認識論に心酔する。
-卒業後エルマンネットの考案者ジェフ・エルマンに師事，薫陶を受ける。
-以来人間の高次認知機能をシミュレートすることを通して知的であるとはどういうことかを考えていると思っていた。
-著書に「AI 白書 2019, 2018」(2019 年, アスキー出版, 共著)，「深層学習教科書ディープラーニング G 検定(ジェネラリスト)公式テキスト」(2018 年，翔泳社，共著), 「Python で体験する深層学習」(コロナ社, 2016)，「ディープラーニング，ビッグデータ，機械学 習あるいはその心理学」(新曜社, 2015)，「ニューラルネットワークの数理的基礎」「脳損傷とニューラルネットワーク モデル，神経心理学への適用例」いずれも守一雄他編「コネクショニストモデルと心理学」(2001) 北大路書房など
+* [ニューラルネットワークで遊んでみよう](https://komazawa-deep-learning.github.io/tensorflow-playground/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.98055&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false){:target="_blank"}
+* [Transformer による百人一首 エンコーダ・デコーダモデル 実習 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
+* [効率よく t-SNE を使う方法](https://project-ccap.github.io/misread-tsne/)
 
-<div class="figure figcenter">
-<img src="figures/Elman_portrait.jpg" width="33%">
-<div class="figcaption" style="width:33%">
-師匠 Jeff Elman と @USD
-</div></div> -->
-
-## [計算論的臨床失語症プロジェクト ccap project](https://project-ccap.github.io/) の紹介
-
-CCAP is the abbrivatation of Computational Clinical Aphasia Project:
-
-
-# PyTorch
+<!-- # PyTorch -->
 
 * [Pytorch によるニューラルネットワークの構築 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_1115PyTorch_buildmodel_tutorial_ja.ipynb)
 * [Dataset とカスタマイズと，モデルのチェックポイント，微調整 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_simple_fine_tune_tutorial.ipynb)
 * [PyTorch Dataset, DataLoader, Sampler, Transforms の使い方 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_dataset_data_loader_sampler.ipynb)
 
-# tSNE
+<!-- # tSNE -->
 
 * [kmnist による PCA と tSNE の比較 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2019komazawa/blob/master/notebooks/2019komazaawa_kmnist_pca_tsne.ipynb)
-* [効率よく t-SNE を使う方法](https://project-ccap.github.io/misread-tsne/)
 
 # Google colabratory でのファイルの [アップ|ダウン]ロード
 
@@ -251,9 +234,9 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
 
 <div class="figure figcenter">
-<img src="figures/2023_0712projection_concept.svg" width="24%">
-<img src="figures/2021_0831jcss_PPT1.svg" width="29%">
-<img src="figures/2021_0831jcss_PPT2.svg" width="29%">
+<img src="/figures/2023_0712projection_concept.svg" width="24%">
+<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
+<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
 </div>
 
 <!-- ベクトル空間の例として，word2vec による PPT  `~/study/2021ccap/notebooks/2021_0831jcss_PPT_projection.[ip
@@ -430,3 +413,45 @@ Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
 * auto-encoders
 * reinforcement learning {environment, state, action, reward, value, q-value, policy, TD, REINFORCE, MDP, POMDP, SARSA, experice replay, advantage, duealing, double-Q, A3C}
  -->
+
+## 従来モデルの問題点
+
+BERT の意味，文法表現を知るために，從來モデルである word2vec の単語表現概説しておく。
+各単語はワンホット onehot 表現からベクトル表現に変換するモデルを単語埋め込みモデル word embedding models あるいはベクトル表現モデル vector representation models と呼ぶ。
+下図  のように各単語を多次元ベクトルとして表現する。
+
+<img src="/figures/2019Devlin_BERT01upper.svg">
+単語のベクトル表現
+
+
+単語埋め込み (word2vec など) 単語は周辺単語の共起情報 [点相互情報量 PMI](https://en.wikipedia.org/wiki/Pointwise_mutual_information) に基づく [@2014LevyGoldberg:nips,@2014Levy:3cosadd]。
+すなわち周辺単語との共起情報を用いて単語の意味を定義している。
+
+<img src="/figures/2019Devlin_BERT01lower.svg">
+
+形式的には，skip-gram であれ CBOW であれ同じである。
+
+#### 単語埋め込みモデルの問題点
+
+単語の意味が一意に定まらない場合，ベクトル表現モデルでは対処が難しい。
+とりわけ多義語の意味を定めることは困難である。
+%文脈自由表現 下図の単語「アップル」は果物であるか，IT 企業であるかは，その単語を単独で取り出した場合一意に定める事ができない。
+
+<img src="/figures/2019Devlin_BERT02upper.svg">
+単語の意味を一意に定めることができない場合
+
+<img src="/figures/2019Devlin_BERT02lower.svg">
+
+
+単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
+句，節，文のベクトル表現を得る努力がなされてきた。
+適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
+seq2seq モデルは RNN の中間層に文情報が表現されることを利用した翻訳モデルであった
+(図 \ref{fig:bert03})~\citep{2014Sutskever_Sequence_to_Sequence}。
+
+\includegraphics[width=0.74\textwidth]{2019Devlin_BERT03.pdf}
+seq2seq モデル
+
+BERT は上述の從來モデルを凌駕する性能を示した。
+
+
