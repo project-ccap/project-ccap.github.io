@@ -11,7 +11,7 @@ author: CCAP プロジェクト
 
 # 言語データとその「鏡」
 
-## 機械学習モデルを用いた言い誤りと失語症例の分析 
+## 機械学習モデルを用いた言い誤りと失語症例の分析
 
 ## [DaSiC203 ワークショップホームページ](https://sites.google.com/view/dasic7-2023/workshop?authuser=0){:target="_blank"}
 
@@ -28,10 +28,11 @@ author: CCAP プロジェクト
 # スケジュール
 
 1. 13:30-14:10 趣旨説明：寺尾康 (静岡県立大学)
-   * データの紹介1：[健常者の言い誤り](2023DaSIC01Terao_健常者言い誤り紹介.pptx): 寺尾康
-   * データの紹介1：[健常者の言い誤り pdf](2023DaSIC01Terao_健常者言い誤り紹介.pdf): 寺尾康
+   * データの紹介1：[健常者の言い誤り](2023DaSIC01Terao_健常者言い誤り紹介.pptx){:target="_blank"}: 寺尾康
+   * データの紹介1：[健常者の言い誤り pdf](2023DaSIC01Terao_健常者言い誤り紹介.pdf){:target="_blank"}: 寺尾康
+   * [発話についての認知モデルの変遷](DaSic_Sec3発話認知モデルの変遷2.pdf){:target="_blank"}: 寺尾康
    * データの紹介2：失語症の錯語: 上間清司(武蔵野大学), 橋本幸成(目白大学)，立場文音 (JCHO 熊本総合病院)
-2. 14:10-14:50 [機械学習からみた言語モデルの鏡](2023DaSIC02Asakawa_Intro_ML): 浅川伸一（東京女子大学）
+2. 14:10-14:50 [機械学習からみた言語モデルの鏡](2023DaSIC02Asakawa_Intro_ML){:target="_blank"}: 浅川伸一（東京女子大学）
 
    * 休憩
 
@@ -78,7 +79,7 @@ Roelofs (2019) Fig. 1
 * [リカレントニューラルネットワークによる文字ベース言語モデル Javascript](https://komazawa-deep-learning.github.io/character_demo.html)
 * [効果的な t-SNE 使用方法](https://project-ccap.github.io/misread-tsne/index.html)
 
-<!-- 
+<!--
 ### 文献資料
 - [ディープラーニング概説, 2015, LeCun, Bengio, Hinton, Nature](https://komazawa-deep-learning.github.io/2021/2015LeCun_Bengio_Hinton_NatureDeepReview.pdf){:target="_blank"}
 - [ディープラーニング回顧録 Senjowski, 2020, Unreasonable effectiveness of deep learning in artificial intelligence](https://komazawa-deep-learning.github.io/2021/2020Sejnowski_Unreasonable_effectiveness_of_deep_learning_in_artificial_intelligence.pdf){:target="_blank"}
@@ -91,7 +92,7 @@ Roelofs (2019) Fig. 1
 - [ハブ＆スポーク仮説 Lambon Ralph, M., Jefferies, E., Patterson, K, and Rogers, T.T., 2017 The neural and computational bases of semantic cognition](2017LambonRalphJefferiesPattersonRogers_The_neural_and_computational_bases_of_semantic_cognition.pdf){:target="_blank"}
 - [2021_0705 リカレントニューラルネットワーク 概説 (再)](2016RNNcamp2handout.pdf){:target="_blank"} -->
 
-<!-- 
+<!--
 ```python
 from google.colab import files<br/>
 uploaded = files.upload()<br/>
@@ -104,7 +105,7 @@ files.download('ファイル名')
 ``` -->
 
 
-<!-- 
+<!--
 ## その他情報
 
 - [2020-0819 st2vec の tSNE](../2020-0819st2vec_tsne/2020-0819st2vec_tsne.html)
