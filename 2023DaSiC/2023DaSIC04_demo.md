@@ -22,6 +22,18 @@ author: CCAP プロジェクト
 	* [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 - [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
 
+
+- [Roelofs (2014) 失語症の言語生成における背側経路の説明 WEAVER＋＋／ARCモデル](https://project-ccap.github.io/2014Roelofs_A_dorsal-pathway_account_of_aphasic_language_production_The_WEAVER++ARC_model.pdf){:target="_blank"}
+- [Bates et al (2003) ボクセルに基づく病変・症状マッピング](https://project-ccap.github.io/2003Bates_Dronkers_Voxel-based_lesi-symptom_mapping.pdf){:target="_blank"}
+- [McClelland (2014) 知覚と認知における相互活性化と相互制約充足](https://project-ccap.github.io/2014McClelland_Interactive_Activation_and_Mutual_Constraint_Satisfaction_in_Perception_and_Cognition.pdf){:target="_blank"}
+- [Goldrick (2016) SLAM と既存の証拠との統合: Walker and Hickok (2015) へのコメント](https://project-ccap.github.io/2016Goldrick_Integrating_SLAM_with_existing_evidence_Comment_on_Walker_and_Hickok2015.pdf){:target="_bla
+nk"}
+- [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
+
+
+## 2021_08
+
+
 ### プレイグラウンドデモ
 
 * [TensorFlow Playgournd ニューラルネットワークの基本](https://project-ccap.github.io/tensorflow-playground)
