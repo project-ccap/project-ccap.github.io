@@ -80,7 +80,6 @@ output randomness) is indicated with the dashed line at the top, and the random 
 LDA と SVM との違いにあらわれている
 5. アルゴリズムモデル algorithm model
 
-
 <div class="figcenter">
 <img src="/figures/1999Levelt_blueprint.jpg" width="49%">
 <img src="/figures/1885LichtheimFig1.png" width="29%">
@@ -117,19 +116,103 @@ LDA と SVM との違いにあらわれている
 
 ### Breiman によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
 
-<div class="figcenter">
+<center>
 <img src="/figures/2001Breiman_Two_Cultures_fig2.svg" width="39%"><br/>
 <img src="/figures/2001Breiman_Two_Cultures_fig3_.svg" width="39%"><br/>
 <!-- <img src="/2023assets/2001Breiman_cultures.svg" width="23%"><br/> -->
+</center>
 <div class="figcaption">
 <!-- ![Breiman(2001)](/2023assets/2001Breiman_cultures.svg){#fig:2001breiman style="width:34%"} -->
 
 From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_, 2001, Vol. 16, No. 3, 199–231, doi:10.1214/ss/1009213725.
 [pdf](https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full)
-</div></div>
+</div>
 
 Breiman は，アンサンブル学習 (バギング，ブートストラップ法) など，影響力のあるいくつかの機械学習手法を提案した機械学習界隈のレジェンド。
 <!-- Breiman によれば，2 つの文化 -->
+
+<center>
+<img src="/figures/2019Glaser_fig2.jpg" width="49%">
+</center>
+
+1. 工学的な問題の解決 機械学習は， 医療診断， ブレインコンピュータインターフェース， 研究ツールなど， 神経科学者が使用する手法の予測性能を向上させることができる。
+2. 予測可能な変数の特定 機械学習により， 脳や外界に関連する変数がお互いを予測しているかどうかをより正確に判断することができる。
+3. 単純なモデルのベンチマーク。 解釈可能な簡易モデルと精度の高い ML モデルの性能を比較することで， 簡易モデルの良し悪しを判断するのに役立つ。
+4. 脳のモデルとしての役割。 脳が機械学習システム， 例えばディープニューラルネットワークと同様の方法で問題を解決しているかどうかを論じることができる。
+
+
+## 機械学習と脳画像研究および心理モデル
+
+### 言語と機能的脳画像研究を結びつけるために，単語の分散表現を機械学習的手法で表現
+
+- [名詞の意味に関連した人間の脳活動の予測, Mitchell, 2018, Predicting Human Brain Activity Associated with the  Meanings of Nouns](https://shinasakawa.github.io/2008Mitchell_Predicting_Human_Brain_Activity_Associated_with
+_the_Meanings_of_Nounsscience.pdf){:target="_blank"}
+
+<center>
+<img src="/figures/2019mitchell-54_20.png" style="width:49%"><br/>
+</center>
+
+### 下図 左のように，「セロリ」から右の脳画像を予測するために，中間表現として，兆 単位の言語コーパス (言語研究では訓練や検証に用いる言語
+データをコーパスと呼ぶ) から得られた **意味特徴** を用いる
+
+<center>
+<img src="/figures/2008Mitchell_fig1.svg" style="width:49%"><br/>
+<p style="text-align: left;width: 66%; background-color: cornsilk;">
+Mitchell (2008) 図 1. 任意の名詞刺激に対するfMRI活性化を予測するモデルの形式。
+fMRI の活性化は、2段階 プロセスで予測される。
+第 1 段階では，入力刺激語の意味を，典型的な単語使用を示す大規模なテキストコーパスから値を抽出した中間的な意味的特徴の観点から符号化する。
+第 2 段階では，これらの中間的な意味的特徴のそれぞれに関連する fMRIシグネチャ の線形結合として，fMRI 画像を予測する。
+<!-- Form of the model for predicting fMRI activation for arbitrary noun stimuli. 
+fMRI activation is predicted in a two-step process. 
+The first step encodes the meaning of the input stimulus word in terms of intermediate semantic features whose values are extracted from a large corpus of text exhibiting typical word use. 
+The second step predicts the fMRI image as a linear combination of the fMRI signatures associated with each of these intermediate semantic features. -->
+</p>
+</center>
+
+### 他の単語 (下図左) eat, taset, fill などの単語から セロリ を予測する回帰モデルを使って予測する
+<center>
+<img src="/figures/2008Mitchell_fig2.svg" style="width:66%"><br/>
+<p style="text-align: left;width: 66%;background-color: cornsilk;">
+Mitchell (2008) 図 2. 与えられた刺激語に対する fMRI 画像の予測。
+(A) 参加者 P1 が 「セロリ」刺激語に対して、他の 58 の単語で学習した後に予測を行う。
+25 個の意味的特徴のうち 3 つの特徴量のベクトルを単位長にスケーリングすることである。
+(食べる, 味わう, 満たす) について学習した $c_{vi}$ 係数は， パネル上部の 3 つの画像のボクセルの色で示されている。
+刺激語「セロリ」に対する各特徴量の共起値は， それぞれの画像の左側に表示されている (例えば 「食べる（セロリ）」の 共起値は 0.84)。
+刺激語の活性化予測値 ((A）の下部に表示) は 25個 の意味的 fMRI シグネチャを線形結合し， その共起値で重み付けしたものである。
+この図は 予測された三次元画像の1つの水平方向のスライス [z=-12 mm in Montreal Neurological Institute (MNI) space] を示している。
+(B) 「セロリ」と「飛行機」について， 他の 58 個の単語を使った訓練後に予測された fMRI 画像と観察された fMRI 画像。
+予測画像と観測画像の上部（後方領域）付近にある赤と青の 2本 の長い縦筋は、左右の楔状回である。
+<!-- Predicting fMRI images for given stimulus words. 
+(A) Forming a prediction for participant P1 for the stimulus word “celery” after training on 58 other words. 
+Learned $c_{vi}$ coefficients for 3 of the 25 semantic features (“eat,” “taste,” and “fill”) are depicted by the voxel colors in the three images at the top of the panel. 
+The cooccurrence value for each of these features for the stimulus word “celery” is shown to the left of their respective images [e.g., the value for “eat (celery)” is 0.84]. 
+The predicted activation for the stimulus word [shown at the bottom of (A)] is a linear combination of the 25 semantic fMRI signatures, weighted by their co-occurrence values. 
+This figure shows just one horizontal slice [z = –12 mm in Montreal Neurological Institute (MNI) space] of the predicted three-dimensional image. 
+(B) Predicted and observed fMRI images for “celery” and “airplane” after training that uses 58 other words. 
+The two long red and blue vertical streaks near the top (posterior region) of the predicted and observed images are the left and right fusiform gyri. -->}
+</p>
+</center>
+
+
+<center>
+<img src="/figures/2008Mitchell_fig3.svg" style="width:49%"><br/>
+<p style="text-align: left;width:66%;background-color:cornsilk;">
+Mitchell (2008) 図 3. 最も正確に予測されたボクセルの位置。
+参加者 P5 の訓練セット以外の単語について、予測されたボクセルの活性化と実際のボクセルの活性化の相関を表面（A）とグラスブレイン（B）で表したもの。
+これらのパネルは、少なくとも 10個 の連続したボクセルを含むクラスタを示しており、それぞれのボクセルの予測-実際の相関は少なくとも 0.28 である。
+これらのボクセル・クラスターは、大脳皮質全体に分布しており、左右の後頭葉と頭頂葉、左右の豆状部、中央後葉、中央前葉に位置している。
+左右の後頭葉、頭頂葉、中前頭葉、左下前頭回、内側前頭回、前帯状回に分布している。
+(C) 9人の参加者全員で平均化した予測-実測相関の表面表現。
+このパネルは、平均相関が 0.14 以上の連続した10 個以上のボクセルを含むクラスターを示している。
+<!-- Locations of most accurately predicted voxels. 
+Surface (A) and glass brain (B) rendering of the correlation between predicted and actual voxel activations for words outside the training set for participant P5. 
+These panels show clusters containing at least 10 contiguous voxels, each of whose predicted-actual correlation is at least 0.28. 
+These voxel clusters are distributed throughout the cortex and located in the left and right occipital and parietal lobes; left and right fusiform,
+postcentral, and middle frontal gyri; left inferior frontal gyrus; medial frontal gyrus; and anterior cingulate. 
+(C) Surface rendering of the predicted-actual correlation averaged over all nine participants. 
+This panel represents clusters containing at least 10 contiguous voxels, each with average correlation of at least 0.14. -->
+</p>
+</center>
 
 ### chatGPT
 
