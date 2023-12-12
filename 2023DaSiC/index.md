@@ -48,6 +48,7 @@ author: CCAP プロジェクト
 	登壇者全員
 
 * [用語集](glossary)
+* [演者 自己または他己紹介](self_introduction)
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">

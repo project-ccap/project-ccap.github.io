@@ -10,16 +10,18 @@ codemirror_mime_type: text/x-cython
 
 ## [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
-<div class="figcentner">
-<img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif">
-<div class='figcaption'>
-
-怪物と戦うものは，自分もその怪物とならないように用心するがよい。そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
+<center>
+<img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/>
 画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
-</div></div>
+</center>
+
+> 怪物と戦うものは，自分もその怪物とならないように用心するがよい。
+> そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
 
 
-昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。
+> 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
+> LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
+> [Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
 
 
 ## 実習
@@ -140,6 +142,31 @@ Breiman は，アンサンブル学習 (バギング，ブートストラップ�
 3. 単純なモデルのベンチマーク。 解釈可能な簡易モデルと精度の高い ML モデルの性能を比較することで， 簡易モデルの良し悪しを判断するのに役立つ。
 4. 脳のモデルとしての役割。 脳が機械学習システム， 例えばディープニューラルネットワークと同様の方法で問題を解決しているかどうかを論じることができる。
 
+<!-- 訓練済ニューラルネットワークを脳と比較する傾向は，画像認識などの行動課題におけるニューラルネットワークの大きな成果により，最近になって再燃した (He+2015)。
+興味深いことに，これらのネットワークは視覚における腹側流路と類似点が多い。 -->
+
+### 人口ニューラルネットワークと神経細胞の機能的類似
+
+人工ニューラルネットワークと脳の反応特性の類似性は，これらのモデルが脳の計算の重要な側面を捉えている可能性を示す
+
+* 両者 (ニューラルネットワークと神経細胞) 共に階層的，多層的
+* 画像の画素からの情報は通常，十数層の「ニューロン」(ノード) を通して処理される
+* 類似した組織に加えて，その活性化も類似
+  * 初期ノードは Gabor のような受容野を持つ (Güçlü&van_Gerven2015)，V1 に見られるエッジ検出器と類似
+  * これらのネットワークの初期層/中間層/後期層における活性化は，それぞれ V1/V4/IT 反応 (個々のニューロンと fMRI 反応の両方) を予測 (Yamins&DiCarlo2016, Yamins+2014, Khaligh-Razavi&Kriegeskorte2014, Güçlü&van_Gerven2015)。
+  * 深層ニューラルネットワークは，物体認識において視点に対して同様に不変 (Kheradpisheh+2016a,b)
+  * 画像間で同様に反応し (Khaligh-Razavi&Kriegeskorte2014)，同様のタイプのエラーを犯す (Kheradpisheh+2016a,b)
+
+<!-- これら類似は，競合するどのクラスのモデルよりも長く，視覚野のより広い範囲に及んでいる。 -->
+<!-- 訓練されたニューラルネットワークと脳の類似性は，視覚系以外にも広がっている。
+これらの研究の形式は，ほぼ共通して，脳領域の内部反応特性と，その脳領域に関連する行動課題で訓練された神経ネットワークの特性を比較するものである。 -->
+
+* <!--30 年前に発表された先駆的な研究では，-->後頭頂ニューロンと，視覚的場面で物体の位置を特定するよう訓練された神経回路網との類似性が示された (Zipser&Andersen 1988)。
+* <!--さらに最近では，-->情景認識について訓練されたネットワークは，後頭葉の場所領域における反応を正確に予測 (Bonner&2018)。
+* 音声認識と音楽ジャンル予測について訓練されたネットワークは，聴覚皮質と同様の活動を示す (Kell+2018)。
+* サルの動きを再現するように訓練されたリカレントニューラルネットワークには，一次運動皮質のニューロンと選択性が非常によく似た活動をするユニットが含まれる (Sussillo+2015)。
+* ナビゲーション課題を訓練したリカレントネットワークの素子は，嗅内皮質や海馬のグリッド細胞や場所細胞と似た活性を持つ (Kanitscheider&Fiete2017, Cueva &Wei2018, Banino+2018)。
+
 
 ## 機械学習と脳画像研究および心理モデル
 
@@ -162,9 +189,9 @@ Mitchell (2008) 図 1. 任意の名詞刺激に対するfMRI活性化を予測�
 fMRI の活性化は、2段階 プロセスで予測される。
 第 1 段階では，入力刺激語の意味を，典型的な単語使用を示す大規模なテキストコーパスから値を抽出した中間的な意味的特徴の観点から符号化する。
 第 2 段階では，これらの中間的な意味的特徴のそれぞれに関連する fMRIシグネチャ の線形結合として，fMRI 画像を予測する。
-<!-- Form of the model for predicting fMRI activation for arbitrary noun stimuli. 
-fMRI activation is predicted in a two-step process. 
-The first step encodes the meaning of the input stimulus word in terms of intermediate semantic features whose values are extracted from a large corpus of text exhibiting typical word use. 
+<!-- Form of the model for predicting fMRI activation for arbitrary noun stimuli.
+fMRI activation is predicted in a two-step process.
+The first step encodes the meaning of the input stimulus word in terms of intermediate semantic features whose values are extracted from a large corpus of text exhibiting typical word use.
 The second step predicts the fMRI image as a linear combination of the fMRI signatures associated with each of these intermediate semantic features. -->
 </p>
 </center>
@@ -182,13 +209,13 @@ Mitchell (2008) 図 2. 与えられた刺激語に対する fMRI 画像の予測
 この図は 予測された三次元画像の1つの水平方向のスライス [z=-12 mm in Montreal Neurological Institute (MNI) space] を示している。
 (B) 「セロリ」と「飛行機」について， 他の 58 個の単語を使った訓練後に予測された fMRI 画像と観察された fMRI 画像。
 予測画像と観測画像の上部（後方領域）付近にある赤と青の 2本 の長い縦筋は、左右の楔状回である。
-<!-- Predicting fMRI images for given stimulus words. 
-(A) Forming a prediction for participant P1 for the stimulus word “celery” after training on 58 other words. 
-Learned $c_{vi}$ coefficients for 3 of the 25 semantic features (“eat,” “taste,” and “fill”) are depicted by the voxel colors in the three images at the top of the panel. 
-The cooccurrence value for each of these features for the stimulus word “celery” is shown to the left of their respective images [e.g., the value for “eat (celery)” is 0.84]. 
-The predicted activation for the stimulus word [shown at the bottom of (A)] is a linear combination of the 25 semantic fMRI signatures, weighted by their co-occurrence values. 
-This figure shows just one horizontal slice [z = –12 mm in Montreal Neurological Institute (MNI) space] of the predicted three-dimensional image. 
-(B) Predicted and observed fMRI images for “celery” and “airplane” after training that uses 58 other words. 
+<!-- Predicting fMRI images for given stimulus words.
+(A) Forming a prediction for participant P1 for the stimulus word “celery” after training on 58 other words.
+Learned $c_{vi}$ coefficients for 3 of the 25 semantic features (“eat,” “taste,” and “fill”) are depicted by the voxel colors in the three images at the top of the panel.
+The cooccurrence value for each of these features for the stimulus word “celery” is shown to the left of their respective images [e.g., the value for “eat (celery)” is 0.84].
+The predicted activation for the stimulus word [shown at the bottom of (A)] is a linear combination of the 25 semantic fMRI signatures, weighted by their co-occurrence values.
+This figure shows just one horizontal slice [z = –12 mm in Montreal Neurological Institute (MNI) space] of the predicted three-dimensional image.
+(B) Predicted and observed fMRI images for “celery” and “airplane” after training that uses 58 other words.
 The two long red and blue vertical streaks near the top (posterior region) of the predicted and observed images are the left and right fusiform gyri. -->}
 </p>
 </center>
@@ -204,12 +231,12 @@ Mitchell (2008) 図 3. 最も正確に予測されたボクセルの位置。
 左右の後頭葉、頭頂葉、中前頭葉、左下前頭回、内側前頭回、前帯状回に分布している。
 (C) 9人の参加者全員で平均化した予測-実測相関の表面表現。
 このパネルは、平均相関が 0.14 以上の連続した10 個以上のボクセルを含むクラスターを示している。
-<!-- Locations of most accurately predicted voxels. 
-Surface (A) and glass brain (B) rendering of the correlation between predicted and actual voxel activations for words outside the training set for participant P5. 
-These panels show clusters containing at least 10 contiguous voxels, each of whose predicted-actual correlation is at least 0.28. 
+<!-- Locations of most accurately predicted voxels.
+Surface (A) and glass brain (B) rendering of the correlation between predicted and actual voxel activations for words outside the training set for participant P5.
+These panels show clusters containing at least 10 contiguous voxels, each of whose predicted-actual correlation is at least 0.28.
 These voxel clusters are distributed throughout the cortex and located in the left and right occipital and parietal lobes; left and right fusiform,
-postcentral, and middle frontal gyri; left inferior frontal gyrus; medial frontal gyrus; and anterior cingulate. 
-(C) Surface rendering of the predicted-actual correlation averaged over all nine participants. 
+postcentral, and middle frontal gyri; left inferior frontal gyrus; medial frontal gyrus; and anterior cingulate.
+(C) Surface rendering of the predicted-actual correlation averaged over all nine participants.
 This panel represents clusters containing at least 10 contiguous voxels, each with average correlation of at least 0.14. -->
 </p>
 </center>
