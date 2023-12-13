@@ -8,60 +8,48 @@ codemirror_mime_type: text/x-cython
 
 <!-- <link href="asamarkdown.css" rel="stylesheet"></link> -->
 
-## [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+[DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+
+## 機械学習からみた言語モデルの鏡
+
+> 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
+> LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
+> [Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
+
+<center><br/><br/>
+<div style="width:66%;text-align:left">
+
+人間の感情と、他の生物のそれと、近代的な型の自動機械の反応との間に鋭い乗り越えられない区画線を引く心理学者は、
+私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
+
+--- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
+</div>
+</center>
+
+### [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 <center>
-<img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/>
-画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
+<img src="/figures/poly_in_poly_long.gif"><br/>
+<!-- <img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/> -->
+画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) <br/>
+左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
 </center>
 
 > 怪物と戦うものは，自分もその怪物とならないように用心するがよい。
 > そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
 
 
-> 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
-> LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
-> [Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
+## 目次
 
-
-## 実習
-
-* [ニューラルネットワークで遊んでみよう](https://komazawa-deep-learning.github.io/tensorflow-playground/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.98055&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false){:target="_blank"}
-* [Transformer による百人一首 エンコーダ・デコーダモデル 実習 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
-* [効率よく t-SNE を使う方法](https://project-ccap.github.io/misread-tsne/)
-
-<!-- # PyTorch -->
-
-* [Pytorch によるニューラルネットワークの構築 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_1115PyTorch_buildmodel_tutorial_ja.ipynb)
-* [Dataset とカスタマイズと，モデルのチェックポイント，微調整 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_simple_fine_tune_tutorial.ipynb)
-* [PyTorch Dataset, DataLoader, Sampler, Transforms の使い方 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_dataset_data_loader_sampler.ipynb)
-
-<!-- # tSNE -->
-
-* [kmnist による PCA と tSNE の比較 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2019komazawa/blob/master/notebooks/2019komazaawa_kmnist_pca_tsne.ipynb)
-
-# Google colabratory でのファイルの [アップ|ダウン]ロード
-
-<div style="width:77%;align:center;text-align:left;margin-left:10%;margin-right:10%">
-
-```python
-from google.colab import files
-uploaded = files.upload()
-```
-
-```python
-from google.colab import files
-files.download('ファイル名')
-```
-</div>
-
-
+1. モデル論
+2. 言語モデル
+3. 離散的記号表現と埋め込みベクトル
 
 ## 生成 AI の性能向上
 
-<div class="figcenter">
-<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="55%">
-<div class="figcaption" style="width:94%">
+<center>
+<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="77%">
+<div style="width:88%;background-color:lavender;text-align:left;">
 
 ニュース記事がモデルによって生成されたものであるかどうかを識別する人間の能力 (正しい割り当てと中立でない割り当ての比率で測定) は，モデルサイズが大きくなるほど低下する。
 意図的に悪い対照モデル (出力のランダム性が高い無条件 GPT-3 小型モデル) の出力に対する精度を上部の破線で示し，ランダムな確率 (50 %) を下部の破線で示す。
@@ -71,7 +59,7 @@ files.download('ファイル名')
 Accuracy on the outputs on the deliberately bad control model (an unconditioned GPT-3 Small model with higher
 output randomness) is indicated with the dashed line at the top, and the random chance (50%) is indicated with
   the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
-</div></div>
+</div></center>
 
 
 ## Modeling
@@ -102,19 +90,19 @@ LDA と SVM との違いにあらわれている
 未知のデータ，未学習のデータに対する性能と母集団の差異を，一概に比較することは難しいが，予測精度を高くすることが，現実には用いられる実用性が高い。
 応用が可能で，実学として世の中の役に立つ成果を生み出すことができる。
 
-### ASA アメリカ統計学会の声明再録
+### ASA アメリカ統計学会の声明
 
-<!-- 1. **P 値は，データが指定された統計モデルとどの程度相性が悪いかを示すことができる** P-values can indicate how incompatible the data are with a specified statistical model. -->
-<!-- 2. **P 値は，研究された仮説が真である確率を測定するものではない。そうではなく，データがランダムな偶然だけから，生成された確率を測定するものである** P-values do not measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone. -->
-<!-- 3. **科学的な結論やビジネスや政策の決定は，p 値が特定の閾値を超えたかどうかだけに基づくべきではない** Scientific conclusions and business or policy decisions should not be based only on whether a p-value passes a specific threshold. -->
-<!-- 4. **適切な推論を行うには，完全な報告と透明性が必要である** Proper inference requires full reporting and transparency. -->
-<!-- 5. **P 値や統計的有意性は，効果の大きさや結果の重要性を測定するものではない** A p-value, or statistical significance, does not measure the size of an effect or the importance of a result. -->
-<!-- 6. **それ自体では，p 値はモデルや仮説に関する証拠の良い尺度を提供しない。** By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis. -->
+1. **P 値は，データが指定された統計モデルとどの程度相性が悪いかを示すことができる** <!--P-values can indicate how incompatible the data are with a specified statistical model.-->
+2. **P 値は，研究された仮説が真である確率を測定するものではない。そうではなく，データがランダムな偶然だけから，生成された確率を測定するものである** <!--P-values do not measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone.-->
+3. **科学的な結論やビジネスや政策の決定は，p 値が特定の閾値を超えたかどうかだけに基づくべきではない** <!--Scientific conclusions and business or policy decisions should not be based only on whether a p-value passes a specific threshold.-->
+4. **適切な推論を行うには，完全な報告と透明性が必要である** <!--Proper inference requires full reporting and transparency.-->
+5. **P 値や統計的有意性は，効果の大きさや結果の重要性を測定するものではない** <!--A p-value, or statistical significance, does not measure the size of an effect or the importance of a result.-->
+6. **それ自体では，p 値はモデルや仮説に関する証拠の良い尺度を提供しない。** <!--By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis.-->
 
-* [基礎と応用社会心理学 (BASP)  編集方針 (2014,2015)](2015Basic_and_Applied_Social_Psychology_ban_p_values_ja.md)
-* [アメリカ統計学会の声明 2014, 2015](2015Basic_and_Applied_Social_Psychology_ban_p_values_ja.md)
-* [統計学の誤り : 統計的妥当性の「ゴールドスタンダード」である P 値は多くの科学者が想定しているほど信頼できるものではない (Nuzzo+2014)](2014Nuzzo_Statistical_errors_ja.md)
-* [統計的有意性を引退させろ (サイエンティフィックアメリカン, 2019)](2019Amrhein_Retire_statistical_significance_ja.md)
+   * [基礎と応用社会心理学 (BASP)  編集方針 (2014,2015)](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja)
+   * [アメリカ統計学会の声明 2014, 2015](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja)
+   * [統計学の誤り : 統計的妥当性の「ゴールドスタンダード」である P 値は多くの科学者が想定しているほど信頼できるものではない (Nuzzo+2014)](https://komazawa-deep-learning.github.io/2023/2014Nuzzo_Statistical_errors_ja)
+   * [統計的有意性を引退させろ (サイエンティフィックアメリカン, 2019)](https://komazawa-deep-learning.github.io/2023/2019Amrhein_Retire_statistical_significance_ja)
 
 ### Breiman によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
 

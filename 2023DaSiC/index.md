@@ -37,25 +37,55 @@ author: CCAP プロジェクト
    * 休憩
 
 3. 15:00-16:15 認知モデルからみた言語モデルの鏡と機械学習の鏡との接点
-   * 認知モデルの説明: 健常者：寺尾康、失語例：上間清司、橋本幸成、大門正太郎（クラーク病院）、高倉祐樹（北海道大学）
-   * [機械学習モデルの説明](2023DaSIC02Asakawa_Intro_ML): 浅川伸一
+   * 認知モデルの説明: 健常者：寺尾康、失語例：上間清司、橋本幸成、[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf)、高倉祐樹（北海道大学）
+   * [機械学習モデルの説明](2023DaSIC03Asakawa_models): 浅川伸一
 4. 16:25-17:25 [実演 鏡を覗いてみると](2023DaSIC04_demo): モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
 
-   * 休憩
+   * 休憩 
 
 5. 17:25-17:40 議論
 	登壇者全員
 
 * [用語集](glossary)
 * [演者 自己または他己紹介](self_introduction)
+* [Google colabratory について](supp_eco)
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">
 <img src="/figures/1885LichtheimFig1.png" style="width:32%"><br/>
-左図: Roelofs (2004) Fig. 2, 右図: Lichtheim (1885) Fig.1 <br/>
-<img src="/figures/2019Roelofs_Aphasiology_fig1.png" style="width:77%"><br/>
-Roelofs (2019) Fig. 1
+<div style="width:88%;background-color:lavender;text-align:left">
+左: WEAVER++ モデルにおける物品命名時の情報の流れ。
+レンマ検索後，音声単語計画は厳密にフィードフォワード方式で行われ，フィードバックは音声理解系を介してのみ行われる。
+内部モニタリングには，右方向に増分的に構成された音韻単語を音声理解系にフィードバックすることが含まれ，外部モニタリングには単語の発音を聞くことが含まれる。
+Roelofs (2004) Fig. 2.<br/>
+<!-- The flow of information in the WEAVER++ model during object naming.
+After lemma retrieval, spoken word planning happens in a strictly feedforward fashion, with feedback occurring only via the speech comprehension system.
+Internal monitoring includes feeding the rightward incrementally constructed phonological word back into the speech comprehension system, whereas external monitoring involves listening to the pronunciation of the word. -->
+右: 図は，子どもに見られる模倣による言語習得の現象と，この処理過程が前提とする反射弧に基づく。
+子どもはこの手段によって，言葉の聴覚的記憶 (聴覚的単語表象) と，協調運動の運動的記憶(運動的単語表象) を持つようになる。
+これらの記憶が固定されている脳の部位を，それぞれ「聴覚心像の座」と「運動心像の座」と呼ぶことにする。
+本スキーマでは，これらの部位を文字 A と M で表す。
+反射円弧は，音響心像を A に伝える求心性枝 a A と，M からのインパルスを発声器官に伝える遠心性枝 M m からなり，A と M を結合する交連によって完成する。
+Lichtheim (1885) Fig. 1.
+<!-- The schema is founded upon the phenomena of the acquisition of language by imitation, as observed in the child, and upon the reflex arc which this process presupposes.
+The child becomes possessed, by this means, of auditory memories of words (auditory word-representations) as well as of motor memories of co-ordinated movements (motor word-representations).
+We may call 'centre of auditory images' and 'centre of motor images', respectively the parts of the brain where these memories are fixed.
+They are designated in the schema by the letters A and M.
+The reflex arc consists in an afferent branch a A, which transmits the acoustic impressions to A; and an efferent branch M m, which conducts the impulses from M to the organs of speech; and is completed by the commissure binding together A and M. -->
+<!-- 左図: Roelofs (2004) Fig. 2, 右図: Lichtheim (1885) Fig.1 <br/> -->
+</div>
+<img src="/figures/2019Roelofs_fig1.svg" style="width:77%"><br/>
+<div style="width:66%;background-color:lavender;text-align:left" >
+WEAVER++/ARC モデルの概念図。
+脳の領域にマッピングされた連合ネットワークと条件-行動規則。
+語彙検出の語形符号化成分を赤で強調。N は名詞。Roelofs (2019) Fig. 1
+<!-- Illustration of the WEAVER++/ARC model: -->
+<!-- An associative network and condition-action rules mapped onto areas of the brain.
+The word-form encoding component of word finding is highlighted in red. -->
+<!-- N = noun.
+Roelofs (2019) Fig. 1 -->
+</div>
 </center>
 
 <!--

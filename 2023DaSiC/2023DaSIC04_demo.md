@@ -5,7 +5,9 @@ author: CCAP プロジェクト
 ---
 <link href="asamarkdown.css" rel="stylesheet">
 
-### 実習ファイル
+[DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+
+## 実演 鏡を覗いてみると
 
 実習には，Google アカウントが必要です。
 
@@ -19,23 +21,45 @@ author: CCAP プロジェクト
 * [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
 * [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
 * [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
-	* [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
-- [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
+	<!-- * [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
+* [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"} -->
 
-
-- [Roelofs (2014) 失語症の言語生成における背側経路の説明 WEAVER＋＋／ARCモデル](https://project-ccap.github.io/2014Roelofs_A_dorsal-pathway_account_of_aphasic_language_production_The_WEAVER++ARC_model.pdf){:target="_blank"}
-- [Bates et al (2003) ボクセルに基づく病変・症状マッピング](https://project-ccap.github.io/2003Bates_Dronkers_Voxel-based_lesi-symptom_mapping.pdf){:target="_blank"}
-- [McClelland (2014) 知覚と認知における相互活性化と相互制約充足](https://project-ccap.github.io/2014McClelland_Interactive_Activation_and_Mutual_Constraint_Satisfaction_in_Perception_and_Cognition.pdf){:target="_blank"}
-- [Goldrick (2016) SLAM と既存の証拠との統合: Walker and Hickok (2015) へのコメント](https://project-ccap.github.io/2016Goldrick_Integrating_SLAM_with_existing_evidence_Comment_on_Walker_and_Hickok2015.pdf){:target="_bla
-nk"}
-- [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
-
-
-## 2021_08
-
-
-### プレイグラウンドデモ
+### プレイグラウンド
 
 * [TensorFlow Playgournd ニューラルネットワークの基本](https://project-ccap.github.io/tensorflow-playground)
 * [リカレントニューラルネットワークによる文字ベース言語モデル Javascript](https://komazawa-deep-learning.github.io/character_demo.html)
 * [効果的な t-SNE 使用方法](https://project-ccap.github.io/misread-tsne/index.html)
+
+
+
+## 実習
+
+* [ニューラルネットワークで遊んでみよう](https://komazawa-deep-learning.github.io/tensorflow-playground/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.98055&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false){:target="_blank"}
+* [Transformer による百人一首 エンコーダ・デコーダモデル 実習 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
+* [効率よく t-SNE を使う方法](https://project-ccap.github.io/misread-tsne/)
+
+<!-- # PyTorch -->
+
+* [Pytorch によるニューラルネットワークの構築 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_1115PyTorch_buildmodel_tutorial_ja.ipynb)
+* [Dataset とカスタマイズと，モデルのチェックポイント，微調整 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_simple_fine_tune_tutorial.ipynb)
+* [PyTorch Dataset, DataLoader, Sampler, Transforms の使い方 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_0824pytorch_dataset_data_loader_sampler.ipynb)
+
+<!-- # tSNE -->
+
+* [kmnist による PCA と tSNE の比較 <img src="/figures/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2019komazawa/blob/master/notebooks/2019komazaawa_kmnist_pca_tsne.ipynb)
+
+# Google colabratory でのファイルの [アップ|ダウン]ロード
+
+<div style="width:77%;align:center;text-align:left;margin-left:10%;margin-right:10%">
+
+```python
+from google.colab import files
+uploaded = files.upload()
+```
+
+```python
+from google.colab import files
+files.download('ファイル名')
+```
+</div>
+
