@@ -347,11 +347,19 @@ $$
 ここで $\ell$ は文 s の訓練文のインデックスであり，各文の長さで規格化することを意味している。
 
 
+## 埋め込みモデル，ベクトル空間
 
-<img src="/figures/2023_1026kWTA_fig1.svg">
-<div class="figcaption">
+* ピラミッド・パームツリー・テスト: 認知症検査
+* ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
 
-データ [4,3,2,1,0] に対して，異なるベータでソフトマックス関数を実施した結果
+1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
+2. ターゲット: かもめ，選択肢: 水田，池，滝，海
+3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
+
+<div class="figure figcenter">
+<img src="/figures/2023_0712projection_concept.svg" width="24%">
+<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
+<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
 </div>
 
 ### 人口ニューラルネットワークと神経細胞の機能的類似
@@ -401,9 +409,34 @@ Transformer 2017 年の論文 [Attention Is All You Need](https://arxiv.org/abs/
 上記の論文のタイトルにあるとおり，Transformer は，**注意機構 attention mechanism** に基づいて，自然言語処理の諸課題を解くモデル。
  -->
 
+# 3. 符号化器・復号化器モデル
 
+## 3.1 言語モデル
 
-## Seq2seq model
+t 番目の位置に現れる単語を $w_t$ と表記し，その確率を $p(w_t)$ とする。
+このとき，次式を言語モデル LM と呼ぶ:
+
+$$\tag{LM}
+p(w_t) = p(w_t|w_{t\in [0,\ldots,t-1]})
+$$
+
+上式右辺は，条件付き確率を表す。すなわち，事前に出現した単語すべてによって，次の単語が定まるとするモデルである。
+最も単純なモデルでは，直前に現れた単語のみによって定まるモデル $p(w_t|w_{t-1})$ である 。
+この場合には，総単語数を $|V|$ とすれば，言語モデルが保持しなければならない記憶容量は $|V|^2$ で与えられる (バイグラム bi-gram 言語モデル)。
+直前の 2 単語から定まるモデルでは $p(w_{t}|w_{t-1},w_{t-2})$ であるが，この場合の記憶容量は $|V|^3$ となる (トリグラム tri-gram 言語モデル)。
+Transformer で採用された語彙数は $|V|=32,000$ である。
+従って，$|V|^n$ の際に必要となる記憶容量は，膨大である。
+
+このことは，統計的言語モデルにとって大きな制約となっていた。
+言語モデルの記憶容量問題を解決する手法として，リカレントニューラルネットワークに基づく言語モデル (neural network language models: NLM) が用いられてきた ([Mikolov+2010](https://www.fit.vutbr.cz/research/groups/speech/publi/2010/mikolov_interspeech2010_IS100722.pdf))。
+リカレントニューラルネットワークを言語モデルとして用いれば，上記記憶容量の問題は発生しない。
+
+だが，NLM では，長距離依存 long term dependency を解消する問題が残されていた。
+このため，エルマン型の単純再帰型リカレントニューラルネットワークではなく，LSTM や GRU といった，長期記憶を調整する機構を持ったリカレントニューラルネットワークを用いることが試みられてきた。
+
+以下に示す，翻訳モデルでは，加えて注意機構を実装することにより，長距離依存解消に対応することが試みられてきた。
+
+## 3.2 翻訳モデル (Seq2seq model)
 
 <div class="figcenter">
 <img src="/figures/2014Sutskever_S22_Fig1.svg" width="77%">
@@ -416,8 +449,19 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 中央の `eos` の前がソース言語であり，中央の `eos` の後はターゲット言語の言語モデルである SRN の中間層への入力
 として用いる。
 
-注意すべきは，ソース言語の文終了時の中間層状態のみをターゲット言語の最初の中間層の入力に用いることであり，それ
-以外の時刻ではソース言語とターゲット言語は関係がない。
+
+<div class="figcenter">
+<img src="/figures/2014Sutskever_Fig2left.svg" width="44%">
+<img src="/figures/2014Sutskever_Fig2right.svg" width="44%">
+<div class="figcaption">
+左: Bahdanau+2014,
+中: Luong+2015, Fig. 2,
+右: Luong+2015, Fig. 3
+</div></div>
+
+## 3.3 注意機構
+
+注意すべきは，ソース言語の文終了時の中間層状態のみをターゲット言語の最初の中間層の入力に用いることであり，それ以外の時刻ではソース言語とターゲット言語は関係がない。
 逆に言えば最終時刻の中間層状態がソース文の情報全てを含んでいるとみなしうる。
 この点を改善することを目指すことが 2014 年以降盛んに行われてきた。
 顕著な例が後述する **双方向 RNN**，**LSTM** 採用したり，**注意** 機構を導入することであった。
@@ -431,68 +475,13 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 右: Luong+2015, Fig. 3
 </div></div>
 
-<div class="figcenter">
-<img src="/figures/2014Sutskever_Fig2left.svg" width="44%">
-<img src="/figures/2014Sutskever_Fig2right.svg" width="44%">
-<div class="figcaption">
-左: Bahdanau+2014,
-中: Luong+2015, Fig. 2,
-右: Luong+2015, Fig. 3
-</div></div>
+## 3.4 Transformer
 
+単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
+句，節，文のベクトル表現を得る努力がなされてきた。
+適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
 
-## 埋め込みモデル，ベクトル空間
-
-* ピラミッド・パームツリー・テスト: 認知症検査
-* ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
-
-1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
-2. ターゲット: かもめ，選択肢: 水田，池，滝，海
-3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
-
-<div class="figure figcenter">
-<img src="/figures/2023_0712projection_concept.svg" width="24%">
-<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
-<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
-</div>
-
-<!-- ベクトル空間の例として，word2vec による PPT  `~/study/2021ccap/notebooks/2021_0831jcss_PPT_projection.[ip
-ynb,pdf]` まで
-
-* いまだに，このような記事が出ることの方が問題だろうと思う。
-[<img src="https://www.mag2.com/p/news/wp-content/uploads/2017/09/logo_mag2news_290x50-1.png" style="width:9%"
-
-> 大ウソつきChatGPT。訴訟文書「過去の判例」が“ほぼ出鱈目”だった理由](https://www.mag2.com/p/news/577615)
-
-生成 AI と呼ばれる，生成 generative とは，サンプリングを行うことを意味している。
-このため，サンプリングに伴う変動は常に存在する。
-
-$$
-p(x_i,\beta) = \frac{e^{x_i/\beta}}{\sum_{j\in X} e^{x_j/\beta}}
-$$ -->
-
-<!-- <img src="figures/2017Vaswani_Fig2_1.svg">
-<img src="figures/2017Vaswani_Fig2_2.svg"> -->
-
-## GPT-4
-
-加えて，chatGPT の後続モデルである GPT-4 では，マルチモーダル，すなわち，視覚と言語の統合が進みました。
-
-<div class="figcenter">
-<img src="/figures/2023kosmos_coverpage.png" width="77%"><br/>
-<div class="figcaption">
-
-[Kosmos-1 の概念図](https://arXiv.org/abs/2302.14045)
-</div></div>
-
-
-まず第一に，大規模ではない，言語モデルについて考えます。
-言語モデルは，機械翻訳などでも使われる技術です。
-ですから，DeepL や Google 翻訳で，使っている方もいることでしょう。
-
-chatGPT を使える方は，上記太字のキーワードについて，chatGPT に質問してみることをお勧めします。
-とりわけ 注意 については，認知，視覚，心理学との関連も深く，注意の障害は，臨床，教育，発達などの分野と関係する
-でしょう。
+そこで，注意機構を積極的に取り込んだゲームチェンジャーが Transformer である。
 
 <div class="figcenter">
 <img src="/figures/2017Vaswani_Fig2_1ja.svg" width="19%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -519,7 +508,7 @@ Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
 
 先週は，心理学と人工知能との関係 -->
 
-
+<!--
 ## 従来モデルの問題点
 
 BERT の意味，文法表現を知るために，從來モデルである word2vec の単語表現概説しておく。
@@ -534,8 +523,10 @@ BERT の意味，文法表現を知るために，從來モデルである word2
 
 <img src="/figures/2019Devlin_BERT01lower.svg">
 
-形式的には，skip-gram であれ CBOW であれ同じである。
+形式的には，skip-gram であれ CBOW であれ同じである。 -->
 
+
+<!--
 #### 単語埋め込みモデルの問題点
 
 単語の意味が一意に定まらない場合，ベクトル表現モデルでは対処が難しい。
@@ -545,18 +536,47 @@ BERT の意味，文法表現を知るために，從來モデルである word2
 <img src="/figures/2019Devlin_BERT02upper.svg">
 単語の意味を一意に定めることができない場合
 
-<img src="/figures/2019Devlin_BERT02lower.svg">
+<img src="/figures/2019Devlin_BERT02lower.svg"> -->
 
 
-単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
-句，節，文のベクトル表現を得る努力がなされてきた。
-適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
-seq2seq モデルは RNN の中間層に文情報が表現されることを利用した翻訳モデルであった
-(図 \ref{fig:bert03})~\citep{2014Sutskever_Sequence_to_Sequence}。
 
-\includegraphics[width=0.74\textwidth]{2019Devlin_BERT03.pdf}
-seq2seq モデル
+<!--
+まず第一に，大規模ではない，言語モデルについて考えます。
+言語モデルは，機械翻訳などでも使われる技術です。
+ですから，DeepL や Google 翻訳で，使っている方もいることでしょう。
 
-BERT は上述の從來モデルを凌駕する性能を示した。
+chatGPT を使える方は，上記太字のキーワードについて，chatGPT に質問してみることをお勧めします。
+とりわけ 注意 については，認知，視覚，心理学との関連も深く，注意の障害は，臨床，教育，発達などの分野と関係する
+でしょう。 -->
 
 
+<!-- ベクトル空間の例として，word2vec による PPT  `~/study/2021ccap/notebooks/2021_0831jcss_PPT_projection.[ip
+ynb,pdf]` まで
+
+* いまだに，このような記事が出ることの方が問題だろうと思う。
+[<img src="https://www.mag2.com/p/news/wp-content/uploads/2017/09/logo_mag2news_290x50-1.png" style="width:9%"
+
+> 大ウソつきChatGPT。訴訟文書「過去の判例」が“ほぼ出鱈目”だった理由](https://www.mag2.com/p/news/577615)
+
+生成 AI と呼ばれる，生成 generative とは，サンプリングを行うことを意味している。
+このため，サンプリングに伴う変動は常に存在する。
+
+$$
+p(x_i,\beta) = \frac{e^{x_i/\beta}}{\sum_{j\in X} e^{x_j/\beta}}
+$$ -->
+
+<!-- <img src="figures/2017Vaswani_Fig2_1.svg">
+<img src="figures/2017Vaswani_Fig2_2.svg"> -->
+
+<!-- ## GPT-4
+
+加えて，chatGPT の後続モデルである GPT-4 では，マルチモーダル，すなわち，視覚と言語の統合が進みました。
+
+<div class="figcenter">
+<img src="/figures/2023kosmos_coverpage.png" width="77%"><br/>
+<div class="figcaption">
+
+[Kosmos-1 の概念図](https://arXiv.org/abs/2302.14045)
+</div></div>
+
+ -->
