@@ -40,6 +40,8 @@ author: CCAP プロジェクト
    * [機械学習モデルの説明](2023DaSIC03Asakawa_models){:target="_blank"}: 浅川伸一
 4. 16:25-17:25 [実演 鏡を覗いてみると](2023DaSIC04_demo){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
+   * [Colab 操作方法](2023yoshihara_colab.pdf){:taget="_blank"}
+   * [Google colabratory について](supp_eco){:target="_blank"}
 
    * 休憩
 
@@ -48,7 +50,6 @@ author: CCAP プロジェクト
 
 * [用語集](glossary){:target="_blank"}
 * [演者 自己または他己紹介](self_introduction){:target="_blank"}
-* [Google colabratory について](supp_eco){:target="_blank"}
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">
