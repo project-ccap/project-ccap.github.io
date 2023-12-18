@@ -2,6 +2,7 @@
 # 自己紹介
 
 * [寺尾 康 (てらお やすし)](/2023DaSiC/2023terao_selfintro.pdf)
+* [⾼倉 祐樹 (たかくら ゆうき)](/2023DaSiC/2023kakakura_selfintro.pdf)
 * [大門 正太朗 (だいもん しょうたろう)](/2023DaSiC/2023daimon_selfintro.pdf)
 * [浅川 伸一 (あさかわ しんいち)](/2023DaSiC/2023asakawa_selfintro.pdf)
 * [立場 文音 (たてば あやね)](/2023DaSiC/2023tateba_selfintro.pdf)

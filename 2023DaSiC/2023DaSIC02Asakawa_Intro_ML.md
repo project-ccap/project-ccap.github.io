@@ -218,30 +218,33 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 
 <img src='/figures/2023dasic_onehot2embeddings.svg' width="49%">
 
-### 人口ニューラルネットワークと神経細胞の機能的類似
+* ワンホットベクトルから，埋め込み表現ベクトルを作成するには，変換行列を掛ければ良い
+* 埋め込み表現から，ワンホットベクトルに戻すことによって，出力トークンを得る。このためにはソフトマックス関数を用いる
 
-人工ニューラルネットワークと脳の反応特性の類似性は，これらのモデルが脳の計算の重要な側面を捉えている可能性を示す
+$$\tag{ソフトマックス関数}
+p(x_i) = \frac{\exp{x_i}}{\sum_{j\neq\mathcal{X}}\exp(x_j)}
+$$
 
-* 両者 (ニューラルネットワークと神経細胞) 共に階層的，多層的
-* 画像の画素からの情報は通常，十数層の「ニューロン」(ノード) を通して処理される
-* 類似した組織に加えて，その活性化も類似
-  * 初期ノードは Gabor のような受容野を持つ (Güçlü&van_Gerven2015)，V1 に見られるエッジ検出器と類似
-  * これらのネットワークの初期層/中間層/後期層における活性化は，それぞれ V1/V4/IT 反応 (個々のニューロンと fMRI 反応の両方) を予測 (Yamins&DiCarlo2016, Yamins+2014, Khaligh-Razavi&Kriegeskorte2014, Güçlü&van_Gerven2015)。
-  * 深層ニューラルネットワークは，物体認識において視点に対して同様に不変 (Kheradpisheh+2016a,b)
-  * 画像間で同様に反応し (Khaligh-Razavi&Kriegeskorte2014)，同様のタイプのエラーを犯す (Kheradpisheh+2016a,b)
+* 指数関数 $e^{x}$ は，$x$ が実数の範囲であれば，正負に関わらず，正の値に変換し，かつ変換後も大小関係が保たれる。すなわち $x > y:$\rightarrow\exp(x)>\exp(y)$
+* すべて要素が正であれば，各要素の総和を分母とし，分子に，その値をとれば，確率とみなしうる。
+* すなわちソフトマックス関数とは，実数値をとるニューラルネットワークの出力を確率に変換し，その最大値を強調するように作用することが分かる。
+* ソフトマックス関数をニューラルネットワークモデルの最終層の出力とした場合，学習に用いられる教師信号もワンホット表現されていれば，ワンホット表現を近似する目的でソフトマックス関数は用いられていると解釈することもできる。
+* ソフトマックス関数は，数ある候補項目の中から，一つを選ぶという意思決定に用いられる。
+* ソフトマックス関数は，数ある候補項目の中から，唯一つの項目に着目するという意味で，注意機構に用いられる。
+* ソフトマックス関数において，考慮すべき項目が x と y と2 つしかない場合，
+$$
+p(x) = \frac{\exp(x)}{\exp(x)+\exp(y)}=\frac{1}{1+\exp(-(x-y))}=\frac{1}{1+\exp(-Z)}\text{,  ただし z=(x-y)},
+$$
+と書くことができる。
+上式は，ロジスティック回帰などでも用いられる，ロジスティックシグモイド関数である。
+2 値分類問題における真偽値，コーホート分析における生存確率などとも考えることができる。
+* ソフトマックス関数の分母に現れる $\sum_{j}\exp(x_{j})$ は，物理学 (統計力学，熱力学) における分配関数 partition function と形式的には同じ形をしている。
+* このことは，ニューラルネットワークの出力層の素子全体を，熱力学的系と同一視して考えることができることを意味する。熱力学的エネルギーであり，熱力学的エントロピーと情報論敵エントロピーが同じ式をしていることが，ソフトマックス関数の定義から導出できる。
 
-<!-- これら類似は，競合するどのクラスのモデルよりも長く，視覚野のより広い範囲に及んでいる。 -->
-<!-- 訓練されたニューラルネットワークと脳の類似性は，視覚系以外にも広がっている。
-これらの研究の形式は，ほぼ共通して，脳領域の内部反応特性と，その脳領域に関連する行動課題で訓練された神経ネットワークの特性を比較するものである。 -->
-
-* <!--30 年前に発表された先駆的な研究では，-->後頭頂ニューロンと，視覚的場面で物体の位置を特定するよう訓練された神経回路網との類似性が示された (Zipser&Andersen 1988)。
-* <!--さらに最近では，-->情景認識について訓練されたネットワークは，後頭葉の場所領域における反応を正確に予測 (Bonner&2018)。
-* 音声認識と音楽ジャンル予測について訓練されたネットワークは，聴覚皮質と同様の活動を示す (Kell+2018)。
-* サルの動きを再現するように訓練されたリカレントニューラルネットワークには，一次運動皮質のニューロンと選択性が非常によく似た活動をするユニットが含まれる (Sussillo+2015)。
-* ナビゲーション課題を訓練したリカレントネットワークの素子は，嗅内皮質や海馬のグリッド細胞や場所細胞と似た活性を持つ (Kanitscheider&Fiete2017, Cueva &Wei2018, Banino+2018)。
+まとめると，ワンホットベクトルを埋め込みベクトルに変換することは，記号表現を高次元実空間へ射影することであり，反対に，埋め込み表現を，ソフトマックス関数を用いて記号表現へ変換することで，記号 (あるいは規則，言語) と分散表現，脳内の神経活動へと変換する橋渡しができることとなる。
 
 
-## 機械学習と脳画像研究および心理モデル
+<!-- ## 機械学習と脳画像研究および心理モデル -->
 
 ### 言語と機能的脳画像研究を結びつけるために，単語の分散表現を機械学習的手法で表現
 
@@ -294,16 +297,16 @@ The two long red and blue vertical streaks near the top (posterior region) of th
 </center>
 
 
-<center>
+<!-- <center>
 <img src="/figures/2008Mitchell_fig3.svg" style="width:49%"><br/>
-<p style="text-align: left;width:66%;background-color:cornsilk;">
-Mitchell (2008) 図 3. 最も正確に予測されたボクセルの位置。
+<p style="text-align: left;width:66%;background-color:cornsilk;"> -->
+<!-- Mitchell (2008) 図 3. 最も正確に予測されたボクセルの位置。
 参加者 P5 の訓練セット以外の単語について、予測されたボクセルの活性化と実際のボクセルの活性化の相関を表面（A）とグラスブレイン（B）で表したもの。
 これらのパネルは、少なくとも 10個 の連続したボクセルを含むクラスタを示しており、それぞれのボクセルの予測-実際の相関は少なくとも 0.28 である。
 これらのボクセル・クラスターは、大脳皮質全体に分布しており、左右の後頭葉と頭頂葉、左右の豆状部、中央後葉、中央前葉に位置している。
 左右の後頭葉、頭頂葉、中前頭葉、左下前頭回、内側前頭回、前帯状回に分布している。
 (C) 9人の参加者全員で平均化した予測-実測相関の表面表現。
-このパネルは、平均相関が 0.14 以上の連続した10 個以上のボクセルを含むクラスターを示している。
+このパネルは、平均相関が 0.14 以上の連続した10 個以上のボクセルを含むクラスターを示している。 -->
 <!-- Locations of most accurately predicted voxels.
 Surface (A) and glass brain (B) rendering of the correlation between predicted and actual voxel activations for words outside the training set for participant P5.
 These panels show clusters containing at least 10 contiguous voxels, each of whose predicted-actual correlation is at least 0.28.
@@ -311,32 +314,8 @@ These voxel clusters are distributed throughout the cortex and located in the le
 postcentral, and middle frontal gyri; left inferior frontal gyrus; medial frontal gyrus; and anterior cingulate.
 (C) Surface rendering of the predicted-actual correlation averaged over all nine participants.
 This panel represents clusters containing at least 10 contiguous voxels, each with average correlation of at least 0.14. -->
-</p>
-</center>
-
-### chatGPT
-
-<div class="figure figcenter">
-<img src="/figures/2022Quyang_instructGPT_fig2ja.svg" width="99%">
-<div class="figcaption">
-
-### instructGPT の概要 [2022Quyang+](https://arxiv.org/abs/2203.02155) Fig.2 を改変
-
-</div></div>
-
-chatGPT の GPT とは **Genrative Pre-trained Transformer** の頭文字。
-**生成モデル (generative modeling)** と **事前学習 (pre-trained models)** と **トランスフォーマー (transformer)** についての理解が必要
-
-Transformer は **言語モデル (Lanugage models)** です。
-言語モデルによって，文章が処理され，適切な応答をするようになったモデルの代表が chatGPT となる。
-
-言語モデルを理解するために，その構成要素である Transformer を取り上げる。
-Transformer 2017 年の論文 [Attention Is All You Need](https://arxiv.org/abs/1706.03762) で提案された，**ニューラルネットワーク neural network** モデル。
-トランスフォーマーはゲームチェンジャーとなった。
-最近の **大規模言語モデル (LLM: Large Language Model)** は，トランスフォーマーを基本構成要素とするモデルがほとんど。
-上記の論文のタイトルにあるとおり，Transformer は，**注意機構 attention mechanism** に基づいて，自然言語処理の諸課題を解くモデル。
-
-
+<!-- </p>
+</center> -->
 
 ## BERT: 埋め込みモデルによる構文解析
 
@@ -366,6 +345,62 @@ $$
 $$
 
 ここで $\ell$ は文 s の訓練文のインデックスであり，各文の長さで規格化することを意味している。
+
+
+
+<img src="/figures/2023_1026kWTA_fig1.svg">
+<div class="figcaption">
+
+データ [4,3,2,1,0] に対して，異なるベータでソフトマックス関数を実施した結果
+</div>
+
+### 人口ニューラルネットワークと神経細胞の機能的類似
+
+人工ニューラルネットワークと脳の反応特性の類似性は，これらのモデルが脳の計算の重要な側面を捉えている可能性を示す
+
+* 両者 (ニューラルネットワークと神経細胞) 共に階層的，多層的
+* 画像の画素からの情報は通常，十数層の「ニューロン」(ノード) を通して処理される
+* 類似した組織に加えて，その活性化も類似
+  * 初期ノードは Gabor のような受容野を持つ (Güçlü&van_Gerven2015)，V1 に見られるエッジ検出器と類似
+  * これらのネットワークの初期層/中間層/後期層における活性化は，それぞれ V1/V4/IT 反応 (個々のニューロンと fMRI 反応の両方) を予測 (Yamins&DiCarlo2016, Yamins+2014, Khaligh-Razavi&Kriegeskorte2014, Güçlü&van_Gerven2015)。
+  * 深層ニューラルネットワークは，物体認識において視点に対して同様に不変 (Kheradpisheh+2016a,b)
+  * 画像間で同様に反応し (Khaligh-Razavi&Kriegeskorte2014)，同様のタイプのエラーを犯す (Kheradpisheh+2016a,b)
+
+<!-- これら類似は，競合するどのクラスのモデルよりも長く，視覚野のより広い範囲に及んでいる。 -->
+<!-- 訓練されたニューラルネットワークと脳の類似性は，視覚系以外にも広がっている。
+これらの研究の形式は，ほぼ共通して，脳領域の内部反応特性と，その脳領域に関連する行動課題で訓練された神経ネットワークの特性を比較するものである。 -->
+
+* <!--30 年前に発表された先駆的な研究では，-->後頭頂ニューロンと，視覚的場面で物体の位置を特定するよう訓練された神経回路網との類似性が示された (Zipser&Andersen 1988)。
+* <!--さらに最近では，-->情景認識について訓練されたネットワークは，後頭葉の場所領域における反応を正確に予測 (Bonner&2018)。
+* 音声認識と音楽ジャンル予測について訓練されたネットワークは，聴覚皮質と同様の活動を示す (Kell+2018)。
+* サルの動きを再現するように訓練されたリカレントニューラルネットワークには，一次運動皮質のニューロンと選択性が非常によく似た活動をするユニットが含まれる (Sussillo+2015)。
+* ナビゲーション課題を訓練したリカレントネットワークの素子は，嗅内皮質や海馬のグリッド細胞や場所細胞と似た活性を持つ (Kanitscheider&Fiete2017, Cueva &Wei2018, Banino+2018)。
+
+
+<!--
+### chatGPT
+
+<div class="figure figcenter">
+<img src="/figures/2022Quyang_instructGPT_fig2ja.svg" width="99%">
+<div class="figcaption">
+
+### instructGPT の概要 [2022Quyang+](https://arxiv.org/abs/2203.02155) Fig.2 を改変
+
+</div></div>
+
+chatGPT の GPT とは **Genrative Pre-trained Transformer** の頭文字。
+**生成モデル (generative modeling)** と **事前学習 (pre-trained models)** と **トランスフォーマー (transformer)** についての理解が必要
+
+Transformer は **言語モデル (Lanugage models)** です。
+言語モデルによって，文章が処理され，適切な応答をするようになったモデルの代表が chatGPT となる。
+
+言語モデルを理解するために，その構成要素である Transformer を取り上げる。
+Transformer 2017 年の論文 [Attention Is All You Need](https://arxiv.org/abs/1706.03762) で提案された，**ニューラルネットワーク neural network** モデル。
+トランスフォーマーはゲームチェンジャーとなった。
+最近の **大規模言語モデル (LLM: Large Language Model)** は，トランスフォーマーを基本構成要素とするモデルがほとんど。
+上記の論文のタイトルにあるとおり，Transformer は，**注意機構 attention mechanism** に基づいて，自然言語処理の諸課題を解くモデル。
+ -->
+
 
 
 ## Seq2seq model
