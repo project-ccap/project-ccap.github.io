@@ -36,7 +36,7 @@ author: CCAP プロジェクト
    * 休憩
 
 3. 15:00-16:15 認知モデルからみた言語モデルの鏡と機械学習の鏡との接点
-   * 認知モデルの説明: 健常者：寺尾康、失語例：上間清司(武蔵野大学), [橋本幸成(目白大学)](2023hashimoto_DaSiC.pdf){:target="_blank"}，
+   * 認知モデルの説明: 健常者：寺尾康、[失語例：上間清司(武蔵野大学)](2023uema_dasic.pdf){:target="_blank"}, [橋本幸成(目白大学)](2023hashimoto_dasic.pdf){:target="_blank"}，
    * [機械学習モデルの説明](2023DaSIC03Asakawa_models){:target="_blank"}: 浅川伸一
 4. 16:25-17:25 [実演 鏡を覗いてみると](2023DaSIC04_demo){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
