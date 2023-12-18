@@ -1,19 +1,19 @@
 ---
-title: "言語データとその「鏡」: 機械学習モデルを用いた言い誤りと失語症例の分析 DaSiC203"
+title: " 言語データとその「鏡」: 機械学習モデルを用いた言い誤りと失語症例の分析 DaSiC2023"
 layout: default
 author: CCAP プロジェクト
 ---
-<link href="asamarkdown.css" rel="stylesheet">
+<link href="/assets/css/asamarkdown.css" rel="stylesheet">
 
-<img src="2023DaSiC_QRcode.png" style="width:12%" align="left">
+<img src="2023DaSiC_QRcode.png" style="width:12%;align=left">
 
 <!-- # [DaSiC2023 ワークショップ](https://sites.google.com/view/dasic7-2023){:target="_blank"} -->
 
-# 言語データとその「鏡」
+#  言語データとその「鏡」
 
-## 機械学習モデルを用いた言い誤りと失語症例の分析
+###  機械学習モデルを用いた言い誤りと失語症例の分析
 
-## [DaSiC203 ワークショップホームページ](https://sites.google.com/view/dasic7-2023/workshop?authuser=0){:target="_blank"}
+[  DaSiC203 ワークショップホームページ](https://sites.google.com/view/dasic7-2023/workshop?authuser=0){:target="_blank"}
 
 * 日時: 2023年12月23日(土)
 * 会場: [筑波大学天王台キャンパス 第一エリア1D201講義室 Google map](https://www.google.co.jp/maps/place/1D201%E6%95%99%E5%AE%A4/@36.108528,140.1019327,16.79z/data=!4m6!3m5!1s0x60220c0745ebad25:0x83c473710859d960!8m2!3d36.1084607!4d140.1018482!16s%2Fg%2F11g6yv8vk7?hl=ja&entry=ttu){:target="_blank"}
@@ -37,7 +37,7 @@ author: CCAP プロジェクト
 3. 15:00-16:15 認知モデルからみた言語モデルの鏡と機械学習の鏡との接点
    * 認知モデルの説明: [健常者：寺尾康](2023terao_dasic3.pdf)、[失語例：上間清司(武蔵野大学)](2023uema_dasic.pdf){:target="_blank"}, [橋本幸成(目白大学)](2023hashimoto_dasic.pdf){:target="_blank"}，
    * [機械学習モデルの説明](2023asakawa_dasic2){:target="_blank"}: 浅川伸一
-4. 16:25-17:25 [実演 鏡を覗いてみると](2023asakawa_daisc3){:target="_blank"}: モデルのデモンストレーション
+4. 16:25-17:25 [実演 鏡を覗いてみると](2023asakawa_dasic3){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
    * [Colab 操作方法](2023yoshihara_colab.pdf){:taget="_blank"}
    * [Google colabratory について](supp_eco){:target="_blank"}

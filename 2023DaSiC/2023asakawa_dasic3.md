@@ -1,13 +1,24 @@
-<link href="asamarkdown.css" rel="stylesheet"></link>
+---
+title: "DaSiC7 (2023) 発表資料 "
+author: 浅川伸一
+layout: default
+codemirror_mode: python
+codemirror_mime_type: text/x-cython
+---
+
+<link href="/assets/css/asamarkdown.css" rel="stylesheet">
 
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
 <center>
-<img src="/figures/poly_in_poly_long.gif"><br/>
+<img src="/figures/poly_in_poly_long.gif" width="94%">
+
 <!-- <img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/> -->
-画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) <br/>
+<div class="figcaption">
+
+画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html)<br/>
 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
-</center>
+</div></center>
 
 <br/>
 <center>
