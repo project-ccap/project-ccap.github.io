@@ -8,6 +8,14 @@ codemirror_mime_type: text/x-cython
 
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
+<div style="text-align:left;width:77%;background-color:cornsilk">
+
+人間の感情と、他の生物のそれと、近代的な型の自動機械の反応との間に鋭い乗り越えられない区画線を引く心理学者は、
+私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
+--- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
+</div>
+</center>
+
 ## 機械学習モデル
 
 <!-- <link href="/asamarkdown.css" rel="stylesheet"></link> -->

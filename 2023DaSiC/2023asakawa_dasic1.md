@@ -20,31 +20,6 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 [Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
 </div>
 
-<br/><br/><br/>
-<div style="text-align:left;width:77%;background-color:cornsilk">
-
-人間の感情と、他の生物のそれと、近代的な型の自動機械の反応との間に鋭い乗り越えられない区画線を引く心理学者は、
-私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
---- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
-</div>
-</center>
-
-<center>
-<img src="/figures/poly_in_poly_long.gif"><br/>
-<!-- <img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/> -->
-画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html) <br/>
-左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
-</center>
-
-<br/>
-<center>
-<div style="text-align:left;width:77%;background-color:cornsilk">
-
-怪物と戦うものは，自分もその怪物とならないように用心するがよい。
-そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
-</div>
-</center>
-
 * [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 
@@ -333,8 +308,7 @@ From `https://github.com/john-hewitt/structural-probes``
 </div></div>
 
 word2vec において単語間の距離は内積で定義されていた。
-このことから，文章を構成する単語で張られる線形内積空間内の距離が構文解析木を与えると見なすことは不自然ではない
-。
+このことから，文章を構成する単語で張られる線形内積空間内の距離が構文解析木を与えると見なすことは不自然ではない。
 
 そこで構文解析木を再現するような射影変換を見つけることができれば BERT を用いて構文解析が可能となる。
 例えば上図における chef と store と was の距離を解析木を反映するような空間を見つけ出すことに相当する。
