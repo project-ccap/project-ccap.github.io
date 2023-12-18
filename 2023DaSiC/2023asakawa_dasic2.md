@@ -14,7 +14,6 @@ codemirror_mime_type: text/x-cython
 私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
 --- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
 </div>
-</center>
 
 ## 機械学習モデル
 

@@ -12,7 +12,6 @@ codemirror_mime_type: text/x-cython
 
 # 機械学習からみた言語モデルの鏡
 
-<center>
 <div style="text-align:left;width:77%;background-color:cornsilk">
 
 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
