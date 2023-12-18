@@ -12,21 +12,22 @@ codemirror_mime_type: text/x-cython
 
 ## 機械学習からみた言語モデルの鏡
 
-> 昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
-> LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
-> [Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
+<center>
+<div style="text-align:left;width:77%;background-color:cornsilk">
 
-<center><br/><br/>
-<div style="width:66%;text-align:left">
+昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
+LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
+[Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
+</div>
+
+<br/><br/><br/>
+<div style="text-align:left;width:77%;background-color:cornsilk">
 
 人間の感情と、他の生物のそれと、近代的な型の自動機械の反応との間に鋭い乗り越えられない区画線を引く心理学者は、
 私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
-
 --- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
 </div>
 </center>
-
-### [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 <center>
 <img src="/figures/poly_in_poly_long.gif"><br/>
@@ -35,15 +36,49 @@ codemirror_mime_type: text/x-cython
 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
 </center>
 
-> 怪物と戦うものは，自分もその怪物とならないように用心するがよい。
-> そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
+<br/>
+<center>
+<div style="text-align:left;width:77%;background-color:cornsilk">
+
+怪物と戦うものは，自分もその怪物とならないように用心するがよい。
+そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
+</div>
+</center>
+
+* [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 
-## 目次
+## Table of contents: part 1 第一部目次
 
-1. モデル論
-2. 言語モデル
-3. 離散的記号表現と埋め込みベクトル
+1. 計算論的モデルへの招待 Invitation to computational modelings
+   1. P 値廃止 Ban of p-values
+   2. データサイエンスの 2 つの文化 Two cultures in data science
+   3. 神経科学に対する機械学習の 4 つの役割 Four roles of machine learning to neuroscience
+2. 記号的表象と分散表象との間隙を埋める (あるいは，規則に基づく操作と幾何学的操作) Filling a gap between symbolic and distributional representations (or between rule-based and vector-based geometrical operations)
+   1. ワンホット符号化と埋め込みベクトル one-hot encodings and embedding vectors
+   2. ソフトマックス関数と結合係数行列 Softmax function and (tying) weight matrices
+3. 符号化器・復号化器モデル Encoder-decoder models
+   1. 言語モデル Language models
+   2. 翻訳モデル Translation models
+   3. 注意機構 Attention mechanism
+   4. Transformer
+4. 微調整と転移学習 Fine tuning and transfer learning
+   1. 最終直下層に含まれている情報 Information containing in penultimate layers
+   2. 大規模言語モデルから特定の課題へ，言い誤りの型からパラメータ推定 What models do from LLM to specific tasks is analogous to what speech errors be modified to those who produced them.
+   3. マルチモーダル，マルチタスク統合へ向けて Towards Multi-modal and multi-task integrations
+
+## Table of contents: part 2 第二部目次
+
+1. Dell+ モデルによるいい誤りのシミュレーション Dell+'s model for speech errors
+   1. ソフトマックス関数の温度パラメータ thermal parameter in softmax function
+   2. 患者ごとの微調整
+2. A encoder-decoder model for word repetition tasks
+
+## Table of contents: part 3 第三部目次
+
+1. A model of 百人一首 implemented on Transformer
+2. Horizontal and vertical errors in speech errors
+
 
 ## 生成 AI の性能向上
 
@@ -107,19 +142,18 @@ LDA と SVM との違いにあらわれている
 ### Breiman によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
 
 <center>
-<img src="/figures/2001Breiman_Two_Cultures_fig2.svg" width="39%"><br/>
-<img src="/figures/2001Breiman_Two_Cultures_fig3_.svg" width="39%"><br/>
-<!-- <img src="/2023assets/2001Breiman_cultures.svg" width="23%"><br/> -->
-</center>
-<div class="figcaption">
-<!-- ![Breiman(2001)](/2023assets/2001Breiman_cultures.svg){#fig:2001breiman style="width:34%"} -->
+<img src="/figures/2001Breiman_Two_Cultures_fig1.svg" width="33%"><br/>
+<img src="/figures/2001Breiman_Two_Cultures_fig2.svg" width="24%">
+<img src="/figures/2001Breiman_Two_Cultures_fig3.svg" width="24%">
+<div style="text-align:left;width:77%;background-color:lavender">
+
+* 上: 入力 x に対して，自然がどのように応答 $y$ するかという枠組み
+* 下左: データモデル，
+* 下右: アルゴリズムモデル
+</div></center>
 
 From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_, 2001, Vol. 16, No. 3, 199–231, doi:10.1214/ss/1009213725.
 [pdf](https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full)
-</div>
-
-Breiman は，アンサンブル学習 (バギング，ブートストラップ法) など，影響力のあるいくつかの機械学習手法を提案した機械学習界隈のレジェンド。
-<!-- Breiman によれば，2 つの文化 -->
 
 <center>
 <img src="/figures/2019Glaser_fig2.jpg" width="49%">
@@ -285,13 +319,12 @@ $$
 
 ## Seq2seq model
 
-<div class="figure figcenter">
+<div class="figcenter">
 <img src="/figures/2014Sutskever_S22_Fig1.svg" width="77%">
 <div class="figcaption">
 
 Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
-</div>
-</div>
+</div></div>
 
 `eos` は文末を表す。
 中央の `eos` の前がソース言語であり，中央の `eos` の後はターゲット言語の言語モデルである SRN の中間層への入力
@@ -303,7 +336,7 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 この点を改善することを目指すことが 2014 年以降盛んに行われてきた。
 顕著な例が後述する **双方向 RNN**，**LSTM** 採用したり，**注意** 機構を導入することであった。
 
-<div class="figure figcenter">
+<div class="figcenter">
 <img src="/figures/2015Bahdanau_attention.jpg" width="44%">
 <img src="/figures/2015Luong_Fig2.svg" width="44%">
 <div class="figcaption">
@@ -312,7 +345,7 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 右: Luong+2015, Fig. 3
 </div></div>
 
-<div class="figure figcenter">
+<div class="figcenter">
 <img src="/figures/2014Sutskever_Fig2left.svg" width="44%">
 <img src="/figures/2014Sutskever_Fig2right.svg" width="44%">
 <div class="figcaption">
@@ -401,8 +434,6 @@ Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
 先週は，心理学と人工知能との関係 -->
 
 
-
-
 ## 従来モデルの問題点
 
 BERT の意味，文法表現を知るために，從來モデルである word2vec の単語表現概説しておく。
@@ -411,7 +442,6 @@ BERT の意味，文法表現を知るために，從來モデルである word2
 
 <img src="/figures/2019Devlin_BERT01upper.svg">
 単語のベクトル表現
-
 
 単語埋め込み (word2vec など) 単語は周辺単語の共起情報 [点相互情報量 PMI](https://en.wikipedia.org/wiki/Pointwise_mutual_information) に基づく [@2014LevyGoldberg:nips,@2014Levy:3cosadd]。
 すなわち周辺単語との共起情報を用いて単語の意味を定義している。

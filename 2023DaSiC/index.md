@@ -28,18 +28,17 @@ author: CCAP プロジェクト
 # スケジュール
 
 1. 13:30-14:10 趣旨説明：寺尾康 (静岡県立大学)
-   * データの紹介1：[健常者の言い誤り](2023DaSIC01Terao_健常者言い誤り紹介.pptx){:target="_blank"}: 寺尾康
-   * データの紹介1：[健常者の言い誤り pdf](2023DaSIC01Terao_健常者言い誤り紹介.pdf){:target="_blank"}: 寺尾康
+   * データの紹介1：[健常者の言い誤り](DaSIC総合用_セッション1.pdf){:target="_blank"}: 寺尾康
    * [発話についての認知モデルの変遷](DaSic_Sec3発話認知モデルの変遷2.pdf){:target="_blank"}: 寺尾康
-   * データの紹介2：失語症の錯語: 上間清司(武蔵野大学), 橋本幸成(目白大学)，立場文音 (JCHO 熊本総合病院)
+   * データの紹介2：失語症の錯語: 高倉祐樹（北海道大学），[立場文音 (JCHO 熊本総合病院)](つくばスライド_立場.pdf){:target="_blank"}，[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf){:target="_blank"}，
 2. 14:10-14:50 [機械学習からみた言語モデルの鏡](2023DaSIC02Asakawa_Intro_ML){:target="_blank"}: 浅川伸一（東京女子大学）
 
    * 休憩
 
 3. 15:00-16:15 認知モデルからみた言語モデルの鏡と機械学習の鏡との接点
-   * 認知モデルの説明: 健常者：寺尾康、失語例：上間清司、橋本幸成、[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf)、高倉祐樹（北海道大学）
-   * [機械学習モデルの説明](2023DaSIC03Asakawa_models): 浅川伸一
-4. 16:25-17:25 [実演 鏡を覗いてみると](2023DaSIC04_demo): モデルのデモンストレーション
+   * 認知モデルの説明: 健常者：寺尾康、失語例：上間清司(武蔵野大学), [橋本幸成(目白大学)](認知モデルの説明２（失語例橋本＿配布）.pdf){:target="_blank"}，
+   * [機械学習モデルの説明](2023DaSIC03Asakawa_models){:target="_blank"}: 浅川伸一
+4. 16:25-17:25 [実演 鏡を覗いてみると](2023DaSIC04_demo){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
 
    * 休憩 
@@ -47,9 +46,9 @@ author: CCAP プロジェクト
 5. 17:25-17:40 議論
 	登壇者全員
 
-* [用語集](glossary)
-* [演者 自己または他己紹介](self_introduction)
-* [Google colabratory について](supp_eco)
+* [用語集](glossary){:target="_blank"}
+* [演者 自己または他己紹介](self_introduction){:target="_blank"}
+* [Google colabratory について](supp_eco){:target="_blank"}
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">

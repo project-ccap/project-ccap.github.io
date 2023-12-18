@@ -6,51 +6,121 @@ codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
 
-<!-- <link href="asamarkdown.css" rel="stylesheet"></link> -->
-
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
 ## 機械学習モデル
+
+<!-- <link href="/asamarkdown.css" rel="stylesheet"></link> -->
+
+## WEAVER++, Dell モデルの再現シミュレーション colab files
+
+<!-- - [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
+- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
+  -  [word2vec による単語連想 + 頻度 デモ <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb) -->
+
+- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
+- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
+<!-- - [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb) -->
+- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
+	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 
 ## 目次
 
 1. 符号化器‐復号化器モデル
 2. Transformer
-3. 2021JNPS
-4. 微調整と再び双対性について
-
-## 生成 AI の性能向上
-
-<center>
-<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="77%">
-<div style="width:88%;background-color:lavender;text-align:left;">
-
-ニュース記事がモデルによって生成されたものであるかどうかを識別する人間の能力 (正しい割り当てと中立でない割り当ての比率で測定) は，モデルサイズが大きくなるほど低下する。
-意図的に悪い対照モデル (出力のランダム性が高い無条件 GPT-3 小型モデル) の出力に対する精度を上部の破線で示し，ランダムな確率 (50 %) を下部の破線で示す。
-ベストフィットの線は 95 %信頼区間を持つべき乗則である。[Brown+2021, arXiv:2005.14165](https://arxiv.com/abs/2005.14165/) Fig. 3
-<!-- #### Figure 3.13: People’s ability to identify whether news articles are model-generated (measured by the
- ratio of correct assignments to non-neutral assignments) decreases as model size increases.
-Accuracy on the outputs on the deliberately bad control model (an unconditioned GPT-3 Small model with higher
-output randomness) is indicated with the dashed line at the top, and the random chance (50%) is indicated with
-  the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
-</div></center>
+3. 転移学習 transfer learning と微調整 fine-tuning
+4. 2021JNPS
+5. 再び双対性について
 
 
-## Modeling
+## 1. 符号化器・復号化器モデル
 
-1. 記述モデル description model
-箱と矢印モデルなど，質的予測
-3. データ適合モデル data-fitting model
-LDA と SVM との違いにあらわれている
-5. アルゴリズムモデル algorithm model
+### Seq2seq model
+
+<div class="figure figcenter">
+<img src="/figures/2014Sutskever_S22_Fig1.svg" width="77%">
+<div class="figcaption">
+
+Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
+</div>
+</div>
+
+`eos` は文末を表す。
+中央の `eos` の前がソース言語であり，中央の `eos` の後はターゲット言語の言語モデルである SRN の中間層への入力
+として用いる。
+
+注意すべきは，ソース言語の文終了時の中間層状態のみをターゲット言語の最初の中間層の入力に用いることであり，それ以外の時刻ではソース言語とターゲット言語は関係がない。
+逆に言えば最終時刻の中間層状態がソース文の情報全てを含んでいるとみなしうる。
+この点を改善することを目指すことが 2014 年以降盛んに行われてきた。
+顕著な例が **双方向 RNN**，**LSTM** 採用したり，**注意** 機構を導入することであった。
+
+<div class="figure figcenter">
+<img src="/figures/2014Sutskever_Fig2left.svg" width="44%">
+<img src="/figures/2014Sutskever_Fig2right.svg" width="44%">
+<div class="figcaption">
+
+From Sutskever+2014, Fig. 2
+</div></div>
+
+## 自然言語系の注意
+
+<div class="figure figcenter">
+<img src="/figures/2015Bahdanau_attention.jpg" width="30%">
+<img src="/figures/2015Luong_Fig2.svg" width="30%">
+<img src="/figures/2015Luong_Fig3.svg" width="30%">
+<div class="figcaption">
+
+左: Bahdanau+2014,
+中: Luong+2015, Fig. 2,
+右: Luong+2015, Fig. 3
+</div></div>
+
+## 3. 転移学習と微調整
 
 <div class="figcenter">
-<img src="/figures/1999Levelt_blueprint.jpg" width="49%">
-<img src="/figures/1885LichtheimFig1.png" width="29%">
+<img src="/figures/2017Ruder_fig1.jpg" width="22%">
+<div class="figcaption">
+
+微調整 (fine tuning) による課題ごとの訓練。
+多層ニューラルネットワークモデルの最終層を，課題ごとに入れ替えることで，複数の課題に適応できるようにする。
+今回は，BIT の 4 課題 (線分二等分，線分検出，文字検出，星印検出) を考える。
+ただし，文字検出課題と星印検出課題は，文字と記号検出を微調整した。
+そのため，課題ごとの微調整は，この両課題については同一である。
+従って，3 種類の微調整を行った。
+
+図は Ruder (2017) [An Overview of Multi-Task Learning in Deep Neural Network](https://arXiv.org/abs/1706.05098),
+Fig. 1. より
+</div></div>
+
+<img src="/figures/2023_0318Daimon_CNPS_p31_32.svg" width="44%">
+
+<img src="/figures/2023_0721bit_line_bisection_demo0.svg" width="24%">
+<img src="/figures/2023_0721bit_line_bisection_demo1.svg" width="24%">
+
+<img src="/figures/2023_0723tlpa_sala_214.png" width="33%">
+<img src="/figures/2023_0723tlpa_sala_83.png" width="33%">
+<img src="/figures/2023_0723tlpa_sala_243.png" width="33%">
+
+## 埋め込みモデル，ベクトル空間
+
+* ピラミッド・パームツリー・テスト: 認知症検査
+* ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
+
+1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
+2. ターゲット: かもめ，選択肢: 水田，池，滝，海
+3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
+
+<div class="figure figcenter">
+<img src="/figures/2023_0712projection_concept.svg" width="24%">
+<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
+<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
 </div>
 
 
-## 1.1 従来モデル
+## 4. JNPS2021
+
+### 4.1 従来モデル
+
 Dell モデルは，2 段階相互活性モデルであり，意味層，語彙層，音素層の 3 層からなるニューラルネットワークモデルである。
 従来モデル (以下 Dell モデルと表記する) を図 1 (Foygel&Dell, 2000) に示した。
 以下では，意味層を S 層，語彙層を L 層，音素層を P 層と表記する。
@@ -180,46 +250,50 @@ $\beta$ は統計力学からの類推から温度パラメータと呼ぶこと
 
 ## A.3 学習
 
-教師信号 $\mathbf{t}=[0.97, 0.01, 0.00, 0.01, 0.00, 0.00]$ とする。
+教師信号 $\mathbf{t}=\left[0.97, 0.01, 0.00, 0.01, 0.00, 0.00\right]$ とする。
 このとき最小化すべき目的関数(損失関数，誤差関数) $l$
 を次のように定義する:
 
-$$
-l\left(p,x;\theta\right)\equiv\sum_i\left( t_i\log(p_i) + (1-t_i)\log(1-p_i)\right)\tag{A.1}
+$$\tag{A.1}
+l\left(p,x;\theta\right)\equiv\sum_i\left( t_i\log(p_i) + (1-t_i)\log(1-p_i)\right)
 $$
 
-$$
+$$\tag{A.2}
 \frac{\partial l}{\partial p}=\sum_i\left(
 \frac{t_i}{p_i}-\frac{1-t_i}{1-p_i}
 \right)
 = \sum_i\frac{t_i(1-p_i)-p_i(1-t_i)}{p_i(1-p_i)}
-= \sum_i\frac{t_i-p_i}{p_i(1-p_i)}\tag{A.2}
+= \sum_i\frac{t_i-p_i}{p_i(1-p_i)}
 $$
 
 この $l$ を最小化する学習をニューラルネットワークの学習則に従い以下のような勾配降下法を用いて訓練する:
-$$
+$$\tag{A.3}
 \Delta\theta = \eta\frac{\partial l}{\partial\theta}
-= \eta\frac{\partial l}{\partial p}\frac{\partial p}{\partial x_t}\frac{\partial x_t}{\partial\theta}\tag{A.3}
+= \eta\frac{\partial l}{\partial p}\frac{\partial p}{\partial x_t}\frac{\partial x_t}{\partial\theta}
 $$
 
 合成関数の微分則に従って
-$\displaystyle\frac{\partial l}{\partial\theta}=\frac{\partial l}{\partial p}\frac{\partial p}{\partial x}\frac{\partial x}{\partial\theta}\tag{A.4}$
+$$\tag{A.4}
+\frac{\partial l}{\partial\theta}
+$$
 である。
 
-更に $p_{i}$ を $x_{j,t}$ で微分，すなわちソフトマックスの微分:
-$$
-\begin{aligned}
-\frac{\partial p_i}{\partial\beta x_i} &=\frac{e^{\beta x_i}\left(\sum e^{\beta x_j}\right)-e^{\beta x_i}e^{\beta x_i}}{\left(\sum e^{\beta x_j}\right)^2}\\
- &=\left(\frac{e^{\beta x_i}}{\sum e^{\beta x_j}}\right)
-\left(\frac{{\sum e^{\beta x_j}}-e^{\beta x_j}}{{\sum e^{\beta x_j}}}\right)\\
-&=p_i \left(\frac{\sum e^{\beta x_j}}{\sum e^{\beta x_i}}
--\frac{e^{\beta x_i}}{\sum e^{\beta x_j}}\right)\\
-&=p_i (1-p_j)
-\end{aligned}\tag{A.5}$$
+<!-- \frac{\partial l}{\partial\theta}=\frac{\partial l}{\partial p}\frac{\partial p}{\partial x}\frac{\partial x}{\partial\theta} -->
 
+更に $p_{i}$ を $x_{j,t}$ で微分，すなわちソフトマックスの微分:
+
+$$\tag{A.5}
+\begin{aligned}
+\frac{\partial p_i}{\partial\beta x_i} =\frac{e^{\beta x_i}\left(\sum e^{\beta x_j}\right)-e^{\beta x_i}e^{\beta x_i}}{\left(\sum e^{\beta x_j}\right)^{2}}
+&=\left(\frac{e^{\beta x_i}}{\sum e^{\beta x_j}}\right)
+\left(\frac{{\sum e^{\beta x_j}}{-e^{\beta x_{j}}}{\sum e^{\beta x_{j}}}\right)\\
+                                       &=p_i \left(\frac{\sum e^{\beta x_j}}{\sum e^{\beta x_i}}-\frac{e^{\beta x_i}}{\sum e^{\beta x_j}}\right)\\
+                                      &=p_i (1-p_j)\frac{\partial p_i}{\partial x_j} \\
+                                      &=  p_i(\delta_{ij}- p_j)\\
+\frac{\partial p_i}{\partial x_j} &=  p_i(\delta_{ij}- p_j)
+\end{aligned}
 $$
-\frac{\partial p_i}{\partial x_j} =  p_i(\delta_{ij}- p_j)\tag{A.6}
-$$
+
 
 $\theta$ を $\beta$ とそれ以外 ($w,d,s,p$) とに分けて考える。
 更に，各個のパラメータについて微分することを考える。
@@ -278,103 +352,6 @@ $$
 $$
 \mathbf{x}_t=\mathbf{\Theta x}_{t-1}+ z\left(\mathbf{x}_{t-1};a_1^,a_2^2\right)\tag{A.12}
 $$
-
-
-## 機械学習と脳画像研究および心理モデル
-
-### 言語と機能的脳画像研究を結びつけるために，単語の分散表現を機械学習的手法で表現
-
-- [名詞の意味に関連した人間の脳活動の予測, Mitchell, 2018, Predicting Human Brain Activity Associated with the  Meanings of Nouns](https://shinasakawa.github.io/2008Mitchell_Predicting_Human_Brain_Activity_Associated_with
-_the_Meanings_of_Nounsscience.pdf){:target="_blank"}
-
-<center>
-<img src="/figures/2019mitchell-54_20.png" style="width:49%"><br/>
-</center>
-
-### 下図 左のように，「セロリ」から右の脳画像を予測するために，中間表現として，兆 単位の言語コーパス (言語研究では訓練や検証に用いる言語
-データをコーパスと呼ぶ) から得られた **意味特徴** を用いる
-
-<center>
-<img src="/figures/2008Mitchell_fig1.svg" style="width:49%"><br/>
-<p style="text-align: left;width: 66%; background-color: cornsilk;">
-Mitchell (2008) 図 1. 任意の名詞刺激に対するfMRI活性化を予測するモデルの形式。
-fMRI の活性化は、2段階 プロセスで予測される。
-第 1 段階では，入力刺激語の意味を，典型的な単語使用を示す大規模なテキストコーパスから値を抽出した中間的な意味的特徴の観点から符号化する。
-第 2 段階では，これらの中間的な意味的特徴のそれぞれに関連する fMRIシグネチャ の線形結合として，fMRI 画像を予測する。
-<!-- Form of the model for predicting fMRI activation for arbitrary noun stimuli.
-fMRI activation is predicted in a two-step process.
-The first step encodes the meaning of the input stimulus word in terms of intermediate semantic features whose values are extracted from a large corpus of text exhibiting typical word use.
-The second step predicts the fMRI image as a linear combination of the fMRI signatures associated with each of these intermediate semantic features. -->
-</p>
-</center>
-
-### 他の単語 (下図左) eat, taset, fill などの単語から セロリ を予測する回帰モデルを使って予測する
-<center>
-<img src="/figures/2008Mitchell_fig2.svg" style="width:66%"><br/>
-<p style="text-align: left;width: 66%;background-color: cornsilk;">
-Mitchell (2008) 図 2. 与えられた刺激語に対する fMRI 画像の予測。
-(A) 参加者 P1 が 「セロリ」刺激語に対して、他の 58 の単語で学習した後に予測を行う。
-25 個の意味的特徴のうち 3 つの特徴量のベクトルを単位長にスケーリングすることである。
-(食べる, 味わう, 満たす) について学習した $c_{vi}$ 係数は， パネル上部の 3 つの画像のボクセルの色で示されている。
-刺激語「セロリ」に対する各特徴量の共起値は， それぞれの画像の左側に表示されている (例えば 「食べる（セロリ）」の 共起値は 0.84)。
-刺激語の活性化予測値 ((A）の下部に表示) は 25個 の意味的 fMRI シグネチャを線形結合し， その共起値で重み付けしたものである。
-この図は 予測された三次元画像の1つの水平方向のスライス [z=-12 mm in Montreal Neurological Institute (MNI) space] を示している。
-(B) 「セロリ」と「飛行機」について， 他の 58 個の単語を使った訓練後に予測された fMRI 画像と観察された fMRI 画像。
-予測画像と観測画像の上部（後方領域）付近にある赤と青の 2本 の長い縦筋は、左右の楔状回である。
-<!-- Predicting fMRI images for given stimulus words.
-(A) Forming a prediction for participant P1 for the stimulus word “celery” after training on 58 other words.
-Learned $c_{vi}$ coefficients for 3 of the 25 semantic features (“eat,” “taste,” and “fill”) are depicted by the voxel colors in the three images at the top of the panel.
-The cooccurrence value for each of these features for the stimulus word “celery” is shown to the left of their respective images [e.g., the value for “eat (celery)” is 0.84].
-The predicted activation for the stimulus word [shown at the bottom of (A)] is a linear combination of the 25 semantic fMRI signatures, weighted by their co-occurrence values.
-This figure shows just one horizontal slice [z = –12 mm in Montreal Neurological Institute (MNI) space] of the predicted three-dimensional image.
-(B) Predicted and observed fMRI images for “celery” and “airplane” after training that uses 58 other words.
-The two long red and blue vertical streaks near the top (posterior region) of the predicted and observed images are the left and right fusiform gyri. -->}
-</p>
-</center>
-
-
-<center>
-<img src="/figures/2008Mitchell_fig3.svg" style="width:49%"><br/>
-<p style="text-align: left;width:66%;background-color:cornsilk;">
-Mitchell (2008) 図 3. 最も正確に予測されたボクセルの位置。
-参加者 P5 の訓練セット以外の単語について、予測されたボクセルの活性化と実際のボクセルの活性化の相関を表面（A）とグラスブレイン（B）で表したもの。
-これらのパネルは、少なくとも 10個 の連続したボクセルを含むクラスタを示しており、それぞれのボクセルの予測-実際の相関は少なくとも 0.28 である。
-これらのボクセル・クラスターは、大脳皮質全体に分布しており、左右の後頭葉と頭頂葉、左右の豆状部、中央後葉、中央前葉に位置している。
-左右の後頭葉、頭頂葉、中前頭葉、左下前頭回、内側前頭回、前帯状回に分布している。
-(C) 9人の参加者全員で平均化した予測-実測相関の表面表現。
-このパネルは、平均相関が 0.14 以上の連続した10 個以上のボクセルを含むクラスターを示している。
-<!-- Locations of most accurately predicted voxels.
-Surface (A) and glass brain (B) rendering of the correlation between predicted and actual voxel activations for words outside the training set for participant P5.
-These panels show clusters containing at least 10 contiguous voxels, each of whose predicted-actual correlation is at least 0.28.
-These voxel clusters are distributed throughout the cortex and located in the left and right occipital and parietal lobes; left and right fusiform,
-postcentral, and middle frontal gyri; left inferior frontal gyrus; medial frontal gyrus; and anterior cingulate.
-(C) Surface rendering of the predicted-actual correlation averaged over all nine participants.
-This panel represents clusters containing at least 10 contiguous voxels, each with average correlation of at least 0.14. -->
-</p>
-</center>
-
-### chatGPT
-
-<div class="figure figcenter">
-<img src="/figures/2022Quyang_instructGPT_fig2ja.svg" width="99%">
-<div class="figcaption">
-
-### instructGPT の概要 [2022Quyang+](https://arxiv.org/abs/2203.02155) Fig.2 を改変
-
-</div></div>
-
-chatGPT の GPT とは **Genrative Pre-trained Transformer** の頭文字。
-**生成モデル (generative modeling)** と **事前学習 (pre-trained models)** と **トランスフォーマー (transformer)** についての理解が必要
-
-Transformer は **言語モデル (Lanugage models)** です。
-言語モデルによって，文章が処理され，適切な応答をするようになったモデルの代表が chatGPT となる。
-
-言語モデルを理解するために，その構成要素である Transformer を取り上げる。
-Transformer 2017 年の論文 [Attention Is All You Need](https://arxiv.org/abs/1706.03762) で提案された，**ニューラルネットワーク neural network** モデル。
-トランスフォーマーはゲームチェンジャーとなった。
-最近の **大規模言語モデル (LLM: Large Language Model)** は，トランスフォーマーを基本構成要素とするモデルがほとんど。
-上記の論文のタイトルにあるとおり，Transformer は，**注意機構 attention mechanism** に基づいて，自然言語処理の諸課題を解くモデル。
-
 
 
 ## BERT: 埋め込みモデルによる構文解析
