@@ -30,7 +30,7 @@ author: CCAP プロジェクト
 1. 13:30-14:10 趣旨説明：寺尾康 (静岡県立大学)
    * データの紹介1：[健常者の言い誤り](2023session1_DaSiC.pdf){:target="_blank"}: 寺尾康
    * [発話についての認知モデルの変遷](DaSic_Sec3発話認知モデルの変遷2.pdf){:target="_blank"}: 寺尾康
-   * データの紹介2：失語症の錯語: 高倉祐樹（北海道大学），[立場文音 (JCHO 熊本総合病院)](2023DaSiC_tateba.pdf){:target="_blank"}，[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf){:target="_blank"}，
+   * データの紹介2：失語症の錯語: 高倉祐樹（北海道大学），[立場文音 (JCHO 熊本総合病院)](2023tateba_DaSiC.pdf){:target="_blank"}，[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf){:target="_blank"}，
 2. 14:10-14:50 [機械学習からみた言語モデルの鏡](2023DaSIC02Asakawa_Intro_ML){:target="_blank"}: 浅川伸一（東京女子大学）
 
    * 休憩

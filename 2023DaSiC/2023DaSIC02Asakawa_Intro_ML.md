@@ -1,16 +1,16 @@
 ---
-title: "DaSiC7 (2023) 発表資料"
+title: "機械学習からみた言語モデルの鏡 DaSiC7 (2023) 発表資料"
 author: 浅川伸一
 layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
 
-<!-- <link href="asamarkdown.css" rel="stylesheet"></link> -->
+<link href="asamarkdown.css" rel="stylesheet"></link>
 
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
-## 機械学習からみた言語モデルの鏡
+# 機械学習からみた言語モデルの鏡
 
 <center>
 <div style="text-align:left;width:77%;background-color:cornsilk">
@@ -48,39 +48,41 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 * [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 
-## Table of contents: part 1 第一部目次
+##### Table of contents: part 1 第一部目次 (14:10-14:50)
 
-1. 計算論的モデルへの招待 Invitation to computational modelings
-   1. P 値廃止 Ban of p-values
+1. 計算論的モデルへの招待 Invitation to computational modelings (10 min.)
+   1. p 値廃止 Ban of p-values
    2. データサイエンスの 2 つの文化 Two cultures in data science
    3. 神経科学に対する機械学習の 4 つの役割 Four roles of machine learning to neuroscience
-2. 記号的表象と分散表象との間隙を埋める (あるいは，規則に基づく操作と幾何学的操作) Filling a gap between symbolic and distributional representations (or between rule-based and vector-based geometrical operations)
+2. 記号表象と分散表象との橋渡し (あるいは，規則に基づく操作と幾何学的操作) Building a bridge between symbolic and distributional representations (or between rule-based and vector-based geometrical operations) (10 min.)
    1. ワンホット符号化と埋め込みベクトル one-hot encodings and embedding vectors
    2. ソフトマックス関数と結合係数行列 Softmax function and (tying) weight matrices
-3. 符号化器・復号化器モデル Encoder-decoder models
+3. 符号化器・復号化器モデル Encoder-decoder models (10 min.)
    1. 言語モデル Language models
    2. 翻訳モデル Translation models
    3. 注意機構 Attention mechanism
    4. Transformer
-4. 微調整と転移学習 Fine tuning and transfer learning
+4. 微調整と転移学習 Fine tuning and transfer learning (10 min.)
    1. 最終直下層に含まれている情報 Information containing in penultimate layers
    2. 大規模言語モデルから特定の課題へ，言い誤りの型からパラメータ推定 What models do from LLM to specific tasks is analogous to what speech errors be modified to those who produced them.
    3. マルチモーダル，マルチタスク統合へ向けて Towards Multi-modal and multi-task integrations
 
-## Table of contents: part 2 第二部目次
+##### Table of contents: part 2 第二部目次 (15:15-16:15)
 
 1. Dell+ モデルによるいい誤りのシミュレーション Dell+'s model for speech errors
    1. ソフトマックス関数の温度パラメータ thermal parameter in softmax function
    2. 患者ごとの微調整
 2. A encoder-decoder model for word repetition tasks
 
-## Table of contents: part 3 第三部目次
+#### Table of contents: part 3 第三部目次 (16:25-17:40)
 
 1. A model of 百人一首 implemented on Transformer
 2. Horizontal and vertical errors in speech errors
 
 
-## 生成 AI の性能向上
+# 1. 計算論モデルへの招待 Invitation of computational modelings
+
+## -1. 生成 AI の性能向上
 
 <center>
 <img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="77%">
@@ -96,8 +98,7 @@ output randomness) is indicated with the dashed line at the top, and the random 
   the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
 </div></center>
 
-
-## Modeling
+## -1.1 Modeling
 
 1. 記述モデル description model
 箱と矢印モデルなど，質的予測
@@ -105,10 +106,10 @@ output randomness) is indicated with the dashed line at the top, and the random 
 LDA と SVM との違いにあらわれている
 5. アルゴリズムモデル algorithm model
 
-<div class="figcenter">
+<!-- <div class="figcenter">
 <img src="/figures/1999Levelt_blueprint.jpg" width="49%">
 <img src="/figures/1885LichtheimFig1.png" width="29%">
-</div>
+</div> -->
 
 
 ### 機械学習と心理統計学の違い
@@ -125,6 +126,8 @@ LDA と SVM との違いにあらわれている
 未知のデータ，未学習のデータに対する性能と母集団の差異を，一概に比較することは難しいが，予測精度を高くすることが，現実には用いられる実用性が高い。
 応用が可能で，実学として世の中の役に立つ成果を生み出すことができる。
 
+## 1.1 P 値廃止 ban of p-values
+
 ### ASA アメリカ統計学会の声明
 
 1. **P 値は，データが指定された統計モデルとどの程度相性が悪いかを示すことができる** <!--P-values can indicate how incompatible the data are with a specified statistical model.-->
@@ -134,12 +137,12 @@ LDA と SVM との違いにあらわれている
 5. **P 値や統計的有意性は，効果の大きさや結果の重要性を測定するものではない** <!--A p-value, or statistical significance, does not measure the size of an effect or the importance of a result.-->
 6. **それ自体では，p 値はモデルや仮説に関する証拠の良い尺度を提供しない。** <!--By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis.-->
 
-   * [基礎と応用社会心理学 (BASP)  編集方針 (2014,2015)](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja)
-   * [アメリカ統計学会の声明 2014, 2015](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja)
-   * [統計学の誤り : 統計的妥当性の「ゴールドスタンダード」である P 値は多くの科学者が想定しているほど信頼できるものではない (Nuzzo+2014)](https://komazawa-deep-learning.github.io/2023/2014Nuzzo_Statistical_errors_ja)
-   * [統計的有意性を引退させろ (サイエンティフィックアメリカン, 2019)](https://komazawa-deep-learning.github.io/2023/2019Amrhein_Retire_statistical_significance_ja)
+   * [基礎と応用社会心理学 (BASP)  編集方針 (2014,2015)](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja){:target="_blank"}
+   * [アメリカ統計学会の声明 2014, 2015](https://komazawa-deep-learning.github.io/2023/2015Basic_and_Applied_Social_Psychology_ban_p_values_ja){:target="_blank"}
+   * [統計学の誤り : 統計的妥当性の「ゴールドスタンダード」である P 値は多くの科学者が想定しているほど信頼できるものではない (Nuzzo+2014)](https://komazawa-deep-learning.github.io/2023/2014Nuzzo_Statistical_errors_ja){:target="_blank"}
+   * [統計的有意性を引退させろ (サイエンティフィックアメリカン, 2019)](https://komazawa-deep-learning.github.io/2023/2019Amrhein_Retire_statistical_significance_ja){:target="_blank"}
 
-### Breiman によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
+## 1.2 Breiman2001 によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
 
 <center>
 <img src="/figures/2001Breiman_Two_Cultures_fig1.svg" width="33%"><br/>
@@ -155,6 +158,8 @@ LDA と SVM との違いにあらわれている
 From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_, 2001, Vol. 16, No. 3, 199–231, doi:10.1214/ss/1009213725.
 [pdf](https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full)
 
+## 1.3 Glaser+2019 神経科学における機械学習モデルの 4 つの役割
+
 <center>
 <img src="/figures/2019Glaser_fig2.jpg" width="49%">
 </center>
@@ -166,6 +171,52 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 
 <!-- 訓練済ニューラルネットワークを脳と比較する傾向は，画像認識などの行動課題におけるニューラルネットワークの大きな成果により，最近になって再燃した (He+2015)。
 興味深いことに，これらのネットワークは視覚における腹側流路と類似点が多い。 -->
+
+# 2. 記号表書と分散表彰との間隙を埋める
+
+* [‘戦’,’争’] の書記表現 [ 1, 1565, 1604, 2]
+* ['s', 'e', 'N', 's', 'o', 'u'] の音韻表現 [ 1, 37, 7, 14, 37, 8, 6, 2]
+
+同様に，単語 (もしくはトークン) についてすべて付番し，そのトークン番号で表現 (tokenizer)
+
+~~~python
+>>> from transformers import EncoderDecoderModel, BertTokenizer, BertConfig
+>>> tknz = BertTokenizer.from_pretrained('sonoisa/sentence-bert-base-ja-mean-tokens-v2')
+>>> print(tknz('誰が一番に着くか私には分かりません。').input_ids)
+[2, 3654, 14, 52, 246, 7, 816, 609, 28470, 1325, 7, 28450, 155, 20431, 28491, 4263, 8, 3]
+
+>>> print(tknz.convert_ids_to_tokens([2, 3654, 14, 52, 246, 7, 816, 609, 28470, 1325, 7, 28450, 155, 20431, 28491, 4263, 8, 3]))
+['[CLS]', '誰', 'が', '一', '番', 'に', '着', 'く', '##か', '私', 'に', '##は', '分', 'かり', '##ま', '##せん', '。', '[SEP]']
+
+>>> tknz('言語学').input_ids
+[2, 1882, 112, 3]
+
+>>> tknz.convert_ids_to_tokens([2, 1882, 112, 3])
+['[CLS]', '言語', '学', '[SEP]']
+
+>>> tknz('データサイエンス').input_ids
+[2, 1676, 14916, 3]
+
+>>> tknz.convert_ids_to_tokens([1676,14916])
+['データ', 'サイエンス']
+
+>>> tknz('DaSiC7').input_ids
+[2, 28367, 28583, 28535, 28598, 127, 3]
+
+>>> tknz.convert_ids_to_tokens([28367, 28583, 28535, 28598, 127])
+['Da', '##S', '##i', '##C', '7']
+~~~
+
+単語 `データサイエンス` は データ が 1676 番という ID 番号を持ち，かつ，サイエンスが 14916 番であることが分かる。
+したがって，データサイエンスを表現するには，32000 次元のワンホットベクトルを 2 つ用いて，
+
+~~~python
+[0,0,..,1,0,0,0]
+~~~
+
+のようなベクトルを作成する。このとき，ベクトルの 1 つの要素だけが 1 で，残りすべての要素が 0 であるベクトルをワンホットベクトルと呼ぶ。
+
+<img src='/figures/2023dasic_onehot2embeddings.svg' width="49%">
 
 ### 人口ニューラルネットワークと神経細胞の機能的類似
 
