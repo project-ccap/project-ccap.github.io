@@ -53,10 +53,24 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 1. A model of 百人一首 implemented on Transformer
 2. Horizontal and vertical errors in speech errors
 
+---
 
-# 1. 計算論モデルへの招待 Invitation of computational modelings
+#  主張 Takeaways
 
-## -1. 生成 AI の性能向上
+1. 大規模言語モデル (LLM)，一般画像錦 (ImageNet) で事前訓練されたモデルに対して，転移学習 transfer learning を行うことで，関心領域の課題を解くモデルを作成
+2. 関心課題に特化したモデルに対して，任意の条件とデータとを用いて，微調整 fine-tuning を行うことで，条件間の差異や生成機序を解明。モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項とを連結する。
+3. 微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化可能
+
+### キーワード keywords
+
+転移学習，微調整，トランスフォーマー，符号化・復号化モデル，注意，ラグランジェの双対性<br/>
+Transfer learning, fine-tuning, Transformer, Encoder-decoder models, Attention, Lagrange duality,
+
+---
+
+# 0. 背景
+
+## 0.1 生成 AI の性能向上
 
 <center>
 <img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="77%">
@@ -72,7 +86,7 @@ output randomness) is indicated with the dashed line at the top, and the random 
   the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
 </div></center>
 
-## -1.1 Modeling
+## 0.2 Modeling
 
 1. 記述モデル description model
 箱と矢印モデルなど，質的予測
@@ -85,8 +99,7 @@ LDA と SVM との違いにあらわれている
 <img src="/figures/1885LichtheimFig1.png" width="29%">
 </div> -->
 
-
-### 機械学習と心理統計学の違い
+## 0.3 機械学習と心理統計学の違い
 
 仮説検定とパラメータチューニングの差異は，母集団の相違に期すのか，それとも選択しているモデルによるものなのか。
 心理統計では，データを説明する努力よりも，母集団の相違，すなわち，帰無仮説が棄却できるか採択されるかに興味がある。
@@ -99,6 +112,8 @@ LDA と SVM との違いにあらわれている
 所与のデータにだけ当てはまるモデルではなく，未知のデータにたいして性能の高いモデルが選択される。
 未知のデータ，未学習のデータに対する性能と母集団の差異を，一概に比較することは難しいが，予測精度を高くすることが，現実には用いられる実用性が高い。
 応用が可能で，実学として世の中の役に立つ成果を生み出すことができる。
+
+# 1. 計算論モデルへの招待 Invitation of computational modelings
 
 ## 1.1 P 値廃止 ban of p-values
 
