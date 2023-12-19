@@ -19,6 +19,18 @@ codemirror_mime_type: text/x-cython
 --- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
 </div>
 
+#### Table of contents: part 2 第二部目次 (15:15-16:15)
+
+1. Dell+ モデルによるいい誤りのシミュレーション Dell+'s model for speech errors
+   1. ソフトマックス関数の温度パラメータ thermal parameter in softmax function
+   2. 患者ごとの微調整
+2. A encoder-decoder model for word repetition tasks
+
+#### Table of contents: part 3 第三部目次 (16:25-17:40)
+
+1. A model of 百人一首 implemented on Transformer
+2. Horizontal and vertical errors in speech errors
+
 #### WEAVER++, Dell モデルの再現シミュレーション colab files
 
 <!-- - [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)

@@ -31,6 +31,12 @@ codemirror_mime_type: text/x-cython
 
 * [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/){:target="_blank"}
 
+#### Table of contents: part 3 第三部目次 (16:25-17:40)
+
+1. A model of 百人一首 implemented on Transformer
+2. Horizontal and vertical errors in speech errors
+
+
 #### 実習ファイル
 
 * [百人一首の上の句とエンコーダによって符号化し，下の句をデコーダで生成する自作 Transformer モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
