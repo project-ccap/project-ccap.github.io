@@ -1,25 +1,25 @@
 ---
-title: "機械学習からみた言語モデルの鏡 DaSiC7 (2023) 発表資料"
+title: "機械学習からみた言語モデルの鏡 DaSiC7 (2023) 発表資料 (1)"
 author: 浅川伸一
 layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
 
-<link href="asamarkdown.css" rel="stylesheet"></link>
+<link href="/assets/css/asamarkdown.css" rel="stylesheet">
 
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
 # 機械学習からみた言語モデルの鏡
 
-<div style="text-align:left;width:77%;background-color:cornsilk">
+<div class="memo" style="width:77%">
 
-昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg) (Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
+昨今の LLM，生成 AI は，ハリー・ポッターの世界で「心の奥底にある，最も切実な願望以上のものは何も示してくれない」 [みぞの鏡](Mirror of Erised: Desire を逆から綴った) かもしれない。<br/>
 LLMs that reflect your needs as well as your intelligence could be a Mirror of Erised (“Desired” spelt backward), which in the world of Harry Potter “shows us nothing more or less than the deepest, most desperate desire of our hearts.
-[Sejnowski(2022)](https://doi.org/10.1162/neco_a_01563)
+[Sejnowski2022](https://doi.org/10.1162/neco_a_01563)
 </div>
 
-* [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
+[みぞの鏡](https://komazawa-deep-learning.github.io/2023assets/HarryPotter_erised_mirror_chapt12_p207_.svg){:target="_blank"}
 
 
 #### Table of contents: part 1 第一部目次 (14:10-14:50)

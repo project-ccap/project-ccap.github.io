@@ -1,75 +1,70 @@
 ---
-title: "DaSiC7 (2023) 発表資料"
+title: "機械学習からみた言語モデルの鏡 DaSiC7 (2023) 発表資料 (2)"
 author: 浅川伸一
 layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
 
+<link href="/assets/css/asamarkdown.css" rel="stylesheet">
+
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
-<div style="text-align:left;width:77%;background-color:cornsilk">
+# 機械学習モデルの説明
+
+<div class="memo" style="width:77%">
 
 人間の感情と、他の生物のそれと、近代的な型の自動機械の反応との間に鋭い乗り越えられない区画線を引く心理学者は、
 私が私自身の主張に慎重でなければならないのと同様に、私の説を否定するのに慎重でなければならない <br/>
 --- N. Wiener, The Human Use of Human Beings(人間機械論, みすず書房, p.73) ---
 </div>
 
-## 機械学習モデル
-
-<!-- <link href="/asamarkdown.css" rel="stylesheet"></link> -->
-
-## WEAVER++, Dell モデルの再現シミュレーション colab files
+#### WEAVER++, Dell モデルの再現シミュレーション colab files
 
 <!-- - [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
 - [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
-  -  [word2vec による単語連想 + 頻度 デモ <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb) -->
+- [word2vec による単語連想 + 頻度 デモ <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb) -->
 
-- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
-- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
+- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb){:target="_blank"}
+- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb){:target="_blank"}
 <!-- - [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb) -->
-- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
-	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
+- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb){:target="_blank"}
+<!-- - [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing) -->
 
 
-## ソフトマックス関数における温度パラメータ
-
-<img src="/figures/2023_1026kWTA_fig1.svg">
-<div class="figcaption">
-
-データ [4,3,2,1,0] に対して，異なるベータでソフトマックス関数を実施した結果
-</div>
-
-
-## 3. 転移学習と微調整
+## 転移学習と微調整
 
 <div class="figcenter">
-<img src="/figures/2017Ruder_fig1.jpg" width="22%">
+<img src="/figures/2017Ruder_fig1.jpg" width="49%">
 <div class="figcaption">
 
 微調整 (fine tuning) による課題ごとの訓練。
 多層ニューラルネットワークモデルの最終層を，課題ごとに入れ替えることで，複数の課題に適応できるようにする。
-今回は，BIT の 4 課題 (線分二等分，線分検出，文字検出，星印検出) を考える。
-ただし，文字検出課題と星印検出課題は，文字と記号検出を微調整した。
-そのため，課題ごとの微調整は，この両課題については同一である。
-従って，3 種類の微調整を行った。
 
 図は Ruder (2017) [An Overview of Multi-Task Learning in Deep Neural Network](https://arXiv.org/abs/1706.05098),
 Fig. 1. より
 </div></div>
 
-<img src="/figures/2023_0318Daimon_CNPS_p31_32.svg" width="44%">
+### 転移学習の応用例，BIT 行動注意検査線分二等分課題のシミュレーション (浅川，武藤 投稿中)
 
-<img src="/figures/2023_0721bit_line_bisection_demo0.svg" width="24%">
-<img src="/figures/2023_0721bit_line_bisection_demo1.svg" width="24%">
+<div class="figcenter">
+<img src="/figures/2023_0721bit_line_bisection_demo0.svg" width="44%">
+<img src="/figures/2023_0721bit_line_bisection_demo1.svg" width="44%">
+</div>
 
-<img src="/figures/2023_0723tlpa_sala_214.png" width="33%">
-<img src="/figures/2023_0723tlpa_sala_83.png" width="33%">
-<img src="/figures/2023_0723tlpa_sala_243.png" width="33%">
+### 転移学習の応用例 (2) TLPA，SALA 失語症，絵画命名課題
+
+<div class="figcenter">
+<img src="/figures/2023_0723tlpa_sala_214.png" width="44%"><br/>
+<img src="/figures/2023_0723tlpa_sala_83.png" width="44%">
+<img src="/figures/2023_0723tlpa_sala_243.png" width="44%">
+</div>
+
 
 ## 埋め込みモデル，ベクトル空間
 
-* ピラミッド・パームツリー・テスト: 認知症検査
+* ピラミッド・パームツリー・テスト: 認知症検査 ([意味連合検査，佐藤2022](https://www.amazon.co.jp/dp/4909375112){:target="_blank"}<br/>
+
 * ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
 
 1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
@@ -77,9 +72,9 @@ Fig. 1. より
 3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
 
 <div class="figure figcenter">
-<img src="/figures/2023_0712projection_concept.svg" width="24%">
-<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
-<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
+<img src="/figures/2023_0712projection_concept.svg" width="33%">
+<img src="/figures/2021_0831jcss_PPT2.svg" width="55%">
+<img src="/figures/2021_0831jcss_PPT1.svg" width="77%">
 </div>
 
 
@@ -126,7 +121,19 @@ sp モデルでは局在する結合係数の変動を記述する意味で，�
 右: [@2013Dell_VLPM] Fig. 5 -->
 </div></center>
 
-## 1.2 従来モデルの問題点
+
+# Dell モデルの改善提案 (浅川+2019)
+
+## ソフトマックス関数における温度パラメータ
+
+<img src="/figures/2023_1026kWTA_fig1.svg">
+<div class="figcaption">
+
+データ [4,3,2,1,0] に対して，異なるベータでソフトマックス関数を実施した結果
+</div>
+
+
+## 従来モデルの問題点
 
 本稿では，上記 Dell モデルの記述をパラメータ推定問題として捉え，機械学習の手法を援用することでパラメータの推定を行うことを提案する。
 <!-- また Dellのモデルでもシミュレーション方式が 2 通りあり，それぞれ SP モデルと WD モデルと呼ばれる。
@@ -183,11 +190,7 @@ $\beta$ は統計力学からの類推から温度パラメータと呼ぶこと
 一方，健常統制群の課題成績は，任意の刺激図版に対して安定的な応答が得られやすいと考えられる。
 このことは，健常統制群の系では，温度パラメータ $\beta$ が低く，すなわち，系の応答が安定しているとみなすことなる。
 
-## A.1 コード
-
-* [](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021cnps_ccap1_simpleDell.ipynb)
-
-## A.2 患者ごとのシミュレーション結果
+## 患者ごとのシミュレーション結果 データは Foygell&Dell2000 論文中のデータを用いた
 
 <center>
 <img src="/figures/2021_0811W_B.svg" width="23%">
@@ -213,7 +216,7 @@ $\beta$ は統計力学からの類推から温度パラメータと呼ぶこと
 <img src="/figures/2021_0811W_R_.svg" width="23%">
 </center>
 
-## A.3 学習
+## 学習
 
 教師信号 $\mathbf{t}=\left[0.97, 0.01, 0.00, 0.01, 0.00, 0.00\right]$ とする。
 このとき最小化すべき目的関数(損失関数，誤差関数) $l$
@@ -316,10 +319,14 @@ $$
 \mathbf{x}_t=\mathbf{\Theta x}_{t-1}+ z\left(\mathbf{x}_{t-1};a_1^,a_2^2\right)\tag{A.12}
 $$
 
+#### コード
 
-# 2. 言い誤り
+* [Dell model の PyTorch 実装 2021CNPS 提案モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021cnps_ccap1_simpleDell.ipynb)
 
-## 2.1 翻訳モデルにおける注意
+
+# エンコーダ・デコーダモデルを用いた，健常者と失語症患者の言い誤りのシミュレーション (大門+2023)
+
+## 翻訳モデルにおける注意
 
 * 符号化器の最後の隠れ状態から単一の文脈ベクトルを構築するのではなく，文脈ベクトルとソース入力全体との間にショートカットを作成する。
 * これらのショートカット接続の重みは，各出力要素ごとにカスタマイズ可能
@@ -330,9 +337,21 @@ $$
     2. 復号化器側の中間層状態 (ターゲット)
     3. ソースとターゲットのアラインメント(配置情報) すなわちどの位置の情報に着目すべきかを決定する
 
-<img src="/figures/2014Sutskever_Fig2left.svg">
-<img src="/figures/2014Sutskever_Fig2right.svg">
-<img src="/figures/2014Sutskever_S22_Fig1.svg">
+<div class="figcenter">
+<img src="/figures/2014Sutskever_S22_Fig1.svg" width="77%">
+<div class="figcaption">
+
+オリジナルモデル [Sutuskever+2014](https://arXiv.org/abs/1409.3215) Fig. 1
+</div></div>
+
+<div class="figcenter">
+<img src="/figures/2014Sutskever_Fig2left.svg" width="44%">
+<img src="/figures/2014Sutskever_Fig2right.svg" width="44%">
+<div class="figcaption">
+
+[Sutuskever+2014](https://arXiv.org/abs/1409.3215) Fig. 2
+</div></div>
+
 
 ## 2.2 注意の種類
 
@@ -400,19 +419,22 @@ $$
 
 ## Building block モデルごとの性能
 
-<center>
-<img src="/figures/2023_0309ccap_comparision_among_RNNmodels.svg" width="39%">
+<div class="figcenter">
+<img src="/figures/2023_0309ccap_comparision_among_RNNmodels.svg" width="66%">
 <img src="/figures/2015Greff_LSTM_ja.svg" width="29%">
-</center>
+</div>
+<div class="figcaption">
+
+左: RNN モデルと注意機構による性能の変化。<br/>
+右: LSTM の概念図 (浅川2015)
+</div>
 
 * SRN without 注意以外のモデルでは，学習が可能であることが分かる。
-* このことから，注意成分と RNN 成分とで，いずれが speech errors に関連しているのかを見定めたい，というリサ
-ーチクエスチョンが提起できる。本発表では，このことに焦点を当てた。
-    * **モデル0**: 全てのパラメータを微調整
-    * **モデル1**: 注意機構を固定して，GRU 側を微調整
-    * **モデル2**: GRU 側を固定して，注意を微調整
+* このことから，注意成分と RNN 成分とで，いずれが speech errors に関連しているのかを見定めたい，というリサーチクエスチョンが提起できる。本発表では，このことに焦点を当てた。
 
-## 入出力表現
+## 実験
+
+### 入出力表現
 
 * 入出力語彙辞書 (48 トークン): ['<PAD>', '<EOW>', '<SOW>', '<UNK>', 'N', 'a', 'a:', 'e', 'e:', 'i', 'i:', 'i::', 'o', 'o:', 'o::', 'u', 'u:', 'b', 'by', 'ch', 'd', 'dy', 'f', 'g', 'gy', 'h', 'hy', 'j', 'k', 'ky', 'm', 'my', 'n', 'ny', 'p', 'py', 'q', 'r', 'ry', 's', 'sh', 't', 'ts', 'w', 'y', 'z', 'ty', ‘:’] <PAD> : 埋め草，<EOW>: 語尾，<SOW>:語頭，<UNK>: 未定義をあらwす特殊トークン
 * 中間層素子数: 64
@@ -420,18 +442,32 @@ $$
 * 復号化器の中間層初期値 = 符号化器の終了時点の中間層状態
 * 復号化器には注意機構を実装 such as chatGPT, BERT, and more.
 
+<div class="figcenter">
 <img src="/figures/2023cnps_KIA_enc_dec.png" width="66%">
+</div>
+<div class="figcaption" style="width:49%">
+エンコーダ・デコーダモデルの概念図
+</div>
 
+### 中間層に加えた３つの処理過程
 
-## 中間層に加えた３つの処理過程
+#### モデル0 全てのパラメータを微調整
 
-1. 水色：ゲート。運動計画と聴覚フィードバック制御 like a Kalman filter (Kalman, 1960)
-2. 青：トップダウン注意
-3. 赤色：エンコーダの出力. 音素系列，ボトムアップ注意，言いたい事：固定 like a STM (Baddley1992)
+#### <font color="cyan">モデル1 注意機構を固定して，GRU 側を微調整</font> 水色: 運動計画と聴覚フィードバック制御 (カルマンフィルタ (Kalman1960) 様の制御を実現)
 
+#### <font color="blue">モデル2 GRU 側を固定して，注意を微調整</font> 青：トップダウン注意
+
+<font color="red">赤色：エンコーダの出力. 音素系列，ボトムアップ注意，言いたい事：固定 like a STM (Baddley1992)</font>
+
+<div class="figcenter">
 <img src="/figures/2023cnps_ccap_model01.png" width="66%">
+</div>
+<div class="figcaption" style="width:49%">
 
-## 事前学習と微調整
+デコーダ側の時刻 t-1 から t への遷移において，微調整を加える部分を色分けして表示。
+</div>
+
+### 事前学習と微調整
 
 * 事前学習 pretraining : 健常モデルとみなす。
     * 転移学習 transfer learning と微調整 fine tuning:
@@ -446,16 +482,18 @@ $$
 
 ## 結果
 
-
-<img src="/figures/2023_0402fine_tuned_speech_errors.svg" width="66%">
+<div class="figcenter">
+<img src="/figures/2023_0402fine_tuned_speech_errors.svg" width="77%">
+</div>
 
 一旦，通常の単語の発話を学習したモデルに対して，提案モデルにおいて，水色部分と青色部分の両者とも微調整対象にした。
 結果は，ほとんど全ての言い誤りを再生させることができた。
-    * 実際には，刺激｢ノートルダム｣については，2 つの正解が存在する(ノートムダルとノールトダム)。
-    * このため，微調整では，このノートルダムの言い間違えの 1 つについてのみ，言い間違えに失敗し，143/144 の言い間違え率を得た。
+
+* 実際には，刺激｢ノートルダム｣については，2 つの正解が存在する(ノートムダルとノールトダム)。
+* このため，微調整では，このノートルダムの言い間違えの 1 つについてのみ，言い間違えに失敗し，143/144 の言い間違え率を得た。
 
 * モデル 0: 全体を微調整
-* <font color="cyan">モデル 1: モデルの水色部分のみ微調整を行い，青色部分を固定した場合</font>，96.5% の言い間違えを再現した。言い間違えに失敗した例は，「たのしませて」(実際の言い間違え例はタノマシ)を/タノシャシ/ などであった。
+* <font color="cyan">モデル 1: モデルの水色部分のみ微調整を行い，青色部分を固定した場合</font> 96.5% の言い間違えを再現した。言い間違えに失敗した例は，「たのしませて」(実際の言い間違え例はタノマシ)を/タノシャシ/ などであった。
 * <font color="blue">モデル 2: 一方，水色部分を固定して微調整を行う</font> 言い間違え再現率は 52/144 =  36.11 % であった。
 
 このことから，成人の言い間違えデータの生成源は，水色部分，すなわち，音の運動出力の繋がり部分の不具合に起因し，語彙的表象の変容だけでは，36 % 程度しか再現できないと言えるだろう。

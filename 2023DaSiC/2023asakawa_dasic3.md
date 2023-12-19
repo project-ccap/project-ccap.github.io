@@ -1,5 +1,5 @@
 ---
-title: "DaSiC7 (2023) 発表資料 "
+title: "機械学習からみた言語モデルの鏡 DaSiC7 (2023) 発表資料 (3)"
 author: 浅川伸一
 layout: default
 codemirror_mode: python
@@ -10,7 +10,16 @@ codemirror_mime_type: text/x-cython
 
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
-<center>
+# 実演 鏡を覗いてみると
+
+<div class="memo" style="width:77%">
+
+怪物と戦うものは，自分もその怪物とならないように用心するがよい。
+そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む<br/>
+146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
+</div>
+
+<div class="figcenter">
 <img src="/figures/poly_in_poly_long.gif" width="94%">
 
 <!-- <img src="https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/poly_in_poly_long.gif"><br/> -->
@@ -18,18 +27,11 @@ codemirror_mime_type: text/x-cython
 
 画像出典: [双対性](https://ds.cc.yamaguchi-u.ac.jp/~math/toybox/polyhedron_soral/explanation/037_4.html)<br/>
 左から，正四面体，正六面体，正八面体，正十二面体，正二十面体
-</div></center>
+</div></div>
 
-<br/>
-<center>
-<div style="text-align:left;width:77%;background-color:cornsilk">
+* [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
-怪物と戦うものは，自分もその怪物とならないように用心するがよい。
-そして，君が長く深淵を覗き込むならば，深淵もまた君を覗き込む 146 (ニーチェ，木場深定訳，善悪の彼岸，120ページ，岩波書店)<br/>
-</div>
-</center>
-
-# 実習ファイル
+#### 実習ファイル
 
 * [百人一首の上の句とエンコーダによって符号化し，下の句をデコーダで生成する自作 Transformer モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb)
 
@@ -66,8 +68,8 @@ $$
 $$
 
 <div class="figcenter">
-<img src="/figures/2023_0723PE_Transformer_curves.png" width="44%">
-<div class="figcaption">
+<img src="/figures/2023_0723PE_Transformer_curves.png" width="77%">
+<div class="figcaption" style="width:55%">
 Transformer の位置符号化器の出力。
 Transformer は位置情報を持たないので，位置情報を周波数変換して用いる。
 </div></div>
@@ -76,7 +78,7 @@ Transformer は位置情報を持たないので，位置情報を周波数変�
 
 <div class="figcenter">
 
-<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="49%">
+<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="77%">
 <div class="figcaption">
 
 #### 図 3.13: ニュース記事がモデルによって生成されたものであるかどうかを識別する人間の能力 (正しい割り当てと中立でない割り当ての比率で測定) は，モデルサイズが大きくなるほど低下する。
