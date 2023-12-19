@@ -29,7 +29,11 @@ codemirror_mime_type: text/x-cython
 </div>
 </center>
 
-# Transformer
+# 実習ファイル
+
+* [百人一首の上の句とエンコーダによって符号化し，下の句をデコーダで生成する自作 Transformer モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb)
+
+# Transformer, [Attention is all you need](https://arxiv.org/abs/1706.03762)
 
 単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
 句，節，文のベクトル表現を得る努力がなされてきた。
@@ -49,6 +53,37 @@ Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
 上図で，`matmul` は行列の積，`scale` は，平均 0 分散 1 への標準化，`mask` は 0 と 1 とで，データを制限すること，`softmax` はソフトマックス関数である。
 
 トランスフォーマーの注意とは，このソフトマックス関数である。
+
+
+### Transformer における位置符号化器 (PE: position encoders)
+
+$$
+\text{PE}_{(\text{pos},2i)} = \sin\left(\frac{\text{pos}}{10000^{\frac{2i}{d_{\mathop{model}}}}}\right)
+$$
+
+$$
+\mathop{PE}_{(\mathop{pos},2i+1)} = \cos\left(\frac{\mathop{pos}}{10000^{\frac{2i}{d_{\mathop{model}}}}}\right)
+$$
+
+<div class="figcenter">
+<img src="/figures/2023_0723PE_Transformer_curves.png" width="44%">
+<div class="figcaption">
+Transformer の位置符号化器の出力。
+Transformer は位置情報を持たないので，位置情報を周波数変換して用いる。
+</div></div>
+
+### 性能評価
+
+<div class="figcenter">
+
+<img src="/figures/2021Brown_GPT3_fig3_13.jpg" width="49%">
+<div class="figcaption">
+
+#### 図 3.13: ニュース記事がモデルによって生成されたものであるかどうかを識別する人間の能力 (正しい割り当てと中立でない割り当ての比率で測定) は，モデルサイズが大きくなるほど低下する。
+意図的に悪い対照モデル (出力のランダム性が高い無条件 GPT-3 小型モデル) の出力に対する精度を上部の破線で示し，ランダムな確率 (50 %) を下部の破線で示す。ベストフィットの線は 95 %信頼区間を持つべき乗則である。
+<!-- #### Figure 3.13: People’s ability to identify whether news articles are model-generated (measured by the ratio of correct assignments to non-neutral assignments) decreases as model size increases.
+Accuracy on the outputs on the deliberately bad control model (an unconditioned GPT-3 Small model with higher output randomness) is indicated with the dashed line at the top, and the random chance (50%) is indicated with the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
+</div></div>
 
 
 # ありえない有能さ Unreasonable effectiveness
