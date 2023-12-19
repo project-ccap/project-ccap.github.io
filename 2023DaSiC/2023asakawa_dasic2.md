@@ -316,3 +316,146 @@ $$
 \mathbf{x}_t=\mathbf{\Theta x}_{t-1}+ z\left(\mathbf{x}_{t-1};a_1^,a_2^2\right)\tag{A.12}
 $$
 
+
+# 2. 言い誤り
+
+## 2.1 翻訳モデルにおける注意
+
+* 符号化器の最後の隠れ状態から単一の文脈ベクトルを構築するのではなく，文脈ベクトルとソース入力全体との間にショートカットを作成する。
+* これらのショートカット接続の重みは，各出力要素ごとにカスタマイズ可能
+* 文脈ベクトルが全入力系列にアクセスできる間は，忘れる心配はない。
+* ソースとターゲットの間のアライメントは，文脈ベクトルによって学習され，制御される。
+* 基本的に文脈ベクトルは 3 つの情報を用いる。
+    1. 符号化器側の中間層状態 (ソース)
+    2. 復号化器側の中間層状態 (ターゲット)
+    3. ソースとターゲットのアラインメント(配置情報) すなわちどの位置の情報に着目すべきかを決定する
+
+<img src="/figures/2014Sutskever_Fig2left.svg">
+<img src="/figures/2014Sutskever_Fig2right.svg">
+<img src="/figures/2014Sutskever_S22_Fig1.svg">
+
+## 2.2 注意の種類
+
+* **文脈ベースの注意 Content-base attention** ([Graves2014](https://arxiv.org/abs/1410.5401)):
+$\text{score}(\mathbf{s}_t, \mathbf{h}_i) = \cos\left(\mathbf{s}_t, \mathbf{h}_i\right)$
+
+* **加算的注意 Additive attention** ([Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf)):
+$\text{score}(\mathbf{s}_t, \mathbf{h}_i) =$ $\mathbf{v}_a^\top \tanh(\mathbf{W}_a\left[\mathbf{s}_t; \mathbf{h}_i\right])$<br/>
+Loung2015 論文では，"concat", Vaswani2017 論文では "additive atttention" として言及されている注意のこと
+* **位置ベースの注意 Location-Base attention** ([Luong2015](https://arxiv.org/pdf/1508.04025.pdf)):
+$\alpha_{t,i} = \text{softmax}(\mathbf{W}_a\mathbf{s}_t)$ <br/>
+これにより，ソフトマックス配置(アライメント)がターゲット位置のみに依存するように単純化される。
+* **一般化注意 General attention** ([Luong2015](https://arxiv.org/pdf/1508.04025.pdf)):
+$\text{score}(\mathbf{s}_t,\mathbf{h}_i) = \mathbf{s}_t^\top\mathbf{W}_a\mathbf{h}_i$<br/>
+$\mathbf{W}_a$ は，注意層の訓練可能な重み行列
+* **内積型注意 Dot-Product attention attention** ([Luong2015](https://arxiv.org/pdf/1508.4025.pdf)):
+$\text{score}(\mathbf{s}_t,\mathbf{h}_i) = \mathbf{s}_t^\top\mathbf{h}_i$
+* **規格化内積型注意 Scaled Dot-Product attention**  ([Vaswani2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf)):
+$\text{score}(\mathbf{s}_t, \mathbf{h}_i) = \frac{\mathbf{s}_t^\top\mathbf{h}_i}{\sqrt{n}}$<br/>
+注：尺度因子を除いて内積型注意に酷似する；ここで、n はソース中間層状態の次元。
+BERT および GPT で用いられている。
+
+$[\cdot;\cdot]$ は 2 つのベクトルの連接を表す。
+
+## 2.3 注意の定義
+
+長さ $n$ のソース系列 $\mathbf{x}$ と，長さ $m$ のターゲット系列 $\mathbf{y}$ を考える。
+太字はベクトルであることを示す。
+
+$$ \begin{aligned}
+\mathbf{x} &= \left[x_1, x_2, \dots, x_n\right] \\
+\mathbf{y} &= \left[y_1, y_2, \dots, y_m\right] \\
+\end{aligned} $$
+
+<!-- $$\mathbf{h}_i = \left[\overrightarrow{\mathbf{h}}_i^\top; \overleftarrow{\mathbf{h}}_i^\top\right]^\t
+op, i=1,\dots,n$$ -->
+復号化器ネットワークは，位置 $t$ の出力語に対して隠れ状態 $\mathbf{s}_t=f( \mathbf{s}_{t-1}, y_{t-1}, \math
+bf{c}_t)$, $t\in[1,m]$ であり，文脈ベクトル $\mathbf{c}_t$ は入力系列の隠れ状態の和で配置(アライメント) の
+得点で重み付けをする。
+
+$$
+\begin{aligned}
+\mathbf{c}_t &= \sum_{i=1}^n \alpha_{t,i} \mathbf{h}_i & \text{ 出力のための文脈ベクトル }y_t\\
+\alpha_{t,i} &= \text{align}(y_t, x_i)                 & \text{ 2 つの単語 }y_t\text{ 及び }x_i\text{ を配
+置}\\
+&= \frac{\exp(\text{score}(\mathbf{s}_{t-1}, \mathbf{h}_i))}{\sum_{i'=1}^n \exp(\text{score}(\mathbf{s}_{t-
+1}, \mathbf{h}_{i'}))} & \text{ アラインメント得点のソフトマックス}
+\end{aligned}
+$$
+
+## アラインメント関数
+
+アライメントモデルは，位置 $i$ の入力と位置$t$ の出力の対 $(y_t, x_i)$ に，それらがどれだけ一致しているかに基づいて得点 $\alpha_{t,i}$ を付与する。
+$\alpha_{t,i}$ の集合は，各出力に対して各ソース中間層状態をどの程度考慮すべきかを定義する重みである。
+Bahdanau 論文では，アライメント得点 $\alpha$ は単一の中間層を持つフィードフォワードネットワークによって計量化され，このネットワークはモデルの他の部分と同時に学習される。
+得点関数は，非線形活性化関数として $\tanh$ が使用されていることを考えると，以下のような形となる:
+$$
+\text{score}(\mathbf{s}_t, \mathbf{h}_i) = \mathbf{v}_a^\top \tanh(\mathbf{W}_a\left[\mathbf{s}_t; \mathbf{
+h}_i\right])
+$$
+
+ここで，$\mathbf{v}_a$ と $\mathbf{W}_a$ は共にアライメントモデルで学習される重み行列。
+
+<!-- アライメント得点行列は，ソース語とターゲット語の相関を明示的に示す良い副産物である。 -->
+
+## Building block モデルごとの性能
+
+<center>
+<img src="/figures/2023_0309ccap_comparision_among_RNNmodels.svg" width="39%">
+<img src="/figures/2015Greff_LSTM_ja.svg" width="29%">
+</center>
+
+* SRN without 注意以外のモデルでは，学習が可能であることが分かる。
+* このことから，注意成分と RNN 成分とで，いずれが speech errors に関連しているのかを見定めたい，というリサ
+ーチクエスチョンが提起できる。本発表では，このことに焦点を当てた。
+    * **モデル0**: 全てのパラメータを微調整
+    * **モデル1**: 注意機構を固定して，GRU 側を微調整
+    * **モデル2**: GRU 側を固定して，注意を微調整
+
+## 入出力表現
+
+* 入出力語彙辞書 (48 トークン): ['<PAD>', '<EOW>', '<SOW>', '<UNK>', 'N', 'a', 'a:', 'e', 'e:', 'i', 'i:', 'i::', 'o', 'o:', 'o::', 'u', 'u:', 'b', 'by', 'ch', 'd', 'dy', 'f', 'g', 'gy', 'h', 'hy', 'j', 'k', 'ky', 'm', 'my', 'n', 'ny', 'p', 'py', 'q', 'r', 'ry', 's', 'sh', 't', 'ts', 'w', 'y', 'z', 'ty', ‘:’] <PAD> : 埋め草，<EOW>: 語尾，<SOW>:語頭，<UNK>: 未定義をあらwす特殊トークン
+* 中間層素子数: 64
+* 語末特殊トークン<EOW> を出力した時点で終了。
+* 復号化器の中間層初期値 = 符号化器の終了時点の中間層状態
+* 復号化器には注意機構を実装 such as chatGPT, BERT, and more.
+
+<img src="/figures/2023cnps_KIA_enc_dec.png" width="66%">
+
+
+## 中間層に加えた３つの処理過程
+
+1. 水色：ゲート。運動計画と聴覚フィードバック制御 like a Kalman filter (Kalman, 1960)
+2. 青：トップダウン注意
+3. 赤色：エンコーダの出力. 音素系列，ボトムアップ注意，言いたい事：固定 like a STM (Baddley1992)
+
+<img src="/figures/2023cnps_ccap_model01.png" width="66%">
+
+## 事前学習と微調整
+
+* 事前学習 pretraining : 健常モデルとみなす。
+    * 転移学習 transfer learning と微調整 fine tuning:
+    * 転移学習: 最終層と最終直下層との結合のみ再学習
+* 微調整: すべての層の結合を再学習
+* 転移学習，微調整完了後のモデルを実際の言い誤り生成器と見なす。
+
+* 健常者であれば，時間的，精神的ストレスのかかった状態での発話場面
+* 失語症，難読症であれば言い誤りに現れる機能変化
+
+上記をモデルのパラメータ変容によって説明可能か？ (ボクセル障害マッピング Dronkers+ などから触発され着想
+
+## 結果
+
+
+<img src="/figures/2023_0402fine_tuned_speech_errors.svg" width="66%">
+
+一旦，通常の単語の発話を学習したモデルに対して，提案モデルにおいて，水色部分と青色部分の両者とも微調整対象にした。
+結果は，ほとんど全ての言い誤りを再生させることができた。
+    * 実際には，刺激｢ノートルダム｣については，2 つの正解が存在する(ノートムダルとノールトダム)。
+    * このため，微調整では，このノートルダムの言い間違えの 1 つについてのみ，言い間違えに失敗し，143/144 の言い間違え率を得た。
+
+* モデル 0: 全体を微調整
+* <font color="cyan">モデル 1: モデルの水色部分のみ微調整を行い，青色部分を固定した場合</font>，96.5% の言い間違えを再現した。言い間違えに失敗した例は，「たのしませて」(実際の言い間違え例はタノマシ)を/タノシャシ/ などであった。
+* <font color="blue">モデル 2: 一方，水色部分を固定して微調整を行う</font> 言い間違え再現率は 52/144 =  36.11 % であった。
+
+このことから，成人の言い間違えデータの生成源は，水色部分，すなわち，音の運動出力の繋がり部分の不具合に起因し，語彙的表象の変容だけでは，36 % 程度しか再現できないと言えるだろう。
