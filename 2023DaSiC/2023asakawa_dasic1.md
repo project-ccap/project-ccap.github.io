@@ -22,7 +22,7 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 * [機械学習における双対性 Duality principle for machine learning, ICML2023 workshop](https://dp4ml.github.io/cfp/)
 
 
-##### Table of contents: part 1 第一部目次 (14:10-14:50)
+#### Table of contents: part 1 第一部目次 (14:10-14:50)
 
 1. 計算論的モデルへの招待 Invitation to computational modelings (10 min.)
    1. p 値廃止 Ban of p-values
@@ -41,7 +41,7 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
    2. 大規模言語モデルから特定の課題へ，言い誤りの型からパラメータ推定 What models do from LLM to specific tasks is analogous to what speech errors be modified to those who produced them.
    3. マルチモーダル，マルチタスク統合へ向けて Towards Multi-modal and multi-task integrations
 
-##### Table of contents: part 2 第二部目次 (15:15-16:15)
+#### Table of contents: part 2 第二部目次 (15:15-16:15)
 
 1. Dell+ モデルによるいい誤りのシミュレーション Dell+'s model for speech errors
    1. ソフトマックス関数の温度パラメータ thermal parameter in softmax function
@@ -453,26 +453,6 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 右: Luong+2015, Fig. 3
 </div></div>
 
-## 3.4 Transformer
-
-単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
-句，節，文のベクトル表現を得る努力がなされてきた。
-適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
-
-そこで，注意機構を積極的に取り込んだゲームチェンジャーが Transformer である。
-
-<div class="figcenter">
-<img src="/figures/2017Vaswani_Fig2_1ja.svg" width="19%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="/figures/2017Vaswani_Fig2_2ja.svg" width="29%">&nbsp;&nbsp;&nbsp;
-<img src="/figures/2017Vaswani_Fig1.svg" width="39%">
-<div class="figcaption">
-
-Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
-</div></div>
-
-上図で，`matmul` は行列の積，`scale` は，平均 0 分散 1 への標準化，`mask` は 0 と 1 とで，データを制限すること，`softmax` はソフトマックス関数である。
-
-トランスフォーマーの注意とは，このソフトマックス関数である。
 
 <!-- 本日は，機械学習と統計学との関係を取り上げ，ニューラルネットワークの導入と実習を行います。 -->
 
