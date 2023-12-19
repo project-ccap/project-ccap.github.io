@@ -1,0 +1,332 @@
+.font_p {
+    color:navy;
+    font-weight:900;
+  }
+
+/* A4サイズ縦 */
+/* @page {
+    size: A4;
+} */
+
+/* size: A4 portrait; */
+/* size: A4 landscape; */
+
+/* @media screen and (min-width: 914px) {
+   body {
+      width: 1024px;
+      margin:0 auto;
+   }
+} */
+
+/* @media print {
+    table, pre {
+        page-break-inside: avoid;
+	}
+	pre {
+        word-wrap: break-word;
+	}
+} */
+
+
+body {
+    /* font-family: Georgia, 'Times New Roman', Times, serif, 'Noto serif Japanese'; */
+    /* font-family: sans-serif; */
+    /* font-family: "Noto serif Japanese"; */
+    /* font-family: noto-serif, "Noto serif Japanese"; */
+    font-family: noto-sans, "Noto sans Japanese";
+    /* font-size: inherit; */
+    /* font-size: 20px; */
+    /* font-size: 10px; */
+    /* font-size: 12px; */
+    /* font-size: 16px; */
+    font-size: 14px;
+    /* font-size: 14px; */
+    /* line-height: 2.0; */
+    line-height: 1.6;
+    /* line-height: 1.2; */
+    /* line-height: 1.4; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding: 30px;
+    background-color: inherit;
+    /* background-color: #fafaf0; */
+}
+
+h1 {
+    font-size: 28px;
+    /* font-size: inherit; */
+    /* font-size: 22px; */
+    font-weight: bold;
+    color: navy;
+    /* border-bottom: 4px solid #cccccc; */
+    /* border-top: 4px solid #cccccc; */
+    margin-top: 10mm;
+    text-align: left;
+    /* text-align: center; */
+}
+
+h2 {
+    font-size: 24px;
+    /* font-size: inherit; */
+    /* font-size: 20px; */
+    font-weight: bold;
+    color: #792e85;
+    margin: 02px;
+    /* padding: 04px; */
+    margin-top: 5mm;
+    margin-bottom: 5mm;
+    /* margin-bottom: 1mm; */
+    /* text-align: left; */
+    /* text-align: center; */
+    /* text-align: center; */
+}
+
+h3 {
+    font-size: 20px;
+    /* font-size: inherit; */
+    /* font-size: 18px; */
+    font-weight: bold;
+    color: teal;
+    /* margin: 02px; */
+    /* padding: 10px; */
+    margin-top: 5mm;
+    margin-bottom: 4mm;
+    /* margin-bottom: 5mm; */
+}
+
+h4 {
+    /* font-size: 18px; */
+    /* font-size: 16px; */
+    font-size: 16px;
+    font-weight: bold;
+    color: navy;
+    margin-top: 5mm;
+    margin-bottom: 4mm;
+}
+
+h5 {
+    font-size: 16px;
+    /* font-size: 14px; */
+    font-weight: bold;
+    margin-top: 5mm;
+    margin-bottom: 2mm;
+}
+
+h6 {
+   font-size: 14px;
+   color: #777777;
+   font-size: 14px;
+   margin-top: 2mm;
+   margin-bottom: 1mm;
+}
+
+hr {
+   border: 0 none;
+   color: #cccccc;
+   height: 4px;
+   padding: 0;
+}
+
+
+/* Images */
+img {
+    max-width: 100%;
+    vertical-align: middle;
+    margin-bottom: 02mm;
+    /* display: block; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/** Figures */
+figure > img {
+    background-color: #fafaf0;
+    margin-bottom: 10mm;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.abstract {
+    text-align: left;
+    font-size: inherit;
+    background-color: powderblue;
+    margin-bottom: 10mm;
+    width: 88%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.figcaption {
+    font-size: inherit;
+    background-color: lavender;
+    text-align: left;
+    width: 77%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 0pt;
+    margin-bottom: 5mm;
+    /* margin-left: 30mm; */
+}
+
+.figcaption3 {
+    font-size: inherit;
+    background-color: conrnsilk;
+    text-align: left;
+    width: 77%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-bottom: 5mm;
+    margin-left: 30mm; */
+}
+
+.figcenter {
+    text-align: center;
+    margin-bottom: 10mm;
+}
+.fig img {
+    max-width: 98%;
+}
+.figleft img {
+    max-width: 50%;
+    float: left;
+    margin-right: 20px;
+}
+.figleft svg {
+    float: left;
+    margin-right: 20px;
+}
+.fighighlight {
+    background-color: #f7f6f1;
+    padding: 20px 4px 20px 4px;
+    border-bottom: 1px solid #999;
+    border-top: 1px solid #999;
+    box-shadow: 0px 2px 5px #CCC, 0px -2px 5px #CCC;
+}
+.figcaption2 {
+    font-weight: 400;
+    font-size: 14px;
+    color: #575651;
+    text-align: justify;
+}
+
+
+.fig {
+    display: block;
+    width: 99%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.author {
+    text-align: center;
+    font-weight: bold;
+    font-size: inherit;
+    margin-bottom: 5mm;
+}
+
+.title {
+    font: 900 "Helvetica Neue", Helvetica, Arial, sans-serif, "Noto Sans Japanese";
+    font-size: inherit;
+    /* font-size: 28px; */
+    /* font-size: 30px; */
+    /* font-size: 34px; */
+    font-size: 20px;
+    font-weight: 900;
+    /* color: navy; */
+    color: black;
+    text-align: center;
+    margin-bottom: 10mm;
+}
+
+.code {
+    font-size: 10pt;
+    font-family: monospace;
+    /* font-size: inherit; */
+    display: block;
+    width: 88%;
+    /* margin-left: 5mm; */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1mm;
+    /* margin-top: 10mm; */
+    margin-bottom: 1mm;
+    /* margin-bottom: 10mm; */
+    text-align: left;
+    /* background-color: cornsilk; */
+    background-color:#f7f6f1;
+    border: 1px solid black;
+}
+
+.footnote {
+    font-size: inherit;
+    display: block;
+    width: 88%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    background-color: cornsilk;
+    /* background-color: beige; */
+    color: dimgray;
+    /* color:teal; */
+}
+
+.memo {
+    font-size: inherit;
+    display: block;
+    width: 88%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    background-color:azure;
+    color: teal;
+    /*color: dimgray;*/
+}
+
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+  },
+  TeX: {
+    equationNumbers: {
+      autoNumber: "all"
+    },
+    Macros: {
+      cf: ['\\boldsymbol{#1}', 1],
+      R: '{\\mathbb R}',
+      C: '{\\mathbb C}',
+      np: ['{#1}#2{#1}', 2],
+      of: ['\\left({#1}\\right)', 1],
+      Given: ['\\left|{#1}\\right.', 1],
+      KL: ['\text{KL}\\left(\\left.{#1}\\right\\|{#2}\\right)', 2],
+    }
+  }
+});
+
+.bbstrong {
+    /* color: navy;
+    font-weight: bold;
+    font-size: inherit; */
+    color: cyan;
+    font-weight: bold;
+    font-size: inherit;
+}
+
+.cstrong {
+    color: cyan;
+    font-weight: bold;
+    font-size: inherit;
+}
+
+.pstrong {
+    color:hotpink;
+    /* color: pink; */
+    font-weight: bold;
+    font-size: inherit;
+}
