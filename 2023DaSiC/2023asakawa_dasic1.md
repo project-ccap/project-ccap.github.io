@@ -63,8 +63,8 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 
 #### キーワード keywords
 
-**符号化・復号化モデル**，**転移学習**，**微調整**，**トランスフォーマー**，**注意**，**ソフトマックス**，**埋め込み表現**，**ラグランジェ双対性**<br/>
-**Encoder-decoder models**, **Transfer learning**, **Fine-tuning**, **Transformer**, **Attention**, **Softmax**, **Embeddings**, **Lagrange duality**,
+**符号化・復号化モデル**，**転移学習**，**微調整**，**トランスフォーマー**，**注意**，**ソフトマックス**，**ワンホットベクトル**, **埋め込み表現**，**ラグランジェ双対性**<br/>
+**Encoder-decoder models**, **Transfer learning**, **Fine-tuning**, **Transformer**, **Attention**, **Softmax**, **onehot vector**, **Embeddings**, **Lagrange duality**,
 
 ---
 
