@@ -58,13 +58,13 @@ LLMs that reflect your needs as well as your intelligence could be a Mirror of E
 #  主張 Takeaways
 
 1. 大規模言語モデル (LLM)，一般画像錦 (ImageNet) で事前訓練されたモデルに対して，転移学習 transfer learning を行うことで，関心領域の課題を解くモデルを作成
-2. 関心課題に特化したモデルに対して，任意の条件とデータとを用いて，微調整 fine-tuning を行うことで，条件間の差異や生成機序を解明。モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項とを連結する。
-3. 微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化可能
+2. 関心課題に特化したモデルに対して，任意の条件とデータとを用いて，微調整 fine-tuning を行うことで，条件間の差異や生成機序を解明。
+3. モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項と連結。微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化可能
 
-### キーワード keywords
+#### キーワード keywords
 
-転移学習，微調整，トランスフォーマー，符号化・復号化モデル，注意，ラグランジェの双対性<br/>
-Transfer learning, fine-tuning, Transformer, Encoder-decoder models, Attention, Lagrange duality,
+**符号化・復号化モデル**，**転移学習**，**微調整**，**トランスフォーマー**，**注意**，**ソフトマックス**，**埋め込み表現**，**ラグランジェ双対性**<br/>
+**Encoder-decoder models**, **Transfer learning**, **Fine-tuning**, **Transformer**, **Attention**, **Softmax**, **Embeddings**, **Lagrange duality**,
 
 ---
 
@@ -149,9 +149,13 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 
 ## 1.3 Glaser+2019 神経科学における機械学習モデルの 4 つの役割
 
-<center>
-<img src="/figures/2019Glaser_fig2.jpg" width="49%">
-</center>
+<div class="figcenter">
+<img src="/figures/2019Glaser_fig2.jpg" width="55%">
+</div>
+<div class="figcaption">
+
+出典: [Glaser+2019](https://linkinghub.elsevier.com/retrieve/pii/S0301008218300856) Fig. 2
+</div>
 
 1. 工学的な問題の解決 機械学習は， 医療診断， ブレインコンピュータインターフェース， 研究ツールなど， 神経科学者が使用する手法の予測性能を向上させることができる。
 2. 予測可能な変数の特定 機械学習により， 脳や外界に関連する変数がお互いを予測しているかどうかをより正確に判断することができる。
@@ -205,12 +209,14 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 したがって，データサイエンスを表現するには，32000 次元のワンホットベクトルを 2 つ用いて，
 
 ~~~python
-[0,0,..,1,0,0,0]
+[0,0,..,1,,...,0,0,0]
 ~~~
 
 のようなベクトルを作成する。このとき，ベクトルの 1 つの要素だけが 1 で，残りすべての要素が 0 であるベクトルをワンホットベクトルと呼ぶ。
 
+<div class="figcenter">
 <img src='/figures/2023dasic_onehot2embeddings.svg' width="49%">
+</div>
 
 * ワンホットベクトルから，埋め込み表現ベクトルを作成するには，変換行列を掛ければ良い
 * 埋め込み表現から，ワンホットベクトルに戻すことによって，出力トークンを得る。このためにはソフトマックス関数を用いる
@@ -219,17 +225,18 @@ $$\tag{ソフトマックス関数}
 p(x_i) = \frac{\exp{x_i}}{\sum_{j\neq\mathcal{X}}\exp(x_j)}
 $$
 
-* 指数関数 $e^{x}$ は，$x$ が実数の範囲であれば，正負に関わらず，正の値に変換し，かつ変換後も大小関係が保たれる。すなわち $x > y:$\rightarrow\exp(x)>\exp(y)$
+* 指数関数 $e^{x}$ は，$x$ が実数の範囲であれば，正負に関わらず，正の値に変換し，かつ変換後も大小関係が保たれる。すなわち $x > y:\rightarrow\exp(x)>\exp(y)$
 * すべて要素が正であれば，各要素の総和を分母とし，分子に，その値をとれば，確率とみなしうる。
 * すなわちソフトマックス関数とは，実数値をとるニューラルネットワークの出力を確率に変換し，その最大値を強調するように作用することが分かる。
 * ソフトマックス関数をニューラルネットワークモデルの最終層の出力とした場合，学習に用いられる教師信号もワンホット表現されていれば，ワンホット表現を近似する目的でソフトマックス関数は用いられていると解釈することもできる。
 * ソフトマックス関数は，数ある候補項目の中から，一つを選ぶという意思決定に用いられる。
 * ソフトマックス関数は，数ある候補項目の中から，唯一つの項目に着目するという意味で，注意機構に用いられる。
-* ソフトマックス関数において，考慮すべき項目が x と y と2 つしかない場合，
+* ソフトマックス関数において，考慮すべき項目が x と y と2 つしかない場合，<br/>
 $$
-p(x) = \frac{\exp(x)}{\exp(x)+\exp(y)}=\frac{1}{1+\exp(-(x-y))}=\frac{1}{1+\exp(-Z)}\text{,  ただし z=(x-y)},
+p(x) = \frac{\exp(x)}{\exp(x)+\exp(y)}=\frac{1}{1+\exp(-(x-y))}=\frac{1}{1+\exp(-Z)}
 $$
-と書くことができる。
+<br/>
+ここで，$z=(x-y)$，と書くことができる。
 上式は，ロジスティック回帰などでも用いられる，ロジスティックシグモイド関数である。
 2 値分類問題における真偽値，コーホート分析における生存確率などとも考えることができる。
 * ソフトマックス関数の分母に現れる $\sum_{j}\exp(x_{j})$ は，物理学 (統計力学，熱力学) における分配関数 partition function と形式的には同じ形をしている。
@@ -237,25 +244,28 @@ $$
 
 まとめると，ワンホットベクトルを埋め込みベクトルに変換することは，記号表現を高次元実空間へ射影することであり，反対に，埋め込み表現を，ソフトマックス関数を用いて記号表現へ変換することで，記号 (あるいは規則，言語) と分散表現，脳内の神経活動へと変換する橋渡しができることとなる。
 
-
 <!-- ## 機械学習と脳画像研究および心理モデル -->
 
 ### 言語と機能的脳画像研究を結びつけるために，単語の分散表現を機械学習的手法で表現
 
-- [名詞の意味に関連した人間の脳活動の予測, Mitchell, 2018, Predicting Human Brain Activity Associated with the  Meanings of Nouns](https://shinasakawa.github.io/2008Mitchell_Predicting_Human_Brain_Activity_Associated_with
-_the_Meanings_of_Nounsscience.pdf){:target="_blank"}
+- [名詞の意味に関連した人間の脳活動の予測, Mitchell, 2018, Predicting Human Brain Activity Associated with the  Meanings of Nouns](https://shinasakawa.github.io/2008Mitchell_Predicting_Human_Brain_Activity_Associated_with_the_Meanings_of_Nounsscience.pdf){:target="_blank"}
 
-<center>
-<img src="/figures/2019mitchell-54_20.png" style="width:49%"><br/>
-</center>
+<div class="figcenter">
+<img src="/figures/2019mitchell-54_20.png" style="width:55%">
+</div>
+<div class="figcaption" style="width:33%">
 
-### 下図 左のように，「セロリ」から右の脳画像を予測するために，中間表現として，兆 単位の言語コーパス (言語研究では訓練や検証に用いる言語
-データをコーパスと呼ぶ) から得られた **意味特徴** を用いる
+Mitchell+2019 より
+</div>
 
-<center>
-<img src="/figures/2008Mitchell_fig1.svg" style="width:49%"><br/>
-<p style="text-align: left;width: 66%; background-color: cornsilk;">
-Mitchell (2008) 図 1. 任意の名詞刺激に対するfMRI活性化を予測するモデルの形式。
+下図 左のように，「セロリ」から右の脳画像を予測するために，中間表現として，兆 単位の言語コーパス (言語研究では訓練や検証に用いる言語データをコーパスと呼ぶ) から得られた **意味特徴** を用いる
+
+<div class="figcenter">
+<img src="/figures/2008Mitchell_fig1.svg" style="width:66%"><br/>
+</div>
+<div class="figcaption">
+
+Mitchell+2008 図 1. 任意の名詞刺激に対するfMRI活性化を予測するモデルの形式。
 fMRI の活性化は、2段階 プロセスで予測される。
 第 1 段階では，入力刺激語の意味を，典型的な単語使用を示す大規模なテキストコーパスから値を抽出した中間的な意味的特徴の観点から符号化する。
 第 2 段階では，これらの中間的な意味的特徴のそれぞれに関連する fMRIシグネチャ の線形結合として，fMRI 画像を予測する。
@@ -263,19 +273,21 @@ fMRI の活性化は、2段階 プロセスで予測される。
 fMRI activation is predicted in a two-step process.
 The first step encodes the meaning of the input stimulus word in terms of intermediate semantic features whose values are extracted from a large corpus of text exhibiting typical word use.
 The second step predicts the fMRI image as a linear combination of the fMRI signatures associated with each of these intermediate semantic features. -->
-</p>
-</center>
+</div>
 
-### 他の単語 (下図左) eat, taset, fill などの単語から セロリ を予測する回帰モデルを使って予測する
-<center>
-<img src="/figures/2008Mitchell_fig2.svg" style="width:66%"><br/>
-<p style="text-align: left;width: 66%;background-color: cornsilk;">
-Mitchell (2008) 図 2. 与えられた刺激語に対する fMRI 画像の予測。
+### 他の単語 (下図左) eat, taset, fill などの単語から セロリ を予測する回帰モデルを使って予測
+
+<div class="figcenter">
+<img src="/figures/2008Mitchell_fig2.svg" style="width:66%">
+</div>
+<div class="figcaption">
+
+Mitchell+2008 図 2. 与えられた刺激語に対する fMRI 画像の予測。
 (A) 参加者 P1 が 「セロリ」刺激語に対して、他の 58 の単語で学習した後に予測を行う。
 25 個の意味的特徴のうち 3 つの特徴量のベクトルを単位長にスケーリングすることである。
 (食べる, 味わう, 満たす) について学習した $c_{vi}$ 係数は， パネル上部の 3 つの画像のボクセルの色で示されている。
 刺激語「セロリ」に対する各特徴量の共起値は， それぞれの画像の左側に表示されている (例えば 「食べる（セロリ）」の 共起値は 0.84)。
-刺激語の活性化予測値 ((A）の下部に表示) は 25個 の意味的 fMRI シグネチャを線形結合し， その共起値で重み付けしたものである。
+刺激語の活性化予測値 (A）の下部に表示) は 25個 の意味的 fMRI シグネチャを線形結合し， その共起値で重み付けしたものである。
 この図は 予測された三次元画像の1つの水平方向のスライス [z=-12 mm in Montreal Neurological Institute (MNI) space] を示している。
 (B) 「セロリ」と「飛行機」について， 他の 58 個の単語を使った訓練後に予測された fMRI 画像と観察された fMRI 画像。
 予測画像と観測画像の上部（後方領域）付近にある赤と青の 2本 の長い縦筋は、左右の楔状回である。
@@ -287,9 +299,7 @@ The predicted activation for the stimulus word [shown at the bottom of (A)] is a
 This figure shows just one horizontal slice [z = –12 mm in Montreal Neurological Institute (MNI) space] of the predicted three-dimensional image.
 (B) Predicted and observed fMRI images for “celery” and “airplane” after training that uses 58 other words.
 The two long red and blue vertical streaks near the top (posterior region) of the predicted and observed images are the left and right fusiform gyri. -->}
-</p>
-</center>
-
+</div>
 
 <!-- <center>
 <img src="/figures/2008Mitchell_fig3.svg" style="width:49%"><br/>
@@ -339,10 +349,69 @@ $$
 
 ここで $\ell$ は文 s の訓練文のインデックスであり，各文の長さで規格化することを意味している。
 
+## 単語埋め込みモデル word2vec
 
-## 埋め込みモデル，ベクトル空間
+<center>
+<img src="/figures/2013Mikolov_KingQueenFig.svg" width="44%">
+<img src="/figures/2013Mikolov_FigCountries.svg" width="44%"><br/>
+<!-- <img src="figures/2013Mikolov_skip-gram_cbow.svg" width="49%"><br/> -->
+<div class="figcaption">
+図 Mikolov+2013 より
+</div></center>
 
-* ピラミッド・パームツリー・テスト: 認知症検査
+### skip-gram と CBOW
+
+* Mikolov は **word2vec** によりニューラルネットワークによる意味実装を示した (Mikolov+2013)。
+* Word2vec は実装に 2 種類ある。それぞれ **CBOW** と **skip-gram** と命名されている。
+* "king" - "man" + "woman" = "queen" のアナロジーを解くことができると喧伝された。
+* 下図左は意味的なアナロジーがベクトルの向きとして表現されていることに注目。
+
+ベクトルは方向と大きさを持っている矢印で表現される。
+このとき，矢印の原点を移動することを考える。
+たとえば "MAN" から "WOMAN" へ向かう矢印を平行移動して "KING" まで持ってくると，その矢印は "QUEEN" を重なることが予想できる。
+これがアナロジー問題の解放の直感的説明である。
+
+* word2vec の実装には 2 種類ある。どちらを使っても同じような結果を得ることが可能である。
+    1. CBOW: Continous Bog of Words 連続単語袋
+    2. skip-gram: スキップグラム
+
+両者は反対の関係になrる。下図を参照。
+
+<div class="figcenter">
+<img src="/figures/2013Mikolov_Fig1.svg" style="width:49%"><br>
+From Mikolov+2013, Fig. 1
+</div>
+
+CBOW も skip-gram も 3 層にニューラルネットワークです。その中間層に現れた表現を **ベクトル埋め込みモデル**
+あるいは **単語埋め込みモデル** と言う。
+
+* CBOW モデルは周辺の単語の単語袋詰め表現から中央の単語を予測
+* skip-gram は中心の単語から周辺の単語袋詰表現を予測
+
+たとえば，次の文章を考える:
+
+~~~python
+["彼", "は", "意味論", "を", "論じ", "た"]
+~~~
+
+表記を簡潔にするため各単語に ID を割り振ることとする。
+すると上文は，単語 ID を用いて以下のように表現される:
+
+```python
+{"彼":0, "は":1, "意味論":2, "を":3, "論じ":4, "た":5}
+```
+
+~~~python
+[0, 1, 2, 3, 4, 5]
+~~~
+
+ウィンドウ幅がプラスマイナス 2 である CBOW モデルでは 3 層の多層パーセプトロンの入出力関係は，入力が 4 次元
+ベクトル，出力も 4 次元ベクトルとなる。
+文の境界を無視すれば，以下のような入出力関係とみなせます。
+
+## ベクトル空間
+
+* ピラミッド・パームツリー・テスト: 認知症検査 ([意味連合検査，佐藤2022](https://www.amazon.co.jp/dp/4909375112){:target="_blank"})<br/>
 * ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
 
 1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
@@ -350,9 +419,13 @@ $$
 3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
 
 <div class="figure figcenter">
-<img src="/figures/2023_0712projection_concept.svg" width="24%">
-<img src="/figures/2021_0831jcss_PPT1.svg" width="29%">
-<img src="/figures/2021_0831jcss_PPT2.svg" width="29%">
+<img src="/figures/2023_0712projection_concept.svg" width="33%">
+<img src="/figures/2021_0831jcss_PPT2.svg" width="55%">
+<img src="/figures/2021_0831jcss_PPT1.svg" width="77%">
+</div>
+<div class="figcaption" width="33%">
+
+近藤・浅川2020 より
 </div>
 
 ### 人口ニューラルネットワークと神経細胞の機能的類似
@@ -444,65 +517,6 @@ Transformer で採用された語彙数は $|V|=32,000$ である。
 
 以下に示す，翻訳モデルでは，加えて注意機構を実装することにより，長距離依存解消に対応することが試みられてきた。
 
-## 単語埋め込みモデル word2vec
-
-<center>
-<img src="/figures/2013Mikolov_KingQueenFig.svg" width="44%">
-<img src="/figures/2013Mikolov_FigCountries.svg" width="44%"><br/>
-<!-- <img src="figures/2013Mikolov_skip-gram_cbow.svg" width="49%"><br/> -->
-<div class="figcaption">
-図 Mikolov+2013 より
-</div></center>
-
-### skip-gram と CBOW
-
-* Mikolov は **word2vec** によりニューラルネットワークによる意味実装を示した (Mikolov+2013)。
-* Word2vec は実装に 2 種類ある。それぞれ **CBOW** と **skip-gram** と命名されている。
-* "king" - "man" + "woman" = "queen" のアナロジーを解くことができると喧伝された。
-* 下図左は意味的なアナロジーがベクトルの向きとして表現されていることに注目。
-
-ベクトルは方向と大きさを持っている矢印で表現される。
-このとき，矢印の原点を移動することを考える。
-たとえば "MAN" から "WOMAN" へ向かう矢印を平行移動して "KING" まで持ってくると，その矢印は "QUEEN" を重なることが予想できる。
-これがアナロジー問題の解放の直感的説明である。
-
-* word2vec の実装には 2 種類ある。どちらを使っても同じような結果を得ることが可能である。
-    1. CBOW: Continous Bog of Words 連続単語袋
-    2. skip-gram: スキップグラム
-
-両者は反対の関係になrる。下図を参照。
-
-<div class="figcenter">
-<img src="/figures/2013Mikolov_Fig1.svg" style="width:49%"><br>
-From Mikolov+2013, Fig. 1
-</div>
-
-CBOW も skip-gram も 3 層にニューラルネットワークです。その中間層に現れた表現を **ベクトル埋め込みモデル**
-あるいは **単語埋め込みモデル** と言う。
-
-* CBOW モデルは周辺の単語の単語袋詰め表現から中央の単語を予測
-* skip-gram は中心の単語から周辺の単語袋詰表現を予測
-
-たとえば，次の文章を考える:
-
-~~~python
-["彼", "は", "意味論", "を", "論じ", "た"]
-~~~
-
-表記を簡潔にするため各単語に ID を割り振ることとする。
-すると上文は，単語 ID を用いて以下のように表現される:
-
-```python
-{"彼":0, "は":1, "意味論":2, "を":3, "論じ":4, "た":5}
-```
-
-~~~python
-[0, 1, 2, 3, 4, 5]
-~~~
-
-ウィンドウ幅がプラスマイナス 2 である CBOW モデルでは 3 層の多層パーセプトロンの入出力関係は，入力が 4 次元
-ベクトル，出力も 4 次元ベクトルとなる。
-文の境界を無視すれば，以下のような入出力関係とみなせます。
 
 
 ## 3.2 翻訳モデル (Seq2seq model)

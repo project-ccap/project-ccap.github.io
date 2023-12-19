@@ -108,3 +108,15 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 2018. The Unreasonable Effectiveness of The Forget Gate, [Westhuizen&Lasenby2018](https://arXiv.org/abs/1804.04849)
 2020. The unreasonable effectiveness of deep learning in artificial intelligence [Sejnowski2020](https://www.pnas.org/doi/full/10.1073/pnas.1907373117)
 2021. The Unreasonable Effectiveness of Neural Network Embeddings, [Gao2021](https://medium.com/aquarium-learning/the-unreasonable-effectiveness-of-neural-network-embeddings-93891acad097) -->
+
+
+# 主張 Takeaways (再)
+
+1. 大規模言語モデル (LLM)，一般画像錦 (ImageNet) で事前訓練されたモデルに対して，転移学習 transfer learning を行うことで，関心領域の課題を解くモデルを作成
+2. 関心課題に特化したモデルに対して，任意の条件とデータとを用いて，微調整 fine-tuning を行うことで，条件間の差異や生成機序を解明。
+3. モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項と連結。微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化可能
+
+#### キーワード keywords
+
+**符号化・復号化モデル**，**転移学習**，**微調整**，**トランスフォーマー**，**注意**，**ソフトマックス**，**埋め込み表現**，**ラグランジェ双対性**<br/>
+**Encoder-decoder models**, **Transfer learning**, **Fine-tuning**, **Transformer**, **Attention**, **Softmax**, **Embeddings**, **Lagrange duality**,

@@ -61,23 +61,6 @@ Fig. 1. より
 </div>
 
 
-## 埋め込みモデル，ベクトル空間
-
-* ピラミッド・パームツリー・テスト: 認知症検査 ([意味連合検査，佐藤2022](https://www.amazon.co.jp/dp/4909375112){:target="_blank"}<br/>
-
-* ターゲットと最も関連のあると考えられる選択肢を一つ選べ。
-
-1. ターゲット: オートバイ，選択肢: 麦わら帽子，帽子，ヘルメット，兜
-2. ターゲット: かもめ，選択肢: 水田，池，滝，海
-3. ターゲット: 柿，選択肢: 五重塔，教会，病院，駅
-
-<div class="figure figcenter">
-<img src="/figures/2023_0712projection_concept.svg" width="33%">
-<img src="/figures/2021_0831jcss_PPT2.svg" width="55%">
-<img src="/figures/2021_0831jcss_PPT1.svg" width="77%">
-</div>
-
-
 ### 従来モデル
 
 Dell モデルは，2 段階相互活性モデルであり，意味層，語彙層，音素層の 3 層からなるニューラルネットワークモデルである。
@@ -108,19 +91,20 @@ sp モデルでは局在する結合係数の変動を記述する意味で，�
 一方，wd モデルでは，限局したパラメータ変動を認めず ($w=s=p$)，大域的パラメータの変動によって課題成績を説明しようとする。
 
 
-<center>
+<div class="figcenter">
 <img src="/figures/2000Foygel_Dell_fig1.png" width="43%"><br/>
 <!-- <img src="figures/2013Dell_fig4.jpg" width="23%">
 <img src="figures/2013Dell_fig5.jpg" width="23%"><br/> -->
-<div style="text-align:left;width:77%;background-color:cornsilk">
+</div>
+<div class="figcaption">
+
 [@2000Foygell_Dell_SP] Fig. 1 Dell らの 2 段階相互活性化モデルの概念図。
 上から，意味層，語彙層，音素層という 3 層から構成される。
 各層間を結ぶ線は結合係数を表しており，結合は対称的である。
 例えば，S 層から L 層へ向かう前向き結合係数の値は，L 層から S 層への逆向き結合のそれと等しい。
 <!-- 中央: [@2013Dell_VLPM] Fig. 4 Dell らのボクセルベース病変パラメータマッピング例,
 右: [@2013Dell_VLPM] Fig. 5 -->
-</div></center>
-
+</div>
 
 # Dell モデルの改善提案 (浅川+2019)
 
@@ -497,3 +481,84 @@ $$
 * <font color="blue">モデル 2: 一方，水色部分を固定して微調整を行う</font> 言い間違え再現率は 52/144 =  36.11 % であった。
 
 このことから，成人の言い間違えデータの生成源は，水色部分，すなわち，音の運動出力の繋がり部分の不具合に起因し，語彙的表象の変容だけでは，36 % 程度しか再現できないと言えるだろう。
+
+## その他のエンコーダ・デコーダモデル
+
+### その他 1. 三角モデル
+
+<div class="figcenter">
+<img src="https://raw.githubusercontent.com/ShinAsakawa/ShinAsakawa.github.io/master/assets/2004Harm_Seidenberg_fig1_extended.svg" style="width:49%">
+</div>
+<div class="figcaption" style="width:33%">
+
+Harm&Seidenberg2004 Fig. 1 を改変。
+</div>
+
+1. O(rthgraphy), P(honology), S(emnatics) のそれぞれに対して，ソースとターゲットと見立てた，9 つのデータセット，モデルを用意
+
+モデル名を下表に示す。
+表中の x2y は，ソースが x [o,p,s] でターゲットが y [o,p,s] であるモデルを意味する。
+カッコ内は，ソースとターゲットのそれぞれが，系列データであれば Seq であり，埋め込みベクトルデータであれば Vec である。
+
+|source\target   | O   | P   |  S |
+|:--:|:--:|:---:|:--:|
+| O | o2o (Seq2seq)| o2p (Seq2Seq)| o2s (Seq2Vec)|
+| P | p2o (Seq2Seq)| p2p (Seq2Seq)| p2s (Seq2Vec)|
+| S | s2o (Vec2Seq)| s2p (Vec2Seq)| s2s (Vec2Vec)|
+
+ソースからターゲットへと系列データかベクトル埋め込みデータかによって，モデルは 4 種類に分類できる。
+
+1. 系列から系列へ: 4 (o2o, o2p, p2o, p2p)，
+2. 系列からベクトル埋め込みへ: 2 (o2s, p2s)
+3. ベクトル埋め込みから系列へ: 2 (s2o, s2p)
+4. ベクトル埋め込みからベクトル埋め込み 1
+
+### その他 2. オノマトペ生成器
+
+オノマトペ 小野+2007 「日本語オノマトペ辞典」の 4500 オノマトペから，word2vec にエントリのある 1741 語を用いて上記の三角モデルの枠組みを用いた
+
+<div class="figcenter">
+<img src="/figures/2023_1217onomatope_phon.png" width="33%">
+<img src="/figures/2023_1217onomatope_sem.png" width="33%">
+<img src="/figures/2023_1217onomatope_phon+sem.png" width="33%">
+</div>
+<div class="figcaption">
+
+左: オノマトペの音韻表象: エンコーダの最終時刻の中間層を tSNE を用いて視覚化<br/>
+中: 対応するオノマトペの word2vec データを tSNE を用いて視覚化<br/>
+右: 音韻+意味 の混合表象を tSNE を用いて視覚化
+</div>
+
+### その他 3. ストループ効果
+
+<div class="figcenter">
+<img src="/figures/1990Cohen_McClelland_stroop_fig3.svg">
+<img src="/figures/2023_1110task_demand_conflict_ja.svg" width="49%">
+</div>
+<div class="figcaption" style="width:94%">
+
+左: 単語読解と色名学習後の接続強度を示すネットワーク図。 (強度は接続の横に示され，中間ユニットのバイアスはユニットの内側に示されている。
+課題要求ユニットから中間ユニットへの注意強度は固定され，中間ユニットのバイアスも固定された。
+課題要求ユニットがオンのとき，対応する経路のユニットの基本入力が 0.0 になり，もう一方の経路のユニットの基本入力が，実験によって -4.0 から -4.9 の範囲になるように選ばれた)。
+<!-- Figure 3. Diagram of the network showing the connection strengths after training on the word-reading a
+nd color-naming tasks.
+(Strengths are shown next to connections; biases on the intermediate units are shown inside the units.
+Attention strengths-from task demand units to intermediate units-were fixed, as were biases for the interme
+diate units.
+The values were chosen so that when the task demand unit was on, the base input for units in the correspond
+ing pathway was 0.0, whereas the base input to units in the other pathway was in the range of -4.0 to -4.9,
+ depending on the experiment.) -->
+
+出典: Cohen, Dunbar, and McClelland (1990) __On the Control of Automatic Processes: A Parallel Distributed Processing Account of the Stroop Effect__, Psychological Review, Vol. 97, No. 3, 332-361.
+
+右: 転移学習，微調整を用いた Stroop 課題の枠組み
+</div>
+
+<div class="figcenter">
+<img src="/figures/2023_1114stroop_stim_examples.png" width="44%">
+</div>
+<div class="figcaption">
+
+Stroop 効果実験に用いた，転移学習に用いた刺激例。フォント種類 14 種，文字サイズ 5 種，色数 4 色，文字数，5 種。
+データ拡張により，訓練刺激は，任意の回転，拡大縮小がなされている。
+</div>
