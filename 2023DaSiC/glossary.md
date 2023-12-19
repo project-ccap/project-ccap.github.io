@@ -24,6 +24,7 @@ author: CCAP プロジェクト
 * RNN (Recurrent Neural Networks): 再帰的ニューラルネットワーク。系列情報を扱うためのニューラルネットワークモデル。Elman ネット，Jordan ネット，LSTM, GRU などが含まれる。
 * SOTA (State of the Art): 現時点での最高性能のこと。
 * Transformer: [Vaswani+2017](https://arXiv.org/abs/1706.03762) によって提案された RNN の代替モデル。マルチヘッド注意 (MHSA) に基づく処理機構。
+* **双対性 duality** あるいは **双対問題 dual problem**: 多くの場合，双対問題とは Lagrange の双対問題を指す。Lagrange の双対問題は，非負の乗数を用いて目的関数を変形し，異なる目的関数を用いて最適化問題を解くことを指す。最小化問題の Lagrange 方程式は，Lagrange 乗数で表現される問題の最大化である。このため，目的関数の最小化は，Langrage 乗数に用いられる関数の最大化とみなしうる。このような一方の関数の最大化が，他方の関数の最小化であるような問題を双対問題と呼ぶ。発話エラーに即して考えれば，発話意図を正しく音声化する問題と，発話意図が伝わらないリスクを最小化するという制約条件とに相当すると考えることが可能であろう。
 * カルバック=ライブラー・ダイバージェンス (Kullback–Leibler divergence): 2 つの確率密度関数の差異を定義する値。機械学習においては，目的関数とモデル出力との間で，カルバック=ライブラー・ダイバージェンスを用いる場合がある。
 <!-- 確率分布 A と B とのカルバック=ライブラー・ダイバージェンスを $KL(A||B)$ などと表記する。確率分布間の距離に相当する。$KL(A||B)\ne KL(B||A)$ すなわち，A から見た B の距離と，B から見た A の距離とが等しいとは限らないため，偽距離と呼ばれることもある。 -->
 * **ソフトマックス softmax**: 実数値を要素とするベクトルを，離散記号に変換する場合，最大値の値を大きくし，他の要素は 0 に近づける操作を行う場合がある。このときに用いられる変換がソフトマックス変換，あるいはソフトマックス関数という。ソフトマックス関数は，識別や分類を行う機械学習モデルの最終層に用いられワンホットベクトルを得る場合用いられる。また，その性質から Transformer ベースの注意機構の実装にも用いられる。物理学のボルツマン分布，エネルギー関数と式としては同一。$\displaystyle f(x_i)=\frac{e^{x_i}}{\sum e^{x_i}}$. 左辺 LHS の 分母 the denominator は，分配関数 partition function と呼ばれる。
@@ -37,7 +38,7 @@ author: CCAP プロジェクト
 - 交差エントロピー損失: エントロピー $- p\log p$ は，熱力学と情報論とで用いられる概念。熱力学の第二法則，時間の矢 に関連。情報理論では，情報量の定義。機械学習では，分類問題の損失関数として頻用される。$-\left(t \log p + (1-t) \log(1-p)\right)$
 - [次元圧縮 t-SNE](https://komazawa-deep-learning.github.io/t-SNE/) 2008 年の提案以来，よく見かけるようになった次元圧縮手法。
 - サポートベクターマシン: ウラジミール・ヴァプニク (Vapnik) による 教師あり学習 (Vapnik 1999, 1998). ディープラーニング以前に主流であった。2 群分類で特徴を最もよく (マージン最大化) 分離する境界面決定アルゴリズム。カーネルトリック，スラック変数の導入。線形回帰，線形判別に比べて性能が出ると考えられていた。今でも，最終層における判別に応用されることがある。
-- 重み崩壊 weight decay: カラス=クーン=タッカー条件(KKT Karush-Kuhn-Tucker condition)を ラグランジェ未定乗項 Lagrange's multpliers 付きで解く
+- 重み崩壊 weight decay: カラス=クーン=タッカー条件(KKT Karush-Kuhn-Tucker condition)を ラグランジェ未定乗項 Lagrange's multpliers 付きで解くことであり，変分問題と一応用とみなしうる。
 
 <!-- <center>-->
 <!--<img src="figures/2015scikit-learn-0.16_svm_p150.jpg" style="width:66%"><br/>-->
@@ -73,7 +74,7 @@ author: CCAP プロジェクト
 * 過学習，未学習 over/under fitting: 学習のし過ぎで，訓練データには当てはまるが，未学習データ，すなわち検査データや検証データに対しての当てはまりが悪くなる場合を過学習と呼び，反対に，訓練データに対しても改善の余地がある場合を未学習と呼ぶ。
 * バッチ正則化 batch normalization: データを正則化 (この場合，平均 0 分散 1 に変換すること) して入力信号とすれば，学習が容易である場合が多い。このため，ミニバッチに対して，毎回正則化を行うこと。
 * 自己符号化器 auto-encoders: 入力信号を復元するような処理に用いられる。内部表象に入力情報の圧縮表現が得られる。
-* 強化学習 reinforcement learning {environment, state, action, reward, value, q-value, policy, TD, REINFORCE, MDP, POMDP, SARSA, experice replay, advantage, duealing, double-Q, A3C}
+* 強化学習 reinforcement learning: 他のニューラルネットワークモデルが，教師信号を正しく予測することを目的関数として居るのに対して，強化学習のそれは，環境から与えられる報酬を最大化することを目的関数とする。環境へより良く適応することと考えれば生物学，進化理論と関連し，不適応と考えれば精神病理への応用もなされている。DQN と呼ばれるモデルが 2014 年に囲碁で世界レベルの人間を破ったことで話題となった。を通常の機械学習分野での用語と異なる専門用語が用いられるが，不自然な仮定ではない。頻用される用語としては，以下のものが挙げられる: 環境 environment, 状態 state, 行為 action, 報酬 reward, 価値 value, Q 値 q-value, 方針 policy, 時間遅延 temporal difference TD, REINFORCE (初期から用いられているアルゴリズム名), マルコフ決定過程 MDP: Markov Decision Process, 部分観察マルコフ決定過程 Partially Observed Markov Decision Process:POMDP, SARSA (アルゴリズム名 State-Action-Reward-State-Action の頭文字), 経験再生 experice replay, アドバンテージ advantage, 血糖 ネットワーク duealing network, 二重 Q アルゴリズム double-Q, 非同期アドバンテージ行為者‐批評家 (アルゴリズム) A3C: Asyncronious Advantage Actor-Critic, 代理方針最適化 PPO: Proximal Policy Optimization なお PPO は chatGPT でも採用されて 2022 年から 2023 年にかけて話題となった。
 
 <!-- # 用語集 glossary
 * BERT (**B**idirectional **E**ncoder **R**epresentations from **T**ransformers): Google が開発した Transformer に基づく言語モデル。マスク化言語モデルと次文予測課題によって事前訓練を行い，各下流課題に対して微調整 (fine turing) を行うことで SOTA を達成した。
