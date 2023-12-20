@@ -54,7 +54,7 @@ https://opensource.org/license/mit/
 	登壇者全員
 
 * [用語集](glossary){:target="_blank"}
-* [演者 自己または他己紹介](self_introduction){:target="_blank"}
+<!-- * [演者 自己または他己紹介](self_introduction){:target="_blank"} -->
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">
