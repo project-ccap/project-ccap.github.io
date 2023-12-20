@@ -131,7 +131,26 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 <img src="/figures/2023_1113chihaya_charfreq.svg" width="94%">
 </div>
 
-# ありえない有能さ Unreasonable effectiveness
+
+# 2. ヨコ型，タテ型の言い誤りのシミュレーション
+
+* 事前訓練データとして，長岡技術大学で公開されている [やさしい日本語](http://www4414uj.sakura.ne.jp/Yasanichi/) データを使用
+* 84300 文を訓練。Transformer を用いて，文の復唱を学習。
+* タテ型の言い誤り，ヨコ型の言い誤りのそれぞれで微調整
+
+
+# 3. 考察
+
+* 目的関数を事前訓練し，目的に即して，微調整を行ッタ。
+* 条件に合わせて，モデルを調整した。
+* すなわち，目的関数の制約項を変化させることで，行動データ再現させることを試みた。
+* Dell モデルにおいては，温度パラメータ，および，S, p パラメータを目的関数として微調整を行った。
+* 復唱モデルにおいては，注意機構とリカレント接続とに制約を設けて，微調整を行い，健常者と失語症患者との違いを記述。
+* これらのシミュレーションは，制約項付きの最適化とみなすことが可能。
+* モデル，データ，パラメータの三項を考えることで，モデルとデータからパラメータを眺め，モデルとパラメータからデータを眺め，データとパラメータからモデルを眺めることになっているだろう。
+
+
+## 3.1 ありえない有能さ Unreasonable effectiveness
 
 * 1960: 自然科学における数学のありえない有能さ, [Wigner1960](https://www.maths.ed.ac.uk/~v1ranick/papers/wigner.pdf){:target="_blank"}
 * 1980: 数学のあり得ない有能さ, [Hamming](https://math.dartmouth.edu/~matc/MathDrama/reading/Hamming.html){:target="_blank"}
