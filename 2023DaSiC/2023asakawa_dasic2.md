@@ -502,7 +502,7 @@ $$
 
 ## その他のエンコーダ・デコーダモデル
 
-### その他 1. 三角モデル
+### その他 1. 三角モデル (近藤・伊集院・浅川2023)
 
 <div class="figcenter">
 <img src="https://raw.githubusercontent.com/ShinAsakawa/ShinAsakawa.github.io/master/assets/2004Harm_Seidenberg_fig1_extended.svg" style="width:49%">
@@ -531,7 +531,7 @@ Harm&Seidenberg2004 Fig. 1 を改変。
 3. ベクトル埋め込みから系列へ: 2 (s2o, s2p)
 4. ベクトル埋め込みからベクトル埋め込み 1
 
-### その他 2. オノマトペ生成器
+### その他 2. オノマトペ生成器 (橋本・浅川 準備中)
 
 オノマトペ 小野+2007 「日本語オノマトペ辞典」の 4500 オノマトペから，word2vec にエントリのある 1741 語を用いて上記の三角モデルの枠組みを用いた
 
@@ -547,7 +547,7 @@ Harm&Seidenberg2004 Fig. 1 を改変。
 右: 音韻+意味 の混合表象を tSNE を用いて視覚化
 </div>
 
-### その他 3. ストループ効果
+### その他 3. ストループ効果 (永田・浅川 準備中)
 
 <div class="figcenter">
 <img src="/figures/1990Cohen_McClelland_stroop_fig3.svg">

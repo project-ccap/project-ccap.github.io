@@ -15,7 +15,6 @@ Copyright (C) 2023 Shinichi Asakawa<br/>
 https://opensource.org/license/mit/
 </div>
 
-
 # 実演 鏡を覗いてみると
 
 <div class="memo" style="width:77%">
@@ -39,18 +38,25 @@ https://opensource.org/license/mit/
 
 #### Table of contents: part 3 第三部目次 (16:25-17:40)
 
-1. A model of 百人一首 implemented on Transformer
-2. Horizontal and vertical errors in speech errors
-
+1. ちはやふる Transformer を用いた符号化器・復号化器モデルによる百人一首
+2. ヨコ型，タテ型の言い誤りのシミュレーション Horizontal and vertical errors in speech errors
 
 #### 実習ファイル
 
 * [百人一首の上の句とエンコーダによって符号化し，下の句をデコーダで生成する自作 Transformer モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
 
-# Transformer, [Attention is all you need](https://arxiv.org/abs/1706.03762){:target="_blank"}
 
-単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
-句，節，文のベクトル表現を得る努力がなされてきた。
+# 1. ちはやふる Transformer を用いた符号化器・復号化器モデルによる百人一首
+
+* データ: [http://www.diana.dti.ne.jp/~fujikura/List/List.html](http://www.diana.dti.ne.jp/~fujikura/List/List.html){:target="_blank"}
+* かるた取り遊びを意識して，すべての歌で，ひらがな表記されたデータを用いた。
+* 課題： 上句をエンコーダに入力し，デコーダに下句を予測させる。
+* 構成単位として [Transformer](https://arxiv.org/abs/1706.03762) を用いた。
+* 訓練時間短縮のため，1 層のみ。素子数は 32，注意ヘッド数 4，最大系列長 22
+
+## 1.1 Transformer, [Attention is all you need](https://arxiv.org/abs/1706.03762){:target="_blank"}
+
+単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，句，節，文のベクトル表現を得る努力がなされてきた。
 適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
 
 そこで，注意機構を積極的に取り込んだゲームチェンジャーが Transformer である。
@@ -68,7 +74,7 @@ Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
 
 トランスフォーマーの注意とは，このソフトマックス関数である。
 
-### Transformer における位置符号化器 (PE: position encoders)
+## 1.2 Transformer における位置符号化器 (PE: position encoders)
 
 $$
 \text{PE}_{(\text{pos},2i)} = \sin\left(\frac{\text{pos}}{10000^{\frac{2i}{d_{\mathop{model}}}}}\right)
@@ -86,7 +92,7 @@ Transformer の位置符号化器の出力。
 Transformer は位置情報を持たないので，位置情報を周波数変換して用いる。
 </div></div>
 
-### 性能評価
+## 1.3 性能評価 intstructGPT (a.k.a chatGPT)
 
 <div class="figcenter">
 
@@ -97,8 +103,33 @@ Transformer は位置情報を持たないので，位置情報を周波数変�
 意図的に悪い対照モデル (出力のランダム性が高い無条件 GPT-3 小型モデル) の出力に対する精度を上部の破線で示し，ランダムな確率 (50 %) を下部の破線で示す。ベストフィットの線は 95 %信頼区間を持つべき乗則である。
 <!-- Figure 3.13: People’s ability to identify whether news articles are model-generated (measured by the ratio of correct assignments to non-neutral assignments) decreases as model size increases.
 Accuracy on the outputs on the deliberately bad control model (an unconditioned GPT-3 Small model with higher output randomness) is indicated with the dashed line at the top, and the random chance (50%) is indicated with the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
+[Brown+2020](https://arXiv.org/abs/2005.14165) Fig. 3 
 </div></div>
 
+## 1.4 結果
+
+* エポック:1 損失:2.97051 正解率:   1.000%
+* エポック:2 損失:1.22301 正解率:  54.000%
+* エポック:3 損失:0.46482 正解率:  76.000%
+* エポック:4 損失:0.18355 正解率:  97.000%
+* エポック:5 損失:0.07385 正解率: 100.000%
+* エポック:6 損失:0.03077 正解率: 100.000%
+
+エポック 4 終了時のエラーは以下のとおり：
+
+<div class="figcenter">
+<img src="/figures/2023_1113chihaya_epoch4_errors.png" width="66%">
+</div>
+<div class="figcaption">
+
+百人一首 上句をエンコーダに与えて，下句をデコーダに予測させた結果。3 エポック目の出力を示す。
+青は正解文字，赤は，誤りを示す。旧かなである `ゐ` を間違えるのは，低頻度である可能性が考えられる。
+</div>
+
+
+<div class="figcenter">
+<img src="/figures/2023_1113chihaya_charfreq.svg" width="94%">
+</div>
 
 # ありえない有能さ Unreasonable effectiveness
 
