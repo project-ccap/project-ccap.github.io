@@ -4,6 +4,12 @@ layout: default
 author: CCAP プロジェクト
 ---
 <link href="/assets/css/asamarkdown.css" rel="stylesheet">
+<div align='right'>
+
+Copyright (C) 2023 Shinichi Asakawa<br/>
+<a href='mailto:asakawa@ieee.org'>Shin Aasakawa</a>, all rights reserved.<br/>
+https://opensource.org/license/mit/
+</div>
 
 <img src="2023DaSiC_QRcode.png" style="width:12%;align=left">
 
@@ -39,7 +45,7 @@ author: CCAP プロジェクト
    * [機械学習モデルの説明](2023asakawa_dasic2){:target="_blank"}: 浅川伸一
 4. 16:25-17:25 [実演 鏡を覗いてみると](2023asakawa_dasic3){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
-   * [Colab 操作方法](2023yoshihara_colab.pdf){:target="_blank"}
+   * [Colab 操作方法 吉原将大 (東北大学)](2023yoshihara_colab.pdf){:target="_blank"}
    * [Google colabratory について](supp_eco){:target="_blank"}
 
    * 休憩

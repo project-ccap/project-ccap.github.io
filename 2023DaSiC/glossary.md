@@ -3,6 +3,14 @@ title: 用語集
 layout: default
 author: CCAP プロジェクト
 ---
+[DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+
+<div align='right'>
+
+Copyright (C) 2023 Shinichi Asakawa<br/>
+<a href='mailto:asakawa@ieee.org'>Shin Aasakawa</a>, all rights reserved.<br/>
+https://opensource.org/license/mit/
+</div>
 
 #### 分野によって異なる訳語を持つ用語
 

@@ -1,12 +1,45 @@
 ---
-title: "DaSiC7 (2023) 発表資料"
+title: "Google colaboratory について DaSiC7 (2023) 発表資料"
 author: 浅川伸一
 layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
+[DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
 
-# Colaboratory 事始め
+<div align='right'>
+
+Copyright (C) 2023 Shinichi Asakawa<br/>
+<a href='mailto:asakawa@ieee.org'>Shin Aasakawa</a>, all rights reserved.<br/>
+https://opensource.org/license/mit/
+</div>
+
+# Google colaboratory について
+
+
+* Google colaboraty とはブラウザ上 [jupyter notebook](https://jupyter.org/){:target="_blank"} ([jupyter lab](https://jupyterlab.readthedocs.io/en/stable/){:target="_blank"}) を実行するクラウド計算環境です。
+* Google Colaboratory では Python の実行を，仮想コンピュータ上で行うことができます。従って，ブラウザさえあれば，特別なインストール作業を必要ありません。
+このため，初心者でも比較的ストレス無く実行可能です。
+* jupyter notebook とは [ipython](https://ipython.org/notebook.html){:target="_blank"} をブラウザ上で実行する環境です。
+* ipython とは [python](https://pytorch.org/){:target="_blank"} をインタラクティブに実行する環境です。
+* python とは機械学習やニューラルネットワークのコミュニティで使われるコンピュータ言語です。
+* Google colaboratory の使い方は jupyeter notebook をご存知であれば，ほぼ同じです。
+
+近年，このような仮想計算機上で実行するクラウンドコンピューティング環境は，Google colaboratory のみならず，複数の実行環境が提供されています。
+有名なところでは，以下のサービスが挙げられます:
+
+  アマゾンのクラウドコンピューティングサービス [AWS](https://aws.amazon.com/){:target="_blank"}，統計解析で人気のある [Rstudio Could](https://posit.cloud/){:target="_blank"} ，文書作成 $\LaTeX$ 環境 [Overleaf](https://www.overleaf.com/){:target="_blank"}, MATLAB 実行環境 [MATLAB online](https://jp.mathworks.com/products/matlab-online.html){:target="_blank"}
+
+Google colaboratory は，Google アカウントさえあれば，無料で実行できます。
+ただし，GPU の計算機資源をより高度に利用したい場合は，月額課金制度 (サブスクリプション) に申し込むことで可能となります。
+
+注意点としては，仮想コンピュータ上で実行されるため，しばらく何もしないでおくと，仮想コンピュータとの接続が途絶えてしまいます。
+設定にもよりますが 20 分程度，入力が無いと切断されます。
+
+切断されて記録が残らないよりは，Google Drive にコピーを保存しておいた方が，便利です。
+そのため，本ワークショップでは，利用者各自で，自身の Google Drive に保存されることをお勧めいたします。
+
+### Q&A
 
 - [Python](https://www.python.org/){:target="_blank"} って何？
     - AI や 機械学習 分野の共同体で使われることが多いコンピュータ言語のことです。下記に示すように高等学校の情報で採択されます。
@@ -24,17 +57,8 @@ codemirror_mime_type: text/x-cython
 - [Google Colaboratory のチュートリアルビデオ](https://youtu.be/inN8seMm7UI){:target="_blank"} も参照してください
 - [外部データとのやりとり，ダウンロード，アップロードなど <img src="/assets/colab_icon.svg">](https://colab.research.google.com/notebooks/io.ipynb){:target="_blank"}
 
-# 簡単な説明
 
-- Colab とはブラウザ上 [jupyter notebook](https://jupyter.org/){:target="_blank"} ([jupyter lab](https://jupyterlab.readthedocs.io/en/stable/){:target="_blank"}) を実行するクラウド計算環境です。
-- 従って，ブラウザさえあれば，特別なインストール作業を必要ありません。
-- jupyter notebook とは [ipython](https://ipython.org/notebook.html){:target="_blank"} をブラウザ上で実行する環境です。
-- ipython とは [python](https://pytorch.org/){:target="_blank"} をインタラクティブに実行する環境です。
-- python とは機械学習やニューラルネットワークのコミュニティで使われるコンピュータ言語です。
-- したがって colab の使い方は jupyeter notebook をご存知であれば，ほぼ同じです。
-- クラウドベースの実行系ですので，インストールの手間は不要です。
-
-# 簡単な操作方法
+### 簡単な操作方法
 
 - notebook は セル と呼ばれる単位から成り立っています。
 - セルは コード，テキスト，画像で構成されます。
@@ -47,9 +71,7 @@ codemirror_mime_type: text/x-cython
 - [http://colab.research.google.com/](http://colab.research.google.com/){:target="_blank"}
 
 
----
-
-オリジナル [URL: ](https://research.google.com/colaboratory/faq.html)
+### Google の Q&A オリジナル [https://research.google.com/colaboratory/faq.html](https://research.google.com/colaboratory/faq.html){:target="_blank"}
 
 - Colaroboratory とは何ですか (What is Colaboratory?)
 

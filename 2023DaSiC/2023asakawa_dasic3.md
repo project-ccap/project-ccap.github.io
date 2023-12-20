@@ -5,10 +5,16 @@ layout: default
 codemirror_mode: python
 codemirror_mime_type: text/x-cython
 ---
-
 <link href="/assets/css/asamarkdown.css" rel="stylesheet">
-
 [DaSiC 7 (2023)](https://sites.google.com/view/dasic7-2023) Linguistics and Data Science in Collaboration 発表資料
+
+<div align='right'>
+
+Copyright (C) 2023 Shinichi Asakawa<br/>
+<a href='mailto:asakawa@ieee.org'>Shin Aasakawa</a>, all rights reserved.<br/>
+https://opensource.org/license/mit/
+</div>
+
 
 # 実演 鏡を覗いてみると
 
