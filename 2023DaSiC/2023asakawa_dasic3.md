@@ -134,8 +134,9 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 
 # 2. ヨコ型，タテ型の言い誤りのシミュレーション
 
-* 事前訓練データとして，長岡技術大学で公開されている [やさしい日本語](http://www4414uj.sakura.ne.jp/Yasanichi/) データを使用
 * 84300 文を訓練。Transformer を用いて，文の復唱を学習。
+* 語彙数 32000. 層数 2, 素子数 384, 注意ヘッド数 4, (BERT えは，語彙数 32000，層数 12，素子数 768, 注意ヘッド数 12)
+* 事前訓練データとして，長岡技術大学で公開されている [やさしい日本語](http://www4414uj.sakura.ne.jp/Yasanichi/) データを使用
 * タテ型の言い誤り，ヨコ型の言い誤りのそれぞれで微調整
 
 
