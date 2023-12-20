@@ -46,6 +46,21 @@ https://opensource.org/license/mit/
 * [百人一首の上の句とエンコーダによって符号化し，下の句をデコーダで生成する自作 Transformer モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/2023notebooks/2023_1113chihaya_Transformer.ipynb){:target="_blank"}
 
 
+# 0. 双対性 duality
+
+機械学習，あるいは，最適化理論において，双対性 duality または双対性原理 duality principle とは，最適化問題を主問題 primal problem と双対問題 dual problem の 2 つの観点から見ることができることを指す。
+主問題 primal problem が最小化問題であれば，双対問題 dual problem は最大化問題である (逆も同様)。
+主問題 (最小化問題) に対するどのような実行可能解も，双対問題 (最大化問題) に対するどのような実行可能解も，少なくとも同じ大きさである。
+したがって，原始問題の解は双対問題の解の上界であり，双対問題の解は主問題の解の下界である。この事実は弱双対性 weak duality と呼ばれる。
+
+Lagrange 双対問題は，非負の Lagrange 乗数を用いて目的関数に制約を加えることによって最小化問題の Lagrangian を形成し，元の目的関数を最小化する主変数の値を解くことによって得られる。
+この解法は，Lagrange 乗数の関数として主変数を与え，これを双対変数と呼ぶ。
+従って，新しい問題は，双対変数に関する制約 (少なくとも非負制約を含む) の下で，双対変数に関して目的関数を最大化することである。
+von Neumann によれば，双対問題と呼ばれる別の視点を用いることで，主問題または双対問題のどちらを解いても最適解が得られるという理論を概念化できる。
+
+* [補足資料 変分問題と標準正則化](/2023DaSiC/supp_variation){:target="_blank"}
+
+
 # 1. ちはやふる Transformer を用いた符号化器・復号化器モデルによる百人一首
 
 * データ: [http://www.diana.dti.ne.jp/~fujikura/List/List.html](http://www.diana.dti.ne.jp/~fujikura/List/List.html){:target="_blank"}
@@ -103,7 +118,7 @@ Transformer は位置情報を持たないので，位置情報を周波数変�
 意図的に悪い対照モデル (出力のランダム性が高い無条件 GPT-3 小型モデル) の出力に対する精度を上部の破線で示し，ランダムな確率 (50 %) を下部の破線で示す。ベストフィットの線は 95 %信頼区間を持つべき乗則である。
 <!-- Figure 3.13: People’s ability to identify whether news articles are model-generated (measured by the ratio of correct assignments to non-neutral assignments) decreases as model size increases.
 Accuracy on the outputs on the deliberately bad control model (an unconditioned GPT-3 Small model with higher output randomness) is indicated with the dashed line at the top, and the random chance (50%) is indicated with the dashed line at the bottom. Line of best fit is a power law with 95% confidence intervals. -->
-[Brown+2020](https://arXiv.org/abs/2005.14165) Fig. 3 
+[Brown+2020](https://arXiv.org/abs/2005.14165) Fig. 3
 </div></div>
 
 ## 1.4 結果
