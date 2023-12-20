@@ -105,6 +105,22 @@ LDA と SVM との違いにあらわれている
 <img src="/figures/1885LichtheimFig1.png" width="29%">
 </div> -->
 
+## 0.3 機械学習の定義，古典的定義と現代的定義
+
+* アーサー・サミュエル Arthur Samuel (1959): 機械学習とは，明示的にプログラムで指示せずにコンピュータに学習させる能力を研究する分野である。<br/>
+  * “field of study that gives computers the ability to learn without being explicitly programmed”
+* トム・ミッチェル Tom Mitchell (1999): ある課題 T とその成績 P の評価からなる経験 E をとおして学習するコンピュータプログラムを機械学習という。<br/>
+  * "A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.”
+
+<div class="figcenter">
+<img src="/figures/SAM.JPG" width="13%">
+<img src="/figures/tom_mitchell.jpg" width="15%"><br/>
+<div class="figcaption" style="width:66%">
+
+左: Arthr L. Samual(1901-1990) from <http://www.i-programmer.info/history/people/669-a-l-samuel-ai-and-games-pioneer.html> <!-- (/2023assets/SAM.JPG) {#fig:SAM style="width39%"}--><br/>
+右: Tom Mitchell from <http://wamc.org/post/dr-tom-mitchell-carnegie-mellon-university-language-learning-computer> <!--/2023assets/tom_mitchell.jpg){#fig:tom style="width:39%"}-->
+</div></div>
+
 ## 0.3 機械学習と心理統計学の違い
 
 仮説検定とパラメータチューニングの差異は，母集団の相違に期すのか，それとも選択しているモデルによるものなのか。
@@ -139,6 +155,11 @@ LDA と SVM との違いにあらわれている
 
 ## 1.2 Breiman2001 によるデータサイエンスにおける 2 つの文化 <!-- あるいは，統計学と機械学習とニューラルネットワークの関係-->
 
+* データモデル文化とアリゴリズムモデル文化
+* データモデル文化とアルゴリズムモデル文化とは，心理統計で用いられるような統計学モデルを使用する文化を指す。
+* 一方，アルゴリズムモデル文化とは，機械学習における統計学的技法を重視する文化である。
+
+
 <center>
 <img src="/figures/2001Breiman_Two_Cultures_fig1.svg" width="33%"><br/>
 <img src="/figures/2001Breiman_Two_Cultures_fig2.svg" width="24%">
@@ -155,6 +176,11 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 
 ## 1.3 Glaser+2019 神経科学における機械学習モデルの 4 つの役割
 
+1. 工学的な問題の解決 機械学習は， 医療診断， ブレインコンピュータインターフェース， 研究ツールなど， 神経科学者が使用する手法の予測性能を向上させることができる。
+2. 予測可能な変数の特定 機械学習により， 脳や外界に関連する変数がお互いを予測しているかどうかをより正確に判断することができる。
+3. 単純なモデルのベンチマーク。 解釈可能な簡易モデルと精度の高い ML モデルの性能を比較することで， 簡易モデルの良し悪しを判断するのに役立つ。
+4. 脳のモデルとしての役割。 脳が機械学習システム， 例えばディープニューラルネットワークと同様の方法で問題を解決しているかどうかを論じることができる。
+
 <div class="figcenter">
 <img src="/figures/2019Glaser_fig2.jpg" width="55%">
 </div>
@@ -162,11 +188,6 @@ From Leo Breiman, Statistical Modeling: The Two Cultures, _Statistical Science_,
 
 出典: [Glaser+2019](https://linkinghub.elsevier.com/retrieve/pii/S0301008218300856) Fig. 2
 </div>
-
-1. 工学的な問題の解決 機械学習は， 医療診断， ブレインコンピュータインターフェース， 研究ツールなど， 神経科学者が使用する手法の予測性能を向上させることができる。
-2. 予測可能な変数の特定 機械学習により， 脳や外界に関連する変数がお互いを予測しているかどうかをより正確に判断することができる。
-3. 単純なモデルのベンチマーク。 解釈可能な簡易モデルと精度の高い ML モデルの性能を比較することで， 簡易モデルの良し悪しを判断するのに役立つ。
-4. 脳のモデルとしての役割。 脳が機械学習システム， 例えばディープニューラルネットワークと同様の方法で問題を解決しているかどうかを論じることができる。
 
 <!-- 訓練済ニューラルネットワークを脳と比較する傾向は，画像認識などの行動課題におけるニューラルネットワークの大きな成果により，最近になって再燃した (He+2015)。
 興味深いことに，これらのネットワークは視覚における腹側流路と類似点が多い。 -->
@@ -563,6 +584,22 @@ Sutskever+2014 Fig. 1, 翻訳モデル `seq2seq` の概念図
 中: Luong+2015, Fig. 2,
 右: Luong+2015, Fig. 3
 </div></div>
+
+## 3.4 注意機構を用いて系列データを処理する Transformer
+
+<div class="figcenter">
+<img src="/figures/2017Vaswani_Fig2_1ja.svg" width="19%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="/figures/2017Vaswani_Fig2_2ja.svg" width="29%">&nbsp;&nbsp;&nbsp;
+<img src="/figures/2017Vaswani_Fig1.svg" width="39%">
+<div class="figcaption">
+
+Transformer [2017Vaswani++](https://arxiv.org/abs/1706.03762) Fig.2 を改変
+</div></div>
+
+上図で，`matmul` は行列の積，`scale` は，平均 0 分散 1 への標準化，`mask` は 0 と 1 とで，データを制限すること，`softmax` はソフトマックス関数である。
+
+トランスフォーマーの注意とは，このソフトマックス関数である。
+
 
 
 <!-- 本日は，機械学習と統計学との関係を取り上げ，ニューラルネットワークの導入と実習を行います。 -->

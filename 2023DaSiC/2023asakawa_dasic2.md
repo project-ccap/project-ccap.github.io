@@ -63,20 +63,25 @@ https://opensource.org/license/mit/
 Fig. 1. より
 </div></div>
 
-### 転移学習の応用例，BIT 行動注意検査線分二等分課題のシミュレーション (浅川，武藤 投稿中)
+### 転移学習の応用例 (1) TLPA，SALA 失語症，絵画命名課題
 
-<div class="figcenter">
-<img src="/figures/2023_0721bit_line_bisection_demo0.svg" width="44%">
-<img src="/figures/2023_0721bit_line_bisection_demo1.svg" width="44%">
-</div>
-
-### 転移学習の応用例 (2) TLPA，SALA 失語症，絵画命名課題
+絵画命名課題を一般画像認識モデルの転移学習として実現した。
 
 <div class="figcenter">
 <img src="/figures/2023_0723tlpa_sala_214.png" width="44%"><br/>
 <img src="/figures/2023_0723tlpa_sala_83.png" width="44%">
 <img src="/figures/2023_0723tlpa_sala_243.png" width="44%">
 </div>
+
+### 転移学習の応用例 (2) BIT 行動注意検査線分二等分課題のシミュレーション (浅川，武藤 投稿中)
+
+一般画像認識モデルにおける，場所情報 (were 経路) とその内容 (what 経路) を転移学習により実現
+
+<div class="figcenter">
+<img src="/figures/2023_0721bit_line_bisection_demo0.svg" width="33%">
+<img src="/figures/2023_0721bit_line_bisection_demo1.svg" width="33%">
+</div>
+
 
 
 ### 従来モデル
