@@ -85,19 +85,23 @@ $$
 (\mathbf{G}+\lambda\mathbf{I})\mathbf{c}=\mathbf{y}
 $$
 
-ここで $\mathbf{I}$ は恒等行列であり，以下のように定義した:<!-- where mathbfI is the identity matrix, and we have defined -->
+ここで $\mathbf{I}$ は恒等行列である。
+また，以下のように定義してあるた:<!-- where mathbfI is the identity matrix, and we have defined -->
 
 $$\begin{aligned}
 (\mathbf{y})_{i} &= \mathbf{y}_{i}\\
 (\mathbf{c})_{i} &= \mathbf{c}_{i}\\
 (G)_{ij}         &= G\left(\mathbf{x}_{i},\mathbf{x}_{j}\right).
 \end{aligned}$$
-そして，正則化問題の解は次のように与えられると結論づける。<!-- We then conclude that the solution to the regularization problem is given by -->
+
+以上のようにして，正則化問題の解は次のように与えられる。<!-- We then conclude that the solution to the regularization problem is given by -->
 
 $$
 f(x)=\sum_{i=1}^{N}c_i G(\mathbf{x};\mathbf{x}_{i}
 $$
-ここで，係数は上の連立方程式を満たす。<!-- where the coefficients satisfy the linear system (6). -->
+
+ここで，係数は上の連立方程式を満たす。
+<!-- where the coefficients satisfy the linear system (6). -->
 
 <!-- しかし，この式は，最小化問題の完全な解ではないことに気づく。
 実際，演算子 P のヌル空間にあるすべての関数は，汎関数の平滑化項からは「見えない」ので，先ほどの展開は P のヌル空間にある項を加えた解となる。
