@@ -125,7 +125,33 @@ Transformer の位置符号化器の出力。
 Transformer は位置情報を持たないので，位置情報を周波数変換して用いる。
 </div></div>
 
-## 1.2.1 Transformer (SBERT) の文ベクトル
+## 1.3 事前訓練
+
+### 次文予測課題
+
+言語モデルの欠点を補完する目的，次の文を予測
+
+[SEP] トークンで区切られた 2 文入力
+
+- 入力: the man went to the store [SEP] he bought a gallon of milk.
+- ラベル:  IsNext
+- 入力:  the man went to the store [SEP] penguins are flightless birds.
+- ラベル:  NotNext
+
+### ファインチューニング GLUE 課題 (General Language Understanding Evaluation)
+
+- **CoLA**: 入力文が英語として正しいか否かを判定
+- **SST-2**: スタンフォード大による映画レビューの極性判断
+- **MRPC**: マイクロソフトの言い換えコーパス。2 文 が等しいか否かを判定
+- **STS-B**: ニュースの見出し文の類似度を5段階で評定
+- **QQP**: 2 つの質問文の意味が等価かを判定
+- **MNLI**: 2 入力文が意味的に含意，矛盾，中立を判定
+- **QNLI**: 2 入力文が意味的に含意，矛盾，中立を判定
+- **RTE**: MNLI に似た2つの入力文の含意を判定
+- **WNI**: ウィノグラッド会話チャレンジ
+
+
+## 1.4 Transformer (SBERT) の文ベクトル
 
 先に紹介した word2vec は，単語ベクトルを得る手法であるが，Transformer は文ベクトルを扱う。
 そこで，文単位での類似性を検討した。
@@ -200,13 +226,14 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 
 # 2. ヨコ型，タテ型の言い誤りのシミュレーション
 
+## 2.1 モデル
+
 * 84300 文を訓練。Transformer を用いて，文の復唱を学習。
 * 語彙数 32000. 層数 2, 素子数 384, 注意ヘッド数 4, (BERT えは，語彙数 32000，層数 12，素子数 768, 注意ヘッド数 12)
 * 事前訓練データとして，長岡技術大学で公開されている [やさしい日本語](http://www4414uj.sakura.ne.jp/Yasanichi/) データを使用
 * タテ型の言い誤り，ヨコ型の言い誤りのそれぞれで微調整
 
-
-# 3. 結果
+## 2.2 結果
 
 * ヨコ型の言い間違えの再現率，(すなわちエンコーダに意図文を入れて，言い間違え文をデコーダに出力する) は  97.778 %
 * タテ型の言い間違えの再現率は 90.000 %
@@ -251,7 +278,10 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 文中の [UNK] は，そもそも学習語彙中に存在しないので，学習しようがない。
 [UNK] トークンの問題を考慮すれば，タテ型の言い誤りも，再現できているように思われる。
 
-# 4. 考察
+
+
+# 3. 考察
+ここまでをまとめると以下のようになる:
 
 * 大規模データに基づくモデルに対して，課題に合わせて，目的関数を事前訓練を行ったモデルに対して，関心のある現象，患者，条件に合わせた微調整を加えた。
 * すなわち，目的関数の制約項を変化させることで，行動データ再現させることを試みた。
@@ -260,8 +290,64 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 * これらのシミュレーションは，制約項付きの最適化とみなすことが可能。
 * モデル，データ，パラメータの三項を考えることで，モデルとデータからパラメータを眺め，モデルとパラメータからデータを眺め，データとパラメータからモデルを眺めることになっているだろう。
 
+## 3.1 制約項からみた定式化
 
-## 4.1 ありえない有能さ Unreasonable effectiveness
+機械学習における目的関数 (損失関数) は次式で与えられる:
+
+$$\tag{一般形}
+\text{目的関数} = \text{誤差} + \lambda\left(\text{正則化項}\right)
+$$
+
+ここで，$\lambda$ は Lagrange 乗数である。
+
+word2vec においては，
+
+$$\tag{word2vec}
+\text{目的関数} = \text{標的単語との誤差} + \lambda\left(\text{負事例 ただし ランダムにサンプリング}\right)
+$$
+
+で与えられていた。
+Dell モデルのパラメータ推定においては，次式となる:
+
+$$\tag{Dell model}
+\text{目的関数} = \text{単語カテゴリ確率との誤差}
++ \lambda_{1}\left(\text{s,p パラメータへの制約}\right)
++ \lambda_{2}\left(\text{w,d パラメータへの制約}\right)
++ \lambda_{3}\left(\text{温度パラメータ $\beta$ への制約}\right)
+$$
+
+一方，エンコーダ・デコーダモデルにより言い間違えのシミュレーションでは，次式で与えられる:
+
+$$\tag{speech errors}
+\text{目的関数} = \text{正しい単語と言い間違え単語との誤差}
++ \lambda_{1}\left(\text{注意機構への制約}\right)
++ \lambda_{2}\left(\text{フィードバック機構への制約}\right)
+$$
+
+同様にして，タテ型，ヨコ型の言い間違え Transformer モデルでは，次式を用いた:
+
+$$\tag{speech errors Transformer 1}
+\text{目的関数} = \text{正しい文と言い間違え文との誤差} + \lambda_{1}\left(\text{ヨコ型言い間違えに対する制約}\right)
+$$
+
+$$\tag{speech errors Transformer 2}
+\text{目的関数} = \text{正しい文と言い間違え文との誤差} + \lambda_{1}\left(\text{タテ型言い間違えに対する制約}\right)
+$$
+
+式 (speech errors Transformer 1) と 式 (speech errors Transformer 2) との関連は，現在のところ不明である。
+しかし，本モデルでは，文法知識の制約，例えば [Dell+2008](https://doi.org/10.1080/01690960801920735) のごとき **構文的交通巡査** (traffic cop) のような機構を仮定しなかった。
+むしろ Transformer による本モデルでは，文法的，統語的な規則を明示的に記述せず，訓練コーパスの学習を通じて，ニューラルネットワークのアーキテクチャと結合係数へと反映された点に留意スべきである。
+
+# 4. 議論 ありえない有能さ Unreasonable effectiveness
+
+Lagrange 乗数を，変分問題として定式化し，制約項に対する意味付けを考えるアプローチは，物理学で始められた。
+制約付き最適化は，画像復元においては 標準正則化理論 (Poggio+1985) で定式化された。
+機械学習においては，汎化性能向上のための制約と考えられてきた。
+近年では，目的関数とと制約項と与え方を検討することで，GAN や stable diffusion 等の生成 AI でも用いられている。
+
+変分 Bayes の考え方でも同様であり，目的関数を Lagrange 方程式とみなせば，目的関数 (主問題) の最小化問題を，制約項付き双対問題の最大化ととらえうる。
+このようにして，他分野で提唱された概念を，援用することで現象を見通しよく説明できる。
+[補足資料 変分問題と標準正則化](/2023DaSiC/supp_variation){:target="_blank"} も参照のこと。
 
 * 1960: 自然科学における数学のありえない有能さ, [Wigner1960](https://www.maths.ed.ac.uk/~v1ranick/papers/wigner.pdf){:target="_blank"}
 * 1980: 数学のあり得ない有能さ, [Hamming](https://math.dartmouth.edu/~matc/MathDrama/reading/Hamming.html){:target="_blank"}
@@ -272,8 +358,7 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 * 2020: 人工知能のあり得ない有能さ, [Sejnowski2020](https://www.pnas.org/doi/full/10.1073/pnas.1907373117){:target="_blank"}
 * 2021: ニューラルネットワーク埋め込みのあり得ない有能さ, [Gao2021](https://medium.com/aquarium-learning/the-unreasonable-effectiveness-of-neural-network-embeddings-93891acad097){:target="_blank"}
 
-<!--
-1960. The Unreasonable Effectiveness of Mathematics in the Natural Science, [Wigner1960](https://www.maths.ed.ac.uk/~v1ranick/papers/wigner.pdf)
+<!--1960. The Unreasonable Effectiveness of Mathematics in the Natural Science, [Wigner1960](https://www.maths.ed.ac.uk/~v1ranick/papers/wigner.pdf)
 1980. The Unreasonable Effectiveness of Mathematics, [Hamming](https://math.dartmouth.edu/~matc/MathDrama/reading/Hamming.html)
 2009. The Unreasonable Effectiveness of Data, [Halevy+2009](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35179.pdf)
 2015. The Unreasonable Effectiveness of Recurrent Neural Networks, [Karpathy2015](https://karpathy.github.io/2015/05/21/rnn-effectiveness/)
@@ -283,11 +368,11 @@ Accuracy on the outputs on the deliberately bad control model (an unconditioned 
 2021. The Unreasonable Effectiveness of Neural Network Embeddings, [Gao2021](https://medium.com/aquarium-learning/the-unreasonable-effectiveness-of-neural-network-embeddings-93891acad097) -->
 
 
-# 主張 Takeaways (再)
+# 主張 Takeaways (再) まとめ
 
 1. 大規模言語モデル (LLM)，一般画像錦 (ImageNet) で事前訓練されたモデルに対して，転移学習 transfer learning を行うことで，関心領域の課題を解くモデルを作成
 2. 関心課題に特化したモデルに対して，任意の条件とデータとを用いて，微調整 fine-tuning を行うことで，条件間の差異や生成機序を解明。
-3. モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項と連結。微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化可能
+3. モデル，データ，パラメータ の三項は，言語学的規範，行動・臨床データ，機械学習モデルの三項と連結。微調整に用いる条件は，制約条件付き最適化 constrained optimization とみなしうる。このことは，データサイエンスにおける，モデルとパラメータの関する双対性原理 duality principle として定式化
 
 #### キーワード keywords
 
