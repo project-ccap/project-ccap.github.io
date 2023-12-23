@@ -35,11 +35,11 @@ body {
     /* font-family: noto-serif, "Noto serif Japanese"; */
     font-family: noto-sans, "Noto sans Japanese";
     /* font-size: inherit; */
-    /* font-size: 20px; */
+    font-size: 20px;
     /* font-size: 10px; */
     /* font-size: 12px; */
     /* font-size: 16px; */
-    font-size: 14px;
+    /*font-size: 14px;*/
     /* font-size: 14px; */
     /* line-height: 2.0; */
     line-height: 1.6;
@@ -97,7 +97,7 @@ h3 {
 h4 {
     /* font-size: 18px; */
     /* font-size: 16px; */
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     color: navy;
     margin-top: 5mm;
