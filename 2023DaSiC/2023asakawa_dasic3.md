@@ -127,6 +127,13 @@ Transformer は位置情報を持たないので，位置情報を周波数変�
 
 ## 1.3 事前訓練
 
+### マスク化言語モデル
+
+<div class="figcenter">
+<img src="/figures/2019Lample_Fig1.svg" width="55%">
+</div>
+
+
 ### 次文予測課題
 
 言語モデルの欠点を補完する目的，次の文を予測
@@ -149,6 +156,53 @@ Transformer は位置情報を持たないので，位置情報を周波数変�
 - **QNLI**: 2 入力文が意味的に含意，矛盾，中立を判定
 - **RTE**: MNLI に似た2つの入力文の含意を判定
 - **WNI**: ウィノグラッド会話チャレンジ
+
+<!--
+### ファインチューニング手続きによる性能比較
+
+マスク化言語モデルのマスク化割合は マスクトークン:ランダム置換:オリジナル=80:10:10 だけでなく，
+他の割合で訓練した場合の 2 種類下流課題，
+MNLI と NER で変化するかを下図 \ref{fig:2019devlin_mask_method21} に示した。
+80:10:10 の性能が最も高いが大きな違いがあるわけではないようである。
+
+<div class="figcenter">
+<img src="/figures/2019Devlin_mask_method21.jpg" width="49%"><br/>
+</div>
+<div class="figcaption">
+マスク化言語モデルのマスク化割合の違いによる性能比較
+</div>
+
+
+### モデルサイズ比較
+
+<div class="figcenter">
+<img src="/figures/2019Devlin_model_size20.jpg" width="59%"><br/>
+</div>
+<div class="figcaption">
+モデルのパラメータ数による性能比較
+</div>
+
+パラメータ数を増加させて大きなモデルにすれば精度向上が期待できる。
+下図では，横軸にパラメータ数で MNLI は青と MRPC は赤 で描かれている。
+パラメータ数増加に伴い精度向上が認められる。
+図に描かれた範囲では精度が天井に達している訳ではない。
+パラメータ数が増加すれば精度は向上していると認められる。
+
+
+### モデル単方向，双方向モデル比較
+
+<div class="figcenter">
+<img src="/figures/2019Devlin_directionality19.jpg" width="59%"><br/>
+</div>
+<div class="figcaption">
+言語モデルの相違による性能比較
+</div>
+
+言語モデルをマスク化言語モデルか次単語予測の従来型の言語モデルによるかの相違による性能比較を
+下図 \ref{fig:2019devlin_directionality19} に示した。
+横軸には訓練ステップである。訓練が進むことでマスク化言語モデルとの差は 2 パーセントではあるが認められるようで
+ある。
+ -->
 
 
 ## 1.4 Transformer (SBERT) の文ベクトル
