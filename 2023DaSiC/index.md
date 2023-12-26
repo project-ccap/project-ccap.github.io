@@ -33,16 +33,24 @@ https://opensource.org/license/mit/
 
 # スケジュール
 
-1. 13:30-14:10 趣旨説明：寺尾康 (静岡県立大学)
-   * データの紹介1：[健常者の言い誤り 寺尾康](2023terao_dasic2.pdf){:target="_blank"}
-   * データの紹介2：[失語症の錯語: 高倉祐樹 (北海道大学)](2023takakura_dasic.pdf){:target="_blank"}，[立場文音 (JCHO 熊本総合病院)](2023tateba_DaSiC.pdf){:target="_blank"}，[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf){:target="_blank"}，
+1. 13:30-14:10 [趣旨説明](DaSIC総合用_セッション1.pdf){:target="_blank"}：寺尾康 (静岡県立大学)
+   * データの紹介1：健常者の言い誤り 寺尾康
+   * データの紹介2：失語症の錯語: 高倉祐樹 (北海道大学)，立場文音 (JCHO 熊本総合病院)，大門正太郎（クラーク病院）
+
+<!-- * データの紹介1：[健常者の言い誤り 寺尾康](2023terao_dasic2.pdf){:target="_blank"}
+   * データの紹介2：[失語症の錯語: 高倉祐樹 (北海道大学)](2023takakura_dasic.pdf){:target="_blank"}，[立場文音 (JCHO 熊本総合病院)](2023tateba_DaSiC.pdf){:target="_blank"}，[大門正太郎（クラーク病院）](23DaSic_大門準備分_初版.pdf){:target="_blank"}， -->
+
 2. 14:10-14:50 [機械学習からみた言語モデルの鏡 浅川伸一 (東京女子大学)](2023asakawa_dasic1){:target="_blank"}
 
    * 休憩
 
-3. 15:00-16:15 認知モデルからみた言語モデルの鏡と機械学習の鏡との接点
-   * 認知モデルの説明: [健常者：寺尾康](2023terao_dasic3.pdf){:target="_blank"}，[失語例：上間清司(武蔵野大学)](2023uema_dasic.pdf){:target="_blank"}, [橋本幸成(目白大学)](2023hashimoto_dasic.pdf){:target="_blank"}，
+3. 15:00-16:15 [認知モデルからみた言語モデルの鏡と機械学習の鏡との接点](DaSIC総合用_セッション3.pdf){:target="_blank"}
+   * 認知モデルの説明: 健常者：寺尾康，失語例：上間清司(武蔵野大学), 橋本幸成(目白大学)
+
+   <!-- * 認知モデルの説明: [健常者：寺尾康](2023terao_dasic3.pdf){:target="_blank"}，[失語例：上間清司(武蔵野大学)](2023uema_dasic.pdf){:target="_blank"}, [橋本幸成(目白大学)](2023hashimoto_dasic.pdf){:target="_blank"}， -->
+
    * [機械学習モデルの説明](2023asakawa_dasic2){:target="_blank"}: 浅川伸一
+
 4. 16:25-17:25 [実演 鏡を覗いてみると](2023asakawa_dasic3){:target="_blank"}: モデルのデモンストレーション
 	浅川伸一、吉原将大（東北大学）
    * [Colab 操作方法 吉原将大 (東北大学)](2023yoshihara_colab.pdf){:target="_blank"}
@@ -54,7 +62,7 @@ https://opensource.org/license/mit/
 	登壇者全員
 
 * [用語集](glossary){:target="_blank"}
-<!-- * [演者 自己または他己紹介](self_introduction){:target="_blank"} -->
+* [演者 自己または他己紹介](self_introduction){:target="_blank"}
 
 <center>
 <img src="/figures/2004Roelofs_PsychRev_comment_fig2_.png" style="width:49%">
