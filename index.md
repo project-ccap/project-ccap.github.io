@@ -13,7 +13,9 @@ CCAP は計算論的臨床失語症プロジェクトの意味です。CCAP の�
 Project CCAP ではプロジェクトが重なっていますが，命名権を取得できなかったので，止む無くこのような形にしました。
 ご了承ください。
 
-## [DaSiC2023](2023DaSiC)
+## [Bayes for CCAP](2026bayes_for_ccap)
+
+## [DaSiC2023](2023dasic)
 
 ## 2021_10
 
@@ -31,8 +33,8 @@ Project CCAP ではプロジェクトが重なっていますが，命名権を�
 - [Walker and Hickok (2015) 音声生成への計算機的アプローチの架け橋: 意味・語彙・聴覚・発話・運動モデル (SLAM)](https://project-ccap.github.io/2016Walker-Hickok_Bridging_computational_approaches_to_speech_production_The_semantic–lexical–auditory–motor_model-SLAM.pdf){:target="_blank"}
 - [wrod2vec による TLPA, SALA 図版の意味ベクトル <img src="https://img.icons8.com/color/48/000000/microsoft-excel-2019--v1.png" style="width: 28px"/>](https://project-ccap.github.io/2021_0905ccap_tlpa_word2vec.xlsx){:target="_blank"}
 - [ResNet18 による各検査図版の視覚的特徴 <img src="https://img.icons8.com/color/48/000000/microsoft-excel-2019--v1.png" style="width: 28px"/>](https://project-ccap.github.io/2020-0713ccap_ResNet.xlsx){:target="_blank"}
-ResNet18 に各検査図版を入力して，最終直下層の出力を得ました。ここで言う検査とは次の 4 検査です: TLPA, SALA, PNT, Snodgrass and Vanderwert. **各図版には著作権がついている可能性がありますが，各ベクトルのデータの著作権は浅川が保持しています**。 一枚の図版あたり 512 次元のベクトルです。 このベクトルを各検査図版ごとにエクセルファイルにしました。
-- [BERT の超簡単な使い方 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_0903BERT_demo.ipynb){:target="_blank"}
+ResNet18 に各検査図版を入力して，最終直下層の出力を得ました。ここで言う検査とは次の 4 検査です: TLPA, SALA, PNT, Snodgrass and Vanderwert. **各図版には著作権がついている可能性がありますが，各ベクトルのデータの著作権は浅川が保持しています**。 一枚の図版あたり 512 次元のベクトルです。このベクトルを各検査図版ごとにエクセルファイルにしました。
+- [BERT の超簡単な使い方 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/komazawa-deep-learning/komazawa-deep-learning.github.io/blob/master/2021notebooks/2021_0903BERT_demo.ipynb){:target="_blank"}
 
 ## 2021_08
 
@@ -65,18 +67,19 @@ Roelofs (2004) Fig. 2
 </center>
 
 - [2021_0705 リカレントニューラルネットワーク 概説 (再)](2016RNNcamp2handout.pdf){:target="_blank"}
-- [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
+- [日本語wikipedia による word2vec Colab 版 2021年5月 neologd 追加<img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021_0531ccap_word2vec.ipynb){:target="_blank"}
 
 
 ## WEAVER++, Dell モデルの再現シミュレーション colab files
-- [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
-- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
-  -  [word2vec による単語連想 + 頻度 デモ <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
 
-- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
-- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
-- [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
-- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="https://ShinAsakawa.github.io./assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
+- [2021年02月22日実施 Dell モデル (Dell, 1997; Foygell and Dell,2000) 再現実験 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Foygel_Dell_model.ipynb)
+- [2021ccap word2vec による単語連想課題のデモ, Rotaru(2018) に関連 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_association_demo.ipynb)
+  -  [word2vec による単語連想 + 頻度 デモ <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021ccap_word_assoc_with_freq.ipynb)
+
+- [他言語プライミング課題での事象関連電位 （ERP) のシミュレーション Roelofs, Cortex (2016) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_ERP_bilingual_lemret.ipynb)
+- [概念バイアス `Conceptual Bias` (Reolofs, 2016) 絵画命名，単語音読，ブロック化，マルチモーダル統合 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2021Roelofs_Conceptual_bias.ipynb)
+- [2 ステップ相互活性化モデルデモ (Foygell and Dell, 2000) <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Foygel_Dell2000_2step_interactive_activaition_model_demo.ipynb)
+- [WEVER++ デモ 2020-1205 更新 Reolofs(2019) Anomia cueing <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/project-ccap/project-ccap.github.io/blob/master/notebooks/2020ccap_Roelofs2019_Anomia_cueing_demo.ipynb)
 	- [上の簡単なまとめ](2020-1214about_Roelofs_anomia_cueing)
 
 ## その他情報
