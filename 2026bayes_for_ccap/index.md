@@ -55,8 +55,8 @@ CCAP メンバとしては，下記のような文献の親密度が高いはず
 ## 回帰モデルの違い，背景にある異なる考え方
 
 $$\begin{aligned}
-y &= Xw + \epsilon, & \epsilon\sim\mathcal{N}\of{0,\sigma^2}                                           & \hspace{20mm}\text{(頻度論的線形回帰モデル)} \\
-y &= Xw + \epsilon, & X\sim\mathcal{N}\of{0,\sigma^2_{s}}, \epsilon\sim\mathcal{N}\of{0,\sigma_{i}^2}, & \hspace{20mm}\text{(線形混合効果モデル) かつ (ベイズ回帰モデル)} \\
+y &= Xw + \epsilon, & w\sim\mathcal{N}\of{\mu_{w},\sigma^2}, \epsilon\sim\mathcal{N}\of{0,\sigma^2}     & \hspace{20mm}\text{(頻度論的線形回帰モデル) $H_0:\mu_w=0$} \\
+y &= Xw + \epsilon, & X\sim\mathcal{N}\of{\mu_{x},\sigma^2_{s}}, w\sim\mathcal{N}\of{\mu_{w},\sigma^2}, \epsilon\sim\mathcal{N}\of{0,\sigma^2}, & \hspace{20mm}\text{(線形混合効果モデル) かつ (ベイズ回帰モデル)} \\
 y &= f\of{X} + \epsilon, & f\sim\mathcal{GP}\of{0,k}, \epsilon\sim\mathcal{N}\of{0,\sigma^2}, & \hspace{20mm}\text{(ガウス過程回帰モデル)}
 \end{aligned}$$
 
@@ -143,7 +143,7 @@ Clark は、結果が一般化可能であると言うためには、以下の *
 
 ##### 3.2 神経科学への展開
 
-EEG や MEG 研究にも混合効果モデルを適用する [lmeEEG `https://doi.org/10.1016/j.jneumeth.2023.109991`](https://www.sciencedirect.com/science/article/abs/pii/S0165027023002108) などの新しい手法が開発されており、心理言語学以外の分野にも広がっている。
+EEG や MEG 研究にも混合効果モデルを適用する [lmeEEG DOI:10.1016/j.jneumeth.2023.109991](https://www.biorxiv.org/content/10.1101/2023.01.18.524560v4){:target="_blank"} などの新しい手法が開発されており、心理言語学以外の分野にも広がっている。
 
 <!-- 実践的な課題 -->
 混合効果モデルの複雑さが障壁となっており、データシミュレーションを通じた理解促進やチュートリアルが[公開](https://eprints.gla.ac.uk/223488/1/223488.pdf) されている。
@@ -156,3 +156,6 @@ EEG や MEG 研究にも混合効果モデルを適用する [lmeEEG `https://do
 * LME だって正しいとは限らないのでは？
 * 知りたいことは，有意差ではなくて，言語活動を行っている人間の頭の中では何が起こっているのか，であろう。
 * [Spieler \& Balota (1997) 基準](1997Spieler_Balota_ja/){:target="_blank"} を考えてモデル化
+
+
+## [Kruschke(2013) Bayesian Estimation Supersedes the t Test 要約](2013Kruschke_BEST_ja/){:target="_blank"}
