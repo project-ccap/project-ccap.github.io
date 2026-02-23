@@ -47,8 +47,8 @@ CCAP メンバとしては，玉岡 (2022)，あるいは，橋本，上間，�
 
 それでも，なお，ベイズを知りたいという動機は，LME では限界があるということを感じているからではないかと邪推してみた。たとえば、LME では、モデルの構造をあらかじめ決めておく必要がある（例：ランダム効果の構造）。しかし、ベイズ統計学では、モデルの構造をデータから学習することができる。また、ベイズ統計学では、モデルの不確実性を自然に扱うことができる。これらの理由から、CCAP の参加者の皆様は、ベイズ統計学に興味を持っているのではないかと邪推する。
 
-* [Language as fixed effect fallacy](1973Clark_ja/){:target="_blank"}: Clark, H. H. (1973) The language-as-fixed-effect fallacy: A critique of language statistics in psychological research. Journal of Verbal Learning and Verbal Behavior, 12(4), 335–359.
-* [Generalizability Crisis: Yarkoni (2022)](2022Yarkoni_ja/){:target="_blank"} The Generalizability Crisis, Behavioral and Brain Sciences, 45, e1, 1–37, DOI:10.1017/S0140525X2000168X
+* [Language as fixed effect fallacy](/2026bayes_for_ccap/1973Clark_ja/){:target="_blank"}: Clark, H. H. (1973) The language-as-fixed-effect fallacy: A critique of language statistics in psychological research. Journal of Verbal Learning and Verbal Behavior, 12(4), 335–359.
+* [Generalizability Crisis: Yarkoni (2022)](/2026bayes_for_ccap/2022Yarkoni_ja/){:target="_blank"} The Generalizability Crisis, Behavioral and Brain Sciences, 45, e1, 1–37, DOI:10.1017/S0140525X2000168X
 * 玉岡 (2022) チュートリアル：線形混合効果モデル（LME）による分析法,
 * 橋本，上間，三盃 (2022) 線形混合効果モデリングによる解析例 － 成人・子どもを対象にした読み処理に関する研究から －
 * [lme4 パッケージのドキュメント](https://cran.r-project.org/web/packages/lme4/lme4.pdf)
@@ -92,8 +92,8 @@ $\displaystyle P\of{A\vert B} = \frac{P\of{B\vert A}P\of{A}}{P\of{B}} = \frac{P\
 ---
 See also:
 
-* [初めてのベイズ学習](2023_1123var_basic/){:target="_blank"}
-* [確率的機械学習と人工知能, Gharamani+(2015)](2015Gharamani_BayesianML_ja/){:target="_blank"}
+* [初めてのベイズ学習](/2026bayes_for_ccap/2023_1123var_basic/){:target="_blank"}
+* [確率的機械学習と人工知能, Gharamani+(2015)](/2026bayes_for_ccap/2015Gharamani_BayesianML_ja/){:target="_blank"}
 * [ベイズ推定のための変分近似法: EM アルゴリズム以降の生活, Tzikas+(2008)](2008Tzikas_Variational_Bayes_ja/){:target="_blank"}
 <!-- * [ベイズ統計学の基礎, Gelman+(2013)](2013Gelman_Bayesian_Statistics_ja.md) -->
 
@@ -150,10 +150,10 @@ EEG や MEG 研究にも混合効果モデルを適用する [lmeEEG DOI:10.1016
 * でも LME って，結局，頻度論統計学の枠組みの中での解決策の提案でしかないよね？
 * LME だって正しいとは限らないのでは？
 * 知りたいことは，有意差ではなくて，言語活動を行っている人間の頭の中では何が起こっているのか，であろう。
-* [Spieler & Balota (1997) 基準](1997Spieler_Balota_ja/){:target="_blank"} を考えてモデル化
+* [Spieler & Balota (1997) 基準](/2026bayes_for_ccap/1997Spieler_Balota_ja/){:target="_blank"} を考えてモデル化
 
 
-## [Kruschke(2013) Bayesian Estimation Supersedes the t Test 要約](2013Kruschke_BEST_ja/){:target="_blank"}
+## [Kruschke(2013) Bayesian Estimation Supersedes the t Test 要約](/2026bayes_for_ccap/2013Kruschke_BEST_ja/){:target="_blank"}
 
 ## ベイズモデルに関するレクチャ(案)<!-- # ベイズ統計学とベイズ機械学習の相違-->
 
