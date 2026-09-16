@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本語読み一貫性データベース</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --surface-alt: #f0eeea;
+  --text: #1a1a1a;
+  --text-muted: #6b6b6b;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --border: #d4d0c8;
+  --green: #16a34a;
+  --amber: #d97706;
+  --red: #dc2626;
+  --mono: 'Source Code Pro', monospace;
+  --sans: 'Noto Sans JP', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161616;
+    --surface: #222222;
+    --surface-alt: #2a2a2a;
+    --text: #e8e8e8;
+    --text-muted: #999;
+    --accent: #60a5fa;
+    --accent-light: #1e3a5f;
+    --border: #444;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --red: #f87171;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161616;
+  --surface: #222222;
+  --surface-alt: #2a2a2a;
+  --text: #e8e8e8;
+  --text-muted: #999;
+  --accent: #60a5fa;
+  --accent-light: #1e3a5f;
+  --border: #444;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.container { max-width: 800px; margin: 0 auto; padding: 24px 16px; }
+header { text-align: center; margin-bottom: 32px; }
+header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.02em; }
+header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+
+.search-box {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.search-box input {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 1.25rem;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+.search-box input:focus { border-color: var(--accent); }
+.search-box button {
+  padding: 8px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.corpus-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.corpus-tabs button {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--sans);
+}
+.corpus-tabs button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.result-card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.result-card .reading {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.result-card .badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+.badge-word { background: var(--accent-light); color: var(--accent); }
+.badge-nonword { background: #fef3c7; color: var(--amber); }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.metric-cell {
+  background: var(--surface-alt);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+}
+.metric-cell .label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.metric-cell .value {
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.alignment-section { margin-bottom: 16px; }
+.alignment-section h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.kanji-breakdown {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.kanji-unit {
+  background: var(--surface-alt);
+  border-radius: 6px;
+  padding: 12px 16px;
+  min-width: 120px;
+  flex: 1;
+}
+.kanji-unit .char {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.kanji-unit .readings-list {
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+.reading-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reading-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  margin-top: 2px;
+}
+
+.candidates-section h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.candidates-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.candidates-table th {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.candidates-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--surface-alt);
+  font-family: var(--mono);
+}
+.candidates-table tr:first-child td { font-weight: 600; }
+
+.cons-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.cons-high { background: var(--green); }
+.cons-mid { background: var(--amber); }
+.cons-low { background: var(--red); }
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-muted);
+}
+.empty-state .icon { font-size: 2rem; margin-bottom: 8px; }
+
+.info-footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>日本語読み一貫性データベース</h1>
+    <p>EM アルゴリズムによる漢字読み分布と Consistency 指標</p>
+  </header>
+
+  <div class="corpus-tabs" id="corpusTabs"></div>
+
+  <div class="search-box">
+    <input type="text" id="queryInput" placeholder="漢字・単語・非単語を入力（例: 学校, 熱校）"
+           autocomplete="off">
+    <button onclick="doSearch()">検索</button>
+  </div>
+
+  <div id="results">
+    <div class="empty-state">
+      <div class="icon">🔍</div>
+      <p>語を入力すると consistency スコアと読み候補を表示します</p>
+    </div>
+  </div>
+
+  <div class="info-footer">
+    <p>Prototype — psycholing_metrics_ja v2.6 / EM alignment with confidence weighting</p>
+    <p>コーパス切替で異なるデータベースの結果を比較できます</p>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// Data (prototype: embedded sample; production: load JSON)
+// ═══════════════════════════════════════════
+
+// コーパスデータを外部 JSON から読み込む
+const CORPORA = {};
+
+// 読み込むコーパスの一覧
+const CORPUS_FILES = [
+//  { key: 'psylex71',   label: 'psylex71 (新聞)',      dir: 'data' },
+//  { key: 'wlsp',       label: 'WLSP (分類語彙表)',     dir: 'data' },
+  { key: 'ntl',        label: 'NTL (BCCWJ)',          dir: 'data' },
+  { key: 'yama_elem',  label: '小学校教科書',           dir: 'data' },
+];
+
+async function loadAllCorpora() {
+  for (const { key, label, dir } of CORPUS_FILES) {
+    try {
+      const [distRes, metricsRes] = await Promise.all([
+        fetch(`${dir}/kanji_dist_${key}.json`),
+        fetch(`${dir}/metrics_${key}.json`),
+      ]);
+
+      // ファイルが存在しない場合はスキップ
+      if (!distRes.ok || !metricsRes.ok) {
+        console.warn(`${key}: ファイルが見つかりません。スキップします。`);
+        continue;
+      }
+
+      const kanji_dist = await distRes.json();
+      const metrics = await metricsRes.json();
+
+      CORPORA[key] = { label, kanji_dist, metrics };
+      console.log(`${key}: 読み込み完了 (${Object.keys(kanji_dist).length} 漢字, ${metrics.length} 語)`);
+    } catch (e) {
+      console.warn(`${key}: 読み込みエラー`, e);
+    }
+  }
+
+  // 最初に読み込めたコーパスを選択
+  const keys = Object.keys(CORPORA);
+  if (keys.length > 0) {
+    currentCorpus = keys[0];
+  }
+
+  // タブを再描画
+  initCorpusTabs();
+}
+
+// Production: load from JSON files
+// async function loadCorpus(name, url_dist, url_metrics) {
+//   const [dist, metrics] = await Promise.all([
+//     fetch(url_dist).then(r => r.json()),
+//     fetch(url_metrics).then(r => r.json()),
+//   ]);
+//   CORPORA[name] = { label: name, kanji_dist: dist, metrics: metrics };
+// }
+
+let currentCorpus = 'sample';
+
+// ═══════════════════════════════════════════
+// Mora segmentation (JS port of kana_to_mora)
+// ═══════════════════════════════════════════
+const SMALL_KANA = new Set('ゃゅょぁぃぅぇぉャュョァィゥェォ');
+
+function kanaToMora(reading) {
+  const morae = [];
+  let i = 0;
+  while (i < reading.length) {
+    const ch = reading[i];
+    if (i + 1 < reading.length && SMALL_KANA.has(reading[i+1])) {
+      morae.push(ch + reading[i+1]);
+      i += 2;
+    } else {
+      morae.push(ch);
+      i += 1;
+    }
+  }
+  return morae;
+}
+
+// ═══════════════════════════════════════════
+// Nonword prediction (JS port of predict_nonword)
+// ═══════════════════════════════════════════
+function predictNonword(word, kanjiDist, topN = 10) {
+  const chars = [...word];
+  const perUnit = [];
+
+  for (const ch of chars) {
+    const entry = kanjiDist[ch];
+    if (!entry || !entry.readings.length) {
+      perUnit.push([{ reading: ch, prob: 1.0 }]);
+      continue;
+    }
+    perUnit.push(entry.readings.slice(0, 5).map(([r, p]) => ({reading: r, prob: p})));
+  }
+
+  // Cartesian product
+  let candidates = [{ parts: [], prob: 1.0 }];
+  for (const readings of perUnit) {
+    const next = [];
+    for (const cand of candidates) {
+      for (const r of readings) {
+        next.push({
+          parts: [...cand.parts, r.reading],
+          prob: cand.prob * r.prob,
+        });
+      }
+    }
+    candidates = next;
+  }
+
+  candidates.sort((a, b) => b.prob - a.prob);
+  candidates = candidates.slice(0, topN);
+
+  // Per-char consistency
+  const perCharCons = chars.map(ch => {
+    const entry = kanjiDist[ch];
+    return entry ? entry.consistency : 0;
+  });
+  const wordCons = perCharCons.reduce((a,b) => a+b, 0) / perCharCons.length;
+
+  return { chars, candidates, perCharCons, wordCons, perUnit };
+}
+
+// ═══════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════
+function initCorpusTabs() {
+  const container = document.getElementById('corpusTabs');
+  container.innerHTML = '';
+  for (const [key, corpus] of Object.entries(CORPORA)) {
+    const btn = document.createElement('button');
+    btn.textContent = corpus.label;
+    btn.className = key === currentCorpus ? 'active' : '';
+    btn.onclick = () => { currentCorpus = key; initCorpusTabs(); doSearch(); };
+    container.appendChild(btn);
+  }
+}
+
+function consColor(c) {
+  if (c >= 0.8) return 'cons-high';
+  if (c >= 0.5) return 'cons-mid';
+  return 'cons-low';
+}
+
+function consColorHex(c) {
+  if (c >= 0.8) return 'var(--green)';
+  if (c >= 0.5) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function doSearch() {
+  const query = document.getElementById('queryInput').value.trim();
+  if (!query) return;
+
+  const corpus = CORPORA[currentCorpus];
+  if (!corpus) return;
+
+  // Check if registered word
+  const found = corpus.metrics.find(m => m.w === query);
+
+  const resultsDiv = document.getElementById('results');
+
+  if (found) {
+    resultsDiv.innerHTML = renderRegistered(found, corpus);
+  } else {
+    const pred = predictNonword(query, corpus.kanji_dist);
+    resultsDiv.innerHTML = renderNonword(query, pred, corpus);
+  }
+}
+
+function renderMetricCell(label, value, format = 'number') {
+  let display, colorClass = '';
+  if (value === null || value === undefined || (typeof value === 'number' && isNaN(value))) {
+    display = '—';
+  } else if (format === 'number') {
+    display = value.toFixed(4);
+  } else if (format === 'int') {
+    display = value.toString();
+  } else {
+    display = value;
+  }
+
+  let indicator = '';
+  if (label.toLowerCase().includes('cons') && typeof value === 'number' && !isNaN(value)) {
+    indicator = `<span class="cons-indicator ${consColor(value)}"></span>`;
+  }
+
+  return `<div class="metric-cell">
+    <div class="label">${label}</div>
+    <div class="value">${indicator}${display}</div>
+  </div>`;
+}
+
+function renderKanjiBreakdown(chars, kanjiDist) {
+  return chars.map(ch => {
+    const entry = kanjiDist[ch];
+    if (!entry) {
+      return `<div class="kanji-unit">
+        <div class="char">${ch}</div>
+        <div class="readings-list" style="color:var(--text-muted)">データなし</div>
+      </div>`;
+    }
+    const maxProb = Math.max(...entry.readings.map(r => r[1]));
+    const readingsHtml = entry.readings.slice(0, 6).map(([r, p]) => {
+      const barWidth = Math.round(p / maxProb * 100);
+      return `<div class="reading-row">
+        <span>${r}</span>
+        <span style="font-family:var(--mono);font-size:0.75rem">${(p*100).toFixed(1)}%</span>
+      </div>
+      <div class="reading-bar" style="width:${barWidth}%;background:${consColorHex(p)}"></div>`;
+    }).join('');
+
+    return `<div class="kanji-unit">
+      <div class="char">${ch} <span style="font-size:0.7rem;color:var(--text-muted)">C=${entry.consistency.toFixed(3)}</span></div>
+      <div class="readings-list">${readingsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderRegistered(m, corpus) {
+  const chars = [...m.w];
+  return `<div class="result-card">
+    <h2>${m.w} <span class="badge badge-word">登録語</span></h2>
+    <div class="reading">${m.r}　（${m.nm} モーラ）</div>
+
+    <div class="metrics-grid">
+      ${renderMetricCell('Consistency', m.c)}
+      ${renderMetricCell('Cons. Target', m.ct)}
+      ${renderMetricCell('Entropy', m.e)}
+      ${renderMetricCell('頻度', m.f, 'int')}
+    </div>
+
+    ${m.a ? `<div class="alignment-section">
+      <h3>Alignment</h3>
+      <div style="font-family:var(--mono);font-size:0.95rem;padding:8px 12px;background:var(--surface-alt);border-radius:4px">${m.a}</div>
+    </div>` : ''}
+
+    <div class="alignment-section">
+      <h3>漢字別読み分布（P(r|K)）</h3>
+      <div class="kanji-breakdown">${renderKanjiBreakdown(chars, corpus.kanji_dist)}</div>
+    </div>
+  </div>`;
+}
+
+function renderNonword(query, pred, corpus) {
+  const candidatesRows = pred.candidates.slice(0, 10).map((c, i) => {
+    const parts = c.parts.join(' + ');
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${c.parts.join('')}</td>
+      <td style="color:var(--text-muted)">${parts}</td>
+      <td>${c.prob.toFixed(6)}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="result-card">
+    <h2>${query} <span class="badge badge-nonword">非単語 / 未登録</span></h2>
+    <div class="reading">予測読み: ${pred.candidates[0]?.parts.join('') || '—'}</div>
+
+    <div class="metrics-grid">
+      ${renderMetricCell('Consistency', pred.wordCons)}
+      ${renderMetricCell('文字数', pred.chars.length, 'int')}
+    </div>
+
+    <div class="alignment-section">
+      <h3>漢字別読み分布（P(r|K)）</h3>
+      <div class="kanji-breakdown">${renderKanjiBreakdown(pred.chars, corpus.kanji_dist)}</div>
+    </div>
+
+    <div class="candidates-section">
+      <h3>読み候補（上位${Math.min(10, pred.candidates.length)}）</h3>
+      <table class="candidates-table">
+        <thead><tr><th>#</th><th>読み</th><th>分解</th><th>結合確率</th></tr></thead>
+        <tbody>${candidatesRows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+// データ読み込み開始
+document.getElementById('results').innerHTML =
+  '<div class="empty-state"><div class="icon">⏳</div><p>データを読み込み中...</p></div>';
+
+loadAllCorpora().then(() => {
+  document.getElementById('results').innerHTML =
+    '<div class="empty-state"><div class="icon">🔍</div>' +
+    '<p>語を入力すると consistency スコアと読み候補を表示します</p></div>';
+});
+</script>
+</body>
+</html>
