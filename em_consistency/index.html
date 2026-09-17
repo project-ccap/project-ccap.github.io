@@ -299,10 +299,10 @@ const CORPORA = {};
 
 // 読み込むコーパスの一覧
 const CORPUS_FILES = [
-  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'data' },
-  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'data' },
-  { key: 'elm',  label: '小学校教科書',           dir: 'data' },
-// { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'data' },
+  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'consistency_data' },
+  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'consistency_data' },
+  { key: 'elm',  label: '小学校教科書',           dir: 'consistency_data' },
+  { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'consistency_data' },
 ];
 
 async function loadAllCorpora() {
@@ -511,7 +511,19 @@ function doSearch() {
   const resultsDiv = document.getElementById('results');
 
   if (found) {
-    resultsDiv.innerHTML = renderRegistered(found, corpus);
+    // JSON に ONS/PNS/OLD20 がなければブラウザ内で計算
+    if (found.ons == null || found.pns == null || found.old20 == null) {
+      resultsDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>近傍指標を計算中...</p></div>';
+      setTimeout(() => {
+        const nbr = computeNeighborMetrics(found.w, found.r, corpus);
+        if (found.ons == null) found.ons = nbr.ons;
+        if (found.pns == null) found.pns = nbr.pns;
+        if (found.old20 == null) found.old20 = nbr.old20;
+        resultsDiv.innerHTML = renderRegistered(found, corpus);
+      }, 10);
+    } else {
+      resultsDiv.innerHTML = renderRegistered(found, corpus);
+    }
   } else {
     const pred = predictNonword(query, corpus.kanji_dist);
     // 近傍指標を計算（予測読みを使用）
