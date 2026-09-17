@@ -299,10 +299,10 @@ const CORPORA = {};
 
 // 読み込むコーパスの一覧
 const CORPUS_FILES = [
-//  { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'data' },
-  { key: 'wlsp',       label: 'WLSP (分類語彙表)',     dir: 'data' },
-  { key: 'nlt',        label: 'NLT (BCCWJ)',          dir: 'data' },
-  { key: 'elm',  label: '小学校教科書',           dir: 'data' },
+  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'consistency_data' },
+  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'consistency_data' },
+  { key: 'elem',  label: '小学校教科書',           dir: 'consistency_data' },
+ { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'consistency_data' },
 ];
 
 async function loadAllCorpora() {
@@ -348,7 +348,8 @@ async function loadAllCorpora() {
 //   CORPORA[name] = { label: name, kanji_dist: dist, metrics: metrics };
 // }
 
-let currentCorpus = 'sample';
+//let currentCorpus = 'sample';
+let currentCorpus = 'nlt';
 
 // ═══════════════════════════════════════════
 // Mora segmentation (JS port of kana_to_mora)
@@ -369,6 +370,55 @@ function kanaToMora(reading) {
     }
   }
   return morae;
+}
+
+// ═══════════════════════════════════════════
+// Levenshtein distance and neighborhood metrics
+// ═══════════════════════════════════════════
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m + 1}, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = Math.min(
+        dp[i-1][j] + 1,
+        dp[i][j-1] + 1,
+        dp[i-1][j-1] + (a[i-1] !== b[j-1] ? 1 : 0),
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+function computeNeighborMetrics(query, queryReading, corpus) {
+  const metrics = corpus.metrics;
+  if (!metrics || !metrics.length) return { ons: null, pns: null, old20: null };
+
+  let ons = 0;
+  let pns = 0;
+  const orthDists = [];
+
+  for (const m of metrics) {
+    const od = levenshtein(query, m.w);
+    orthDists.push(od);
+    if (od === 1) ons++;
+    if (queryReading && m.r) {
+      const pd = levenshtein(queryReading, m.r);
+      if (pd === 1) pns++;
+    }
+  }
+
+  // OLD20: mean of 20 smallest orthographic distances (excluding self)
+  orthDists.sort((a, b) => a - b);
+  const nonzero = orthDists.filter(d => d > 0);
+  const top20 = nonzero.slice(0, 20);
+  const old20 = top20.length > 0
+    ? top20.reduce((a, b) => a + b, 0) / top20.length
+    : null;
+
+  return { ons, pns, old20 };
 }
 
 // ═══════════════════════════════════════════
@@ -405,14 +455,20 @@ function predictNonword(word, kanjiDist, topN = 10) {
   candidates.sort((a, b) => b.prob - a.prob);
   candidates = candidates.slice(0, topN);
 
-  // Per-char consistency
+  // Per-char consistency and entropy
   const perCharCons = chars.map(ch => {
     const entry = kanjiDist[ch];
     return entry ? entry.consistency : 0;
   });
+  const perCharEnt = chars.map(ch => {
+    const entry = kanjiDist[ch];
+    if (!entry || !entry.readings.length) return 0;
+    return -entry.readings.reduce((s, [, p]) => s + (p > 0 ? p * Math.log(p) : 0), 0);
+  });
   const wordCons = perCharCons.reduce((a,b) => a+b, 0) / perCharCons.length;
+  const wordEnt = perCharEnt.reduce((a,b) => a+b, 0) / perCharEnt.length;
 
-  return { chars, candidates, perCharCons, wordCons, perUnit };
+  return { chars, candidates, perCharCons, perCharEnt, wordCons, wordEnt, perUnit };
 }
 
 // ═══════════════════════════════════════════
@@ -458,7 +514,16 @@ function doSearch() {
     resultsDiv.innerHTML = renderRegistered(found, corpus);
   } else {
     const pred = predictNonword(query, corpus.kanji_dist);
-    resultsDiv.innerHTML = renderNonword(query, pred, corpus);
+    // 近傍指標を計算（予測読みを使用）
+    resultsDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>近傍指標を計算中...</p></div>';
+    setTimeout(() => {
+      const topReading = pred.candidates[0]?.parts.join('') || '';
+      const nbr = computeNeighborMetrics(query, topReading, corpus);
+      pred.ons = nbr.ons;
+      pred.pns = nbr.pns;
+      pred.old20 = nbr.old20;
+      resultsDiv.innerHTML = renderNonword(query, pred, corpus);
+    }, 10);
   }
 }
 
@@ -522,6 +587,9 @@ function renderRegistered(m, corpus) {
       ${renderMetricCell('Cons. Target', m.ct)}
       ${renderMetricCell('Entropy', m.e)}
       ${renderMetricCell('頻度', m.f, 'int')}
+      ${renderMetricCell('ONS', m.ons, 'int')}
+      ${renderMetricCell('PNS', m.pns, 'int')}
+      ${renderMetricCell('OLD20', m.old20)}
     </div>
 
     ${m.a ? `<div class="alignment-section">
@@ -553,7 +621,11 @@ function renderNonword(query, pred, corpus) {
 
     <div class="metrics-grid">
       ${renderMetricCell('Consistency', pred.wordCons)}
+      ${renderMetricCell('Entropy', pred.wordEnt)}
       ${renderMetricCell('文字数', pred.chars.length, 'int')}
+      ${renderMetricCell('ONS', pred.ons, 'int')}
+      ${renderMetricCell('PNS', pred.pns, 'int')}
+      ${renderMetricCell('OLD20', pred.old20)}
     </div>
 
     <div class="alignment-section">
