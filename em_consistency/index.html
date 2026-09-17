@@ -299,28 +299,58 @@ const CORPORA = {};
 
 // 読み込むコーパスの一覧
 const CORPUS_FILES = [
-  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'data' },
-  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'data' },
-  { key: 'elm',  label: '小学校教科書',           dir: 'data' },
-  { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'data' },
+  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'consistency_data' },
+  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'consistency_data' },
+  { key: 'elem',  label: '小学校教科書',           dir: 'consistency_data' },
+ { key: 'psylex',   label: 'psylex71 (新聞)',      dir: 'consistency_data' },
 ];
+
+/**
+ * .json.gz を fetch し、ブラウザ内で解凍して JSON をパースする。
+ * .gz が見つからなければ .json にフォールバック。
+ */
+async function fetchJSON(url) {
+  // まず .gz を試す
+  const gzUrl = url + '.gz';
+  let res = await fetch(gzUrl);
+
+  if (res.ok) {
+    // DecompressionStream で gzip 解凍
+    const ds = new DecompressionStream('gzip');
+    const decompressed = res.body.pipeThrough(ds);
+    const reader = decompressed.getReader();
+    const chunks = [];
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+    const blob = new Blob(chunks);
+    const text = await blob.text();
+    console.log(`  ✓ ${gzUrl} (${(Number(res.headers.get('content-length'))/1024).toFixed(0)} KB gz)`);
+    return JSON.parse(text);
+  }
+
+  // .gz がなければ .json にフォールバック
+  res = await fetch(url);
+  if (!res.ok) return null;
+  console.log(`  ✓ ${url}`);
+  return res.json();
+}
 
 async function loadAllCorpora() {
   for (const { key, label, dir } of CORPUS_FILES) {
     try {
-      const [distRes, metricsRes] = await Promise.all([
-        fetch(`${dir}/kanji_dist_${key}.json`),
-        fetch(`${dir}/metrics_${key}.json`),
+      console.log(`${key}: 読み込み中...`);
+      const [kanji_dist, metrics] = await Promise.all([
+        fetchJSON(`${dir}/kanji_dist_${key}.json`),
+        fetchJSON(`${dir}/metrics_${key}.json`),
       ]);
 
-      // ファイルが存在しない場合はスキップ
-      if (!distRes.ok || !metricsRes.ok) {
+      if (!kanji_dist || !metrics) {
         console.warn(`${key}: ファイルが見つかりません。スキップします。`);
         continue;
       }
-
-      const kanji_dist = await distRes.json();
-      const metrics = await metricsRes.json();
 
       CORPORA[key] = { label, kanji_dist, metrics };
       console.log(`${key}: 読み込み完了 (${Object.keys(kanji_dist).length} 漢字, ${metrics.length} 語)`);
