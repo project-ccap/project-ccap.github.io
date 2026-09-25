@@ -273,6 +273,8 @@ header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
   <div class="search-box">
     <input type="text" id="queryInput" placeholder="漢字・単語・非単語を入力（例: 学校, 熱校）"
            autocomplete="off">
+    <input type="text" id="readingInput" placeholder="読みを指定（任意: はし, ガッコウ）"
+           autocomplete="off" style="max-width:220px">
     <button onclick="doSearch()">検索</button>
   </div>
 
@@ -299,10 +301,10 @@ const CORPORA = {};
 
 // 読み込むコーパスの一覧
 const CORPUS_FILES = [
-  { key: 'wlsp',  label: 'WLSP (分類語彙表)', dir: 'data' },
-  { key: 'nlt',   label: 'NLT (BCCWJ)',     dir: 'data' },
-  { key: 'elm',  label: '小学校教科書',      dir: 'data' },
-// { key: 'psylex', label: 'psylex71 (新聞)',  dir: 'data' },
+  { key: 'wlsp',  label: 'WLSP (分類語彙表)',     dir: 'data' },
+  { key: 'nlt',   label: 'NLT (BCCWJ)',          dir: 'data' },
+  { key: 'elem',  label: '小学校教科書',           dir: 'data' },
+// { key: 'psylex71',   label: 'psylex71 (新聞)',      dir: 'data' },
 ];
 
 /**
@@ -502,6 +504,118 @@ function predictNonword(word, kanjiDist, topN = 10) {
 }
 
 // ═══════════════════════════════════════════
+// Ad-hoc consistency_target computation
+// ═══════════════════════════════════════════
+
+/**
+ * カタカナ→ひらがな変換
+ */
+function katakanaToHiragana(str) {
+  return str.replace(/[ァ-ヶ]/g, ch =>
+    String.fromCharCode(ch.charCodeAt(0) - 0x60)
+  );
+}
+
+/**
+ * 任意の (語, 読み) に対して consistency_target を計算する。
+ * align_word_reading の JS 実装（簡易版：均等分割を試行）。
+ *
+ * 戻り値: { ct, alignment, perUnit }
+ *   ct: consistency_target (平均 P(r_aligned|K))
+ *   alignment: "橋→はし" 形式の文字列
+ *   perUnit: [{char, reading, prob}]
+ */
+function computeConsTargetForReading(word, reading, kanjiDist) {
+  const chars = [...word];
+  const readingHira = katakanaToHiragana(reading);
+  const morae = kanaToMora(readingHira);
+  const nChars = chars.length;
+  const nMorae = morae.length;
+
+  if (nChars === 0 || nMorae === 0) return null;
+
+  // 単一文字 → 全モーラがその文字の読み
+  if (nChars === 1) {
+    const readingKey = morae.join('');
+    const entry = kanjiDist[chars[0]];
+    let prob = 0;
+    if (entry) {
+      const found = entry.readings.find(([r]) => r === readingKey);
+      prob = found ? found[1] : 0;
+    }
+    return {
+      ct: prob,
+      alignment: `${chars[0]}→${readingKey}`,
+      perUnit: [{ char: chars[0], reading: readingKey, prob }],
+    };
+  }
+
+  // 複数文字 → 全可能分割を試し、最尤分割を選択
+  // splits: nChars 個のスロットに nMorae 個のモーラを分配する組み合わせ
+  function* generateSplits(nSlots, nItems) {
+    if (nSlots === 1) {
+      if (nItems >= 1) yield [nItems];
+      return;
+    }
+    for (let take = 1; take <= nItems - (nSlots - 1); take++) {
+      for (const rest of generateSplits(nSlots - 1, nItems - take)) {
+        yield [take, ...rest];
+      }
+    }
+  }
+
+  let bestProb = -Infinity;
+  let bestSplit = null;
+  let bestPerUnit = null;
+
+  for (const split of generateSplits(nChars, nMorae)) {
+    let logProb = 0;
+    const perUnit = [];
+    let offset = 0;
+    let valid = true;
+
+    for (let i = 0; i < nChars; i++) {
+      const readingMorae = morae.slice(offset, offset + split[i]);
+      const readingKey = readingMorae.join('');
+      offset += split[i];
+
+      const entry = kanjiDist[chars[i]];
+      let prob = 0;
+      if (entry) {
+        const found = entry.readings.find(([r]) => r === readingKey);
+        prob = found ? found[1] : 0;
+      }
+
+      if (prob <= 0) {
+        // このアライメントでは P=0 のスロットがある
+        // log(0) を避けるため小さな値を使う
+        logProb += Math.log(1e-10);
+      } else {
+        logProb += Math.log(prob);
+      }
+      perUnit.push({ char: chars[i], reading: readingKey, prob });
+    }
+
+    if (logProb > bestProb) {
+      bestProb = logProb;
+      bestSplit = split;
+      bestPerUnit = perUnit;
+    }
+  }
+
+  if (!bestPerUnit) return null;
+
+  const validProbs = bestPerUnit.filter(u => u.prob > 0).map(u => u.prob);
+  const ct = validProbs.length > 0
+    ? validProbs.reduce((a, b) => a + b, 0) / bestPerUnit.length
+    : 0;
+
+  const alignment = bestPerUnit.map(u => `${u.char}→${u.reading}`).join(' / ');
+
+  return { ct, alignment, perUnit: bestPerUnit };
+}
+
+// ═══════════════════════════════════════════
 // UI
 // ═══════════════════════════════════════════
 function initCorpusTabs() {
@@ -535,28 +649,54 @@ function doSearch() {
   const corpus = CORPORA[currentCorpus];
   if (!corpus) return;
 
-  // Check if registered word
-  const found = corpus.metrics.find(m => m.w === query);
+  const specifiedReading = document.getElementById('readingInput').value.trim();
+
+  // 同一語の全エントリを取得（複数読みが登録されている場合あり）
+  const allMatches = corpus.metrics.filter(m => m.w === query);
 
   const resultsDiv = document.getElementById('results');
 
-  if (found) {
-    // JSON に ONS/PNS/OLD20 がなければブラウザ内で計算
-    if (found.ons == null || found.pns == null || found.old20 == null) {
+  if (allMatches.length > 0) {
+    // 読みが指定されている場合、その読みのエントリを優先表示
+    let primary;
+    if (specifiedReading) {
+      const readingHira = katakanaToHiragana(specifiedReading);
+      primary = allMatches.find(m => katakanaToHiragana(m.r) === readingHira);
+    }
+    // 指定読みが見つからない or 未指定 → 頻度最大のエントリを使用
+    if (!primary) {
+      primary = allMatches.reduce((best, m) => (m.f || 0) > (best.f || 0) ? m : best, allMatches[0]);
+    }
+
+    // ONS/PNS/OLD20 計算
+    if (primary.ons == null || primary.pns == null || primary.old20 == null) {
       resultsDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>近傍指標を計算中...</p></div>';
       setTimeout(() => {
-        const nbr = computeNeighborMetrics(found.w, found.r, corpus);
-        if (found.ons == null) found.ons = nbr.ons;
-        if (found.pns == null) found.pns = nbr.pns;
-        if (found.old20 == null) found.old20 = nbr.old20;
-        resultsDiv.innerHTML = renderRegistered(found, corpus);
+        const nbr = computeNeighborMetrics(primary.w, primary.r, corpus);
+        if (primary.ons == null) primary.ons = nbr.ons;
+        if (primary.pns == null) primary.pns = nbr.pns;
+        if (primary.old20 == null) primary.old20 = nbr.old20;
+        resultsDiv.innerHTML = renderRegistered(primary, corpus, allMatches, specifiedReading);
       }, 10);
     } else {
-      resultsDiv.innerHTML = renderRegistered(found, corpus);
+      resultsDiv.innerHTML = renderRegistered(primary, corpus, allMatches, specifiedReading);
     }
+  } else if (specifiedReading) {
+    // 未登録語だが読みが指定されている → consistency_target を計算
+    const ctResult = computeConsTargetForReading(query, specifiedReading, corpus.kanji_dist);
+    const pred = predictNonword(query, corpus.kanji_dist);
+    resultsDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>近傍指標を計算中...</p></div>';
+    setTimeout(() => {
+      const nbr = computeNeighborMetrics(query, specifiedReading, corpus);
+      pred.ons = nbr.ons;
+      pred.pns = nbr.pns;
+      pred.old20 = nbr.old20;
+      pred.specifiedReading = specifiedReading;
+      pred.ctResult = ctResult;
+      resultsDiv.innerHTML = renderNonword(query, pred, corpus);
+    }, 10);
   } else {
     const pred = predictNonword(query, corpus.kanji_dist);
-    // 近傍指標を計算（予測読みを使用）
     resultsDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>近傍指標を計算中...</p></div>';
     setTimeout(() => {
       const topReading = pred.candidates[0]?.parts.join('') || '';
@@ -618,11 +758,50 @@ function renderKanjiBreakdown(chars, kanjiDist) {
   }).join('');
 }
 
-function renderRegistered(m, corpus) {
+function renderRegistered(m, corpus, allMatches, specifiedReading) {
   const chars = [...m.w];
+
+  // 同一語に複数読みが登録されている場合、一覧を表示
+  let multiReadingHtml = '';
+  if (allMatches && allMatches.length > 1) {
+    const rows = allMatches.map(entry => {
+      const isCurrent = entry === m;
+      const style = isCurrent ? 'font-weight:700;color:var(--accent)' : 'cursor:pointer;color:var(--text-muted)';
+      const marker = isCurrent ? ' ◀' : '';
+      return `<span style="${style};margin-right:12px;font-size:0.9rem"
+        onclick="document.getElementById('readingInput').value='${entry.r}';doSearch()"
+        >${entry.r}（頻度 ${entry.f || 0}, CT ${entry.ct != null ? entry.ct.toFixed(4) : '—'}）${marker}</span>`;
+    }).join('');
+    multiReadingHtml = `<div style="margin-bottom:12px;padding:10px 12px;background:var(--surface-alt);border-radius:6px;border-left:3px solid var(--amber)">
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">⚠ この語は ${allMatches.length} 件の読みで登録されています（クリックで切替）:</div>
+      <div>${rows}</div>
+    </div>`;
+  }
+
+  // 読み指定による ad-hoc CT 計算結果
+  let adHocCtHtml = '';
+  if (specifiedReading) {
+    const ctResult = computeConsTargetForReading(m.w, specifiedReading, corpus.kanji_dist);
+    if (ctResult) {
+      adHocCtHtml = `<div style="margin-bottom:16px;padding:12px;background:var(--accent-light);border-radius:6px">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">指定読み「${specifiedReading}」の Cons. Target:</div>
+        <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;margin-bottom:4px">
+          <span class="cons-indicator ${consColor(ctResult.ct)}"></span>${ctResult.ct.toFixed(4)}
+        </div>
+        <div style="font-family:var(--mono);font-size:0.85rem;color:var(--text-muted)">${ctResult.alignment}</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px">
+          ${ctResult.perUnit.map(u => `P(${u.reading}|${u.char})=${u.prob.toFixed(4)}`).join('　')}
+        </div>
+      </div>`;
+    }
+  }
+
   return `<div class="result-card">
     <h2>${m.w} <span class="badge badge-word">登録語</span></h2>
     <div class="reading">${m.r}　（${m.nm} モーラ）</div>
+
+    ${multiReadingHtml}
+    ${adHocCtHtml}
 
     <div class="metrics-grid">
       ${renderMetricCell('Consistency', m.c)}
@@ -657,9 +836,27 @@ function renderNonword(query, pred, corpus) {
     </tr>`;
   }).join('');
 
+  // 読み指定がある場合、その Cons. Target を表示
+  let adHocCtHtml = '';
+  if (pred.specifiedReading && pred.ctResult) {
+    const ct = pred.ctResult;
+    adHocCtHtml = `<div style="margin-bottom:16px;padding:12px;background:var(--accent-light);border-radius:6px">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">指定読み「${pred.specifiedReading}」の Cons. Target:</div>
+      <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;margin-bottom:4px">
+        <span class="cons-indicator ${consColor(ct.ct)}"></span>${ct.ct.toFixed(4)}
+      </div>
+      <div style="font-family:var(--mono);font-size:0.85rem;color:var(--text-muted)">${ct.alignment}</div>
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px">
+        ${ct.perUnit.map(u => `P(${u.reading}|${u.char})=${u.prob.toFixed(4)}`).join('　')}
+      </div>
+    </div>`;
+  }
+
   return `<div class="result-card">
     <h2>${query} <span class="badge badge-nonword">非単語 / 未登録</span></h2>
     <div class="reading">予測読み: ${pred.candidates[0]?.parts.join('') || '—'}</div>
+
+    ${adHocCtHtml}
 
     <div class="metrics-grid">
       ${renderMetricCell('Consistency', pred.wordCons)}
@@ -689,6 +886,9 @@ function renderNonword(query, pred, corpus) {
 // Init
 // ═══════════════════════════════════════════
 document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+document.getElementById('readingInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') doSearch();
 });
 
